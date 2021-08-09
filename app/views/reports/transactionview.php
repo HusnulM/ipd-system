@@ -8,7 +8,7 @@
                                 <?= $data['menu']; ?>
                             </h2>
                             <ul class="header-dropdown m-r--5">                                
-                                <a href="<?= BASEURL; ?>/exportdata/exportmovement/<?= $data['strdate']; ?>/<?= $data['enddate']; ?>/<?= $data['movement']; ?>" target="_blank" class="btn bg-teal">
+                                <a href="<?= BASEURL; ?>/exportdata/exportransaction/<?= $data['strdate']; ?>/<?= $data['enddate']; ?>" target="_blank" class="btn bg-teal">
                                    <i class="material-icons">cloud_download</i> EXPORT DATA
                                 </a>
 
@@ -18,13 +18,13 @@
 							</ul>
                         </div>
                         <div class="body">                                
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover dataTable js-exportable" style="width:200%;font-size:13px;">
+                            <div class="table-responsive">
+                                    <table id="report-data" class="table table-bordered table-striped table-hover" style="width:450%;font-size:13px;">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
                                                 <th>MODEL</th>
-                                                <th>PART CODE</th>
+                                                <th>ASSY NO</th>
                                                 <th>LOT / SERIAL NO</th>
                                                 <th>AOI SMT-BOTTOM (1st)</th>
                                                 <th>AOI SMT-TOP (2nd)</th>
@@ -39,6 +39,16 @@
                                                 <th>LOCATION</th>
                                                 <th>CAUSE</th>
                                                 <th>ACTION</th>
+                                                <th>REPAIR DEFECT</th>
+                                                <th>REPAIR LOCATION</th>
+                                                <th>REPAIR ACTION</th>
+                                                <th>AFTER REPAIR-ICT</th>
+                                                <th>AFTER REPAIR-QPIT</th>
+                                                <th>AFTER REPAIR-AOI TOP</th>
+                                                <th>AFTER REPAIR-BOT</th>
+                                                <th>AFTER REPAIR-FVI</th>
+                                                <th>QQA</th>
+                                                <th>QQA REMARK</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -63,6 +73,17 @@
                                                     <td><?= $row['location'] ?></td>
                                                     <td><?= $row['cause'] ?></td>
                                                     <td><?= $row['action'] ?></td>
+        
+                                                    <td><?= $row['repair_defect'] ?></td>
+                                                    <td><?= $row['repair_location'] ?></td>
+                                                    <td><?= $row['repair_action'] ?></td>
+                                                    <td><?= $row['repair1'] ?></td>
+                                                    <td><?= $row['repair2'] ?></td>
+                                                    <td><?= $row['repair3'] ?></td>
+                                                    <td><?= $row['repair4'] ?></td>
+                                                    <td><?= $row['repair5'] ?></td>
+                                                    <td><?= $row['repair6'] ?></td>
+                                                    <td><?= $row['remark'] ?></td>
                                                 </tr>
                                             <?php endforeach; ?>
                                         </tbody>
@@ -75,3 +96,15 @@
             </div>
         </div>
     </section>
+
+    <script>
+        $(document).ready(function() {
+            $('#report-data').DataTable( {
+                // "scrollY": 200,
+                // "scrollX": true,
+                // "pageResize": true
+            } );
+
+            
+        } );
+    </script>

@@ -33,9 +33,6 @@
 <script src="<?= BASEURL; ?>/js/pages/tables/jquery-datatable.js"></script>
 <script src="https://cdn.datatables.net/rowgroup/1.1.2/js/dataTables.rowGroup.min.js"></script>
 
-
-<script src="<?= BASEURL; ?>/plugins/chartjs/Chart.bundle.js"></script>
-
 <!-- Demo Js -->
 <script src="<?= BASEURL; ?>/js/demo.js"></script>
 <script src="<?= BASEURL; ?>/js/script.js"></script>

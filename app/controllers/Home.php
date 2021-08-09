@@ -32,7 +32,7 @@ class Home extends Controller {
 	}
 
 	public function logout(){
-		setcookie($_SESSION['usr']['user'], "AUTH-USER", time() - 3600); 
+		// setcookie($_SESSION['usr']['user'], "AUTH-USER", time() - 3600); 
 		unset($_SESSION['usr']);
 		header('location: '. BASEURL);
 	}

@@ -29,4 +29,9 @@ $(function () {
         pageLength: 50,
         lengthMenu: [50, 100, 200, 500]
     });
+
+    $('.js-exportable-new').DataTable({
+        "scrollY": 200,
+        "scrollX": true
+    });
 });

@@ -44,7 +44,9 @@ class Reports extends Controller{
 			$data['appmenu']  = $this->model('Home_model')->getUsermenu();         //--
 			//------------------------------------------------------------------------- 
 
-			$data['rdata'] = $this->model('Report_model')->rtransaction($strdate, $enddate);
+			$data['rdata']   = $this->model('Report_model')->rtransaction($strdate, $enddate);
+			$data['strdate'] = $strdate;
+			$data['enddate'] = $enddate;
 
 			$this->view('templates/header_a', $data);
 			$this->view('reports/transactionview', $data);
