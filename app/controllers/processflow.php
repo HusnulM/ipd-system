@@ -15,9 +15,6 @@ class Processflow extends Controller {
             $data['title'] = 'Transaction Process Flow';
             $data['menu']  = 'Transaction Process Flow';
 
-            $data['setting']  = $this->model('Setting_model')->getgensetting();
-            $data['appmenu']  = $this->model('Home_model')->getUsermenu();  
-
             $data['rdata']    = $this->model('Processflow_model')->getAll();
             $data['userlist'] = $this->model('User_model')->userList();
 

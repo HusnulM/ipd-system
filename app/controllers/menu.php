@@ -12,12 +12,7 @@ class Menu extends Controller {
         $check = $this->model('Home_model')->checkUsermenu('menu','Read');
         if ($check){
             $data['title'] = 'Application Menu';
-            $data['menu']  = 'Application Menu';
-
-            // Wajib di semua route ke view--------------------------------------------
-            $data['setting']  = $this->model('Setting_model')->getgensetting();    //--
-            $data['appmenu']  = $this->model('Home_model')->getUsermenu();         //--
-            //-------------------------------------------------------------------------   
+            $data['menu']  = 'Application Menu';  
 
             $data['menus'] = $this->model('Menu_model')->getListMenu();   
 
@@ -34,10 +29,7 @@ class Menu extends Controller {
         if ($check){
             $data['title'] = 'Create Menu';
             $data['menu']  = 'Create Menu';
-
-            // Wajib di semua route ke view
-            $data['setting']  = $this->model('Setting_model')->getgensetting();
-            $data['appmenu']  = $this->model('Home_model')->getUsermenu();         
+                   
             $data['menugroups']  = $this->model('Menu_model')->getListMenugroups();         
 
             $this->view('templates/header_a', $data);
@@ -52,11 +44,7 @@ class Menu extends Controller {
         $check = $this->model('Home_model')->checkUsermenu('menu','Update');
         if ($check){
             $data['title'] = 'Edit Application Menu';
-            $data['menu']  = 'Edit Application Menu';
-
-            // Wajib di semua route ke view
-            $data['setting']  = $this->model('Setting_model')->getgensetting();
-            $data['appmenu']  = $this->model('Home_model')->getUsermenu();         
+            $data['menu']  = 'Edit Application Menu';       
 
             $data['menus']        = $this->model('Menu_model')->getMenuById($id);
             $data['currentgroup'] = $this->model('Menu_model')->getMenugroupByid($data['menus']['menugroup']);

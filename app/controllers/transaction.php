@@ -111,28 +111,53 @@ class Transaction extends Controller {
         $checkNG  = $this->model('Transaction_model')->checNGStatus($_POST['formid']);
 
         if($process['lastprocess'] == $sequence['sequence']){
-            Flasher::setMessage('Serial NO '. $_POST['_lotnumber'] .' already processed in '. $sequence['processname'],'','danger');
-			header('location: '. BASEURL . '/transaction/process');
+            // Flasher::setMessage('Serial NO '. $_POST['_lotnumber'] .' already processed in '. $sequence['processname'],'','danger');
+			// header('location: '. BASEURL . '/transaction/process');
+            $return = array(
+                "msgtype" => "2",
+                "message" => 'Serial NO '. $_POST['_lotnumber'] .' already processed in '. $sequence['processname']
+            );
+            echo json_encode($return);
 			exit;	
         }else{
             $checkProcess = $sequence['sequence'] - $process['lastprocess'];
             if($checkProcess > 1){
-                Flasher::setMessage('Previous Process In Serial NO '. $_POST['_lotnumber'] .' not processed yet','','danger');
-                header('location: '. BASEURL . '/transaction/process');
+                // Flasher::setMessage('Previous Process In Serial NO '. $_POST['_lotnumber'] .' not processed yet','','danger');
+                // header('location: '. BASEURL . '/transaction/process');
+                $return = array(
+                    "msgtype" => "2",
+                    "message" => 'Previous Process In Serial NO '. $_POST['_lotnumber'] .' not processed yet'
+                );
+                echo json_encode($return);
                 exit;
             }else{
                 if($checkNG){
-                    Flasher::setMessage('Cannot Process Serial No '. $_POST['lotnumber'] .', Status is NG in Previous Process '. $sequence['processname'],'','danger');
-                    header('location: '. BASEURL . '/transaction/process');
+                    // Flasher::setMessage('Cannot Process Serial No '. $_POST['lotnumber'] .', Status is NG in Previous Process '. $sequence['processname'],'','danger');
+                    // header('location: '. BASEURL . '/transaction/process');
+                    $return = array(
+                        "msgtype" => "2",
+                        "message" => 'Cannot Process Serial No '. $_POST['lotnumber'] .', Status is NG in Previous Process '. $sequence['processname']
+                    );
+                    echo json_encode($return);
                     exit;
                 }else{
                     if( $this->model('Transaction_model')->saveprocess($_POST) > 0 ) {
-                        Flasher::setMessage('Transaction Serial NO '. $_POST['_lotnumber'] .' Processed','','success');
-                        header('location: '. BASEURL . '/transaction/process');
+                        // Flasher::setMessage('Transaction Serial NO '. $_POST['_lotnumber'] .' Processed','','success');
+                        // header('location: '. BASEURL . '/transaction/process');
+                        $return = array(
+                            "msgtype" => "1",
+                            "message" => 'Transaction Serial NO '. $_POST['_lotnumber'] .' Processed'
+                        );
+                        echo json_encode($return);
                         exit;			
                     }else{
-                        Flasher::setMessage('Process Transaction Serial NO '. $_POST['_lotnumber'] .' Fail','','danger');
-                        header('location: '. BASEURL . '/transaction/process');
+                        // Flasher::setMessage('Process Transaction Serial NO '. $_POST['_lotnumber'] .' Fail','','danger');
+                        // header('location: '. BASEURL . '/transaction/process');
+                        $return = array(
+                            "msgtype" => "2",
+                            "message" => 'Process Transaction Serial NO '. $_POST['_lotnumber'] .' Fail'
+                        );
+                        echo json_encode($return);
                         exit;	
                     }
                 }

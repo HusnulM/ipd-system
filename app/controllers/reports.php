@@ -19,11 +19,6 @@ class Reports extends Controller{
         if ($check){
 			$data['title']    = 'Report Transaction Process';
 			$data['menu']     = 'Report Transaction Process';
-			
-			// Wajib di semua route ke view--------------------------------------------
-			$data['setting']  = $this->model('Setting_model')->getgensetting();    //--
-			$data['appmenu']  = $this->model('Home_model')->getUsermenu();         //--
-			//------------------------------------------------------------------------- 
 
 			$this->view('templates/header_a', $data);
 			$this->view('reports/transaction', $data);
@@ -38,11 +33,6 @@ class Reports extends Controller{
         if ($check){
 			$data['title']    = 'Report Transaction Process';
 			$data['menu']     = 'Report Transaction Process';
-			
-			// Wajib di semua route ke view--------------------------------------------
-			$data['setting']  = $this->model('Setting_model')->getgensetting();    //--
-			$data['appmenu']  = $this->model('Home_model')->getUsermenu();         //--
-			//------------------------------------------------------------------------- 
 
 			$data['rdata']   = $this->model('Report_model')->rtransaction($strdate, $enddate);
 			$data['strdate'] = $strdate;

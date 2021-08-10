@@ -1,4 +1,22 @@
+<?php
+    // require_once '../../../config/config.php';
 
+    $dsn = "mysql:host=".DB_HOST.";dbname=".DB_NAME."";
+    $pdo = new PDO($dsn, DB_USER, DB_PASS);
+
+    $user = $_SESSION['usr']['user'];
+
+    $query1 = $pdo->query("SELECT distinct * FROM v_user_menugroup WHERE username='$user'");
+    $query2 = $pdo->query("SELECT distinct username,menuid,menu,route,type,menugroup,icon FROM v_user_menu WHERE username='$user' and type='parent'");
+    $query3 = $pdo->query("SELECT * FROM tblsetting where id = '1'");
+
+    $menuGroups = $query1->fetchAll();
+    $menuAll    = $query2->fetchAll();
+    $setting    = $query3->fetch();
+
+    $pdo=null;
+
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -149,7 +167,7 @@
             <div class="navbar-header">
                 <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
                 <a href="javascript:void(0);" class="bars"></a>
-                <a class="navbar-brand" href="<?= BASEURL; ?>"><?= $data['setting']['company']; ?></a>
+                <a class="navbar-brand" href="<?= BASEURL; ?>"><?= $setting['company']; ?></a>
             </div>
             <div class="collapse navbar-collapse" id="navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
@@ -185,14 +203,14 @@
                     </li>
 
                     <!-- Master Data Menu -->
-                    <?php foreach($data['appmenu']['menugroups'] as $menugroup) : ?>
+                    <?php foreach($menuGroups as $menugroup) : ?>
                         <li>
                             <a href="javascript:void(0);" class="menu-toggle">
                                 <i class="material-icons"><?= $menugroup['icon']; ?></i>
                                 <span><?= $menugroup['description']; ?></span>
                             </a>
                             <ul class="ml-menu">
-                                <?php foreach($data['appmenu']['menus'] as $menu) : ?>
+                                <?php foreach($menuAll as $menu) : ?>
                                     <?php if($menu['menugroup'] === $menugroup['menugroup']) : ?>
                                         <li>
                                             <a href="<?= BASEURL; ?>/<?= $menu['route']; ?>"><?= $menu['menu']; ?></a>

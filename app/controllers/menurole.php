@@ -14,11 +14,6 @@ class Menurole extends Controller {
             $data['title'] = 'Assign Menu to Role';
             $data['menu']  = 'Assign Menu to Role';
 
-            // Wajib di semua route ke view--------------------------------------------
-            $data['setting']  = $this->model('Setting_model')->getgensetting();    //--
-            $data['appmenu']  = $this->model('Home_model')->getUsermenu();         //--
-            //-------------------------------------------------------------------------   
-
             $data['data'] = $this->model('Menurole_model')->getListMenuRoleAssignment();   
 
             $this->view('templates/header_a', $data);
@@ -33,11 +28,7 @@ class Menurole extends Controller {
         $check = $this->model('Home_model')->checkUsermenu('menurole','Create');
         if ($check){
             $data['title'] = 'Create Menu';
-            $data['menu']  = 'Create Menu';
-
-            // Wajib di semua route ke view
-            $data['setting']  = $this->model('Setting_model')->getgensetting();
-            $data['appmenu']  = $this->model('Home_model')->getUsermenu();   
+            $data['menu']  = 'Create Menu';  
 
             $data['roles']    = $this->model('Role_model')->getList();   
             $data['menus']    = $this->model('Menu_model')->getListMenu();   
@@ -54,11 +45,7 @@ class Menurole extends Controller {
         $check = $this->model('Home_model')->checkUsermenu('menurole','Update');
         if ($check){
             $data['title'] = 'Edit Application Menu';
-            $data['menu']  = 'Edit Application Menu';
-
-            // Wajib di semua route ke view
-            $data['setting']  = $this->model('Setting_model')->getgensetting();
-            $data['appmenu']  = $this->model('Home_model')->getUsermenu();         
+            $data['menu']  = 'Edit Application Menu';       
 
             $data['menus']    = $this->model('Menu_model')->getMenuById($id);
 

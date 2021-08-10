@@ -16,13 +16,8 @@ class User extends Controller{
 			$data['title']    = 'Data User';
 			$data['menu']     = 'User';
 			$data['menu-dsc'] = 'Maintain User';
-			
-			 // Wajib di semua route ke view--------------------------------------------
-			 $data['setting']  = $this->model('Setting_model')->getgensetting();    //--
-			 $data['appmenu']  = $this->model('Home_model')->getUsermenu();         //--
-			 //-------------------------------------------------------------------------   
 	
-			 $data['rdata']    = $this->model('User_model')->userList();
+			$data['rdata']    = $this->model('User_model')->userList();
 	
 			$this->view('templates/header_a', $data);
 			$this->view('user/index', $data);
@@ -37,15 +32,8 @@ class User extends Controller{
         if ($check){
 			$data['title']    = 'Add New User';
 			$data['menu']     = 'Add New User';
-			
-			 // Wajib di semua route ke view--------------------------------------------
-			 $data['setting']  = $this->model('Setting_model')->getgensetting();    //--
-			 $data['appmenu']  = $this->model('Home_model')->getUsermenu();         //--
-			 //-------------------------------------------------------------------------   
 	
 			$data['setting']    = $this->model('Setting_model')->getgensetting();
-			// $data['department'] = $this->model('Department_model')->getList();
-			// $data['jabatan']    = $this->model('Jabatan_model')->getList();
 	
 			$this->view('templates/header_a', $data);
 			$this->view('user/create', $data);
@@ -91,12 +79,7 @@ class User extends Controller{
 	public function changepassword(){
 		$data['title'] = 'Edit Password';
 		$data['menu'] = 'User';
-		$data['menu-dsc'] = 'Change Password';
-
-		// Wajib di semua route ke view--------------------------------------------
-		 $data['setting']  = $this->model('Setting_model')->getgensetting();    //--
-		 $data['appmenu']  = $this->model('Home_model')->getUsermenu();         //--
-		 //-------------------------------------------------------------------------   
+		$data['menu-dsc'] = 'Change Password'; 
 
 		$this->view('templates/header_a', $data);
 		$this->view('user/changepass', $data);
@@ -119,12 +102,7 @@ class User extends Controller{
 		$check = $this->model('Home_model')->checkUsermenu('user','Update');
         if ($check){
 			$data['title'] = 'Change User';
-			$data['menu']  = 'Change User';
-	
-			// Wajib di semua route ke view--------------------------------------------
-			$data['setting']  = $this->model('Setting_model')->getgensetting();    //--
-			$data['appmenu']  = $this->model('Home_model')->getUsermenu();         //--
-			//-------------------------------------------------------------------------   
+			$data['menu']  = 'Change User';  
 	
 			$data['user']       = $this->model('User_model')->getUserbyid($username);
 			

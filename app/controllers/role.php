@@ -12,12 +12,7 @@ class Role extends Controller {
         $check = $this->model('Home_model')->checkUsermenu('role','Read');
         if ($check){
             $data['title'] = 'Role';
-            $data['menu']  = 'Role';
-
-            // Wajib di semua route ke view--------------------------------------------
-            $data['setting']  = $this->model('Setting_model')->getgensetting();    //--
-            $data['appmenu']  = $this->model('Home_model')->getUsermenu();         //--
-            //-------------------------------------------------------------------------   
+            $data['menu']  = 'Role';  
 
             $data['roles'] = $this->model('Role_model')->getList();   
 
@@ -33,11 +28,7 @@ class Role extends Controller {
         $check = $this->model('Home_model')->checkUsermenu('role','Create');
         if ($check){
             $data['title'] = 'Create role';
-            $data['menu']  = 'Create role';
-
-            // Wajib di semua route ke view
-            $data['setting']  = $this->model('Setting_model')->getgensetting();
-            $data['appmenu']  = $this->model('Home_model')->getUsermenu();         
+            $data['menu']  = 'Create role';        
 
             $this->view('templates/header_a', $data);
             $this->view('role/create', $data);
@@ -51,11 +42,7 @@ class Role extends Controller {
         $check = $this->model('Home_model')->checkUsermenu('role','Update');
         if ($check){
             $data['title'] = 'Edit role';
-            $data['menu']  = 'Edit role';
-
-            // Wajib di semua route ke view
-            $data['setting']  = $this->model('Setting_model')->getgensetting();
-            $data['appmenu']  = $this->model('Home_model')->getUsermenu();         
+            $data['menu']  = 'Edit role';     
 
             $data['menus']    = $this->model('Role_model')->getRoleById($id);
 

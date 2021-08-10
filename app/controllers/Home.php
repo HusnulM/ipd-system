@@ -7,8 +7,6 @@ class Home extends Controller {
 		if( isset($_SESSION['usr']) ){
 			$data['title'] = 'Dashboard';
 			$data['menu']  = 'Dashboard';
-			$data['setting'] = $this->model('Setting_model')->getgensetting();
-			$data['appmenu'] = $this->model('Home_model')->getUsermenu();
 
 			$this->view('templates/header_a', $data);
 			$this->view('dashboard/home', $data);

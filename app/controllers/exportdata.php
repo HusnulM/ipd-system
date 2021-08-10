@@ -54,34 +54,36 @@ class Exportdata extends Controller{
 		);
 
 		// Buat header tabel nya pada baris ke 3
-		$excel->setActiveSheetIndex(0)->setCellValue('A1', "NO"); // Set kolom A3 dengan tulisan "NO"
-		$excel->setActiveSheetIndex(0)->setCellValue('B1', "MODEL"); // Set kolom B3 dengan tulisan "NIS"
-		$excel->setActiveSheetIndex(0)->setCellValue('C1', "PART CODE"); // Set kolom C3 dengan tulisan "NAMA"
-		$excel->setActiveSheetIndex(0)->setCellValue('D1', "LOT / SERIAL NO"); 
-		$excel->setActiveSheetIndex(0)->setCellValue('E1', "AOI SMT-BOTTOM (1st)"); 
-		$excel->setActiveSheetIndex(0)->setCellValue('F1', "AOI SMT-TOP (2nd)");
-        $excel->setActiveSheetIndex(0)->setCellValue('G1', "SMT SI");
-		$excel->setActiveSheetIndex(0)->setCellValue('H1', "ICT");
-		$excel->setActiveSheetIndex(0)->setCellValue('I1', "QPIT");
-		$excel->setActiveSheetIndex(0)->setCellValue('J1', "AOI HW-TOP");
-		$excel->setActiveSheetIndex(0)->setCellValue('K1', "AOI HW-BOTTOM");
-		$excel->setActiveSheetIndex(0)->setCellValue('L1', "FVI");
-		$excel->setActiveSheetIndex(0)->setCellValue('M1', "Error Process");
-		$excel->setActiveSheetIndex(0)->setCellValue('N1', "DEFECT NAME");
-		$excel->setActiveSheetIndex(0)->setCellValue('O1', "LOCATION");
-		$excel->setActiveSheetIndex(0)->setCellValue('P1', "CAUSE");
-		$excel->setActiveSheetIndex(0)->setCellValue('Q1', "ACTION");
-
-		$excel->setActiveSheetIndex(0)->setCellValue('R1', "REPAIR-DEFECT");
-		$excel->setActiveSheetIndex(0)->setCellValue('S1', "REPAIR-LOCATION");
-		$excel->setActiveSheetIndex(0)->setCellValue('T1', "REPAIR-ACTION");
-		$excel->setActiveSheetIndex(0)->setCellValue('U1', "AFTER REPAIR-ICT");
-		$excel->setActiveSheetIndex(0)->setCellValue('V1', "AFTER REPAIR-QPIT");
-		$excel->setActiveSheetIndex(0)->setCellValue('W1', "AFTER REPAIR-AOI TOP");
-		$excel->setActiveSheetIndex(0)->setCellValue('X1', "AFTER REPAIR-BOT");
-		$excel->setActiveSheetIndex(0)->setCellValue('Y1', "AFTER REPAIR-FVI");
-		$excel->setActiveSheetIndex(0)->setCellValue('Z1', "QQA");
-		$excel->setActiveSheetIndex(0)->setCellValue('AA1', "QQA REMARK");												
+		$excel->setActiveSheetIndex(0)->setCellValue('A1', "NO"); 
+		$excel->setActiveSheetIndex(0)->setCellValue('B1', "PROD DATE");
+		$excel->setActiveSheetIndex(0)->setCellValue('C1', "TEN NO");
+		$excel->setActiveSheetIndex(0)->setCellValue('D1', "MODEL");
+		$excel->setActiveSheetIndex(0)->setCellValue('E1', "PART CODE");
+		$excel->setActiveSheetIndex(0)->setCellValue('F1', "LOT / SERIAL NO"); 
+		$excel->setActiveSheetIndex(0)->setCellValue('G1', "AOI SMT-BOTTOM (1st)"); 
+		$excel->setActiveSheetIndex(0)->setCellValue('H1', "AOI SMT-TOP (2nd)");
+        $excel->setActiveSheetIndex(0)->setCellValue('I1', "SMT SI");
+		$excel->setActiveSheetIndex(0)->setCellValue('J1', "ICT");
+		$excel->setActiveSheetIndex(0)->setCellValue('K1', "QPIT");
+		$excel->setActiveSheetIndex(0)->setCellValue('L1', "AOI HW-TOP");
+		$excel->setActiveSheetIndex(0)->setCellValue('M1', "AOI HW-BOTTOM");
+		$excel->setActiveSheetIndex(0)->setCellValue('N1', "FVI");
+		$excel->setActiveSheetIndex(0)->setCellValue('O1', "QQA");
+		$excel->setActiveSheetIndex(0)->setCellValue('P1', "Error Process");
+		$excel->setActiveSheetIndex(0)->setCellValue('Q1', "DEFECT NAME");
+		$excel->setActiveSheetIndex(0)->setCellValue('R1', "LOCATION");
+		$excel->setActiveSheetIndex(0)->setCellValue('S1', "CAUSE");
+		$excel->setActiveSheetIndex(0)->setCellValue('T1', "ACTION");
+		$excel->setActiveSheetIndex(0)->setCellValue('U1', "REPAIR-DEFECT");
+		$excel->setActiveSheetIndex(0)->setCellValue('V1', "REPAIR-LOCATION");
+		$excel->setActiveSheetIndex(0)->setCellValue('X1', "REPAIR-ACTION");
+		$excel->setActiveSheetIndex(0)->setCellValue('Y1', "AFTER REPAIR-ICT");
+		$excel->setActiveSheetIndex(0)->setCellValue('Z1', "AFTER REPAIR-QPIT");
+		$excel->setActiveSheetIndex(0)->setCellValue('AA1', "AFTER REPAIR-AOI TOP");
+		$excel->setActiveSheetIndex(0)->setCellValue('AB1', "AFTER REPAIR-BOT");
+		$excel->setActiveSheetIndex(0)->setCellValue('AC1', "AFTER REPAIR-FVI");
+		$excel->setActiveSheetIndex(0)->setCellValue('AD1', "QQA");
+		$excel->setActiveSheetIndex(0)->setCellValue('AE1', "QQA REMARK");												
 
 
 		// Apply style header yang telah kita buat tadi ke masing-masing kolom header
@@ -106,13 +108,16 @@ class Exportdata extends Controller{
 		$excel->getActiveSheet()->getStyle('S1')->applyFromArray($style_col);
 		$excel->getActiveSheet()->getStyle('T1')->applyFromArray($style_col);
 		$excel->getActiveSheet()->getStyle('U1')->applyFromArray($style_col);
-
 		$excel->getActiveSheet()->getStyle('V1')->applyFromArray($style_col);
 		$excel->getActiveSheet()->getStyle('X1')->applyFromArray($style_col);
 		$excel->getActiveSheet()->getStyle('W1')->applyFromArray($style_col);
 		$excel->getActiveSheet()->getStyle('Y1')->applyFromArray($style_col);
 		$excel->getActiveSheet()->getStyle('Z1')->applyFromArray($style_col);
 		$excel->getActiveSheet()->getStyle('AA1')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('AB1')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('AC1')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('AD1')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('AE1')->applyFromArray($style_col);
         // $excel->getActiveSheet()->getStyle('H4')->applyFromArray($style_col);
 
 		
@@ -120,33 +125,35 @@ class Exportdata extends Controller{
 		$numrow = 2;
 		foreach($data['expdata'] as $i => $h){ // Ambil semua data dari hasil eksekusi $sql
 			$excel->setActiveSheetIndex(0)->setCellValue('A'.$numrow, $no);
-			$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow, $h['partmodel']);
-			$excel->setActiveSheetIndex(0)->setCellValue('C'.$numrow, $h['partnumber']);
-            $excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow, $h['serial_no']);
-            $excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow, $h['process1']);
-            $excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow, $h['process2']);
-            $excel->setActiveSheetIndex(0)->setCellValue('G'.$numrow, $h['process3']);
-			$excel->setActiveSheetIndex(0)->setCellValue('H'.$numrow, $h['process4']);
-			$excel->setActiveSheetIndex(0)->setCellValue('I'.$numrow, $h['process5']);
-			$excel->setActiveSheetIndex(0)->setCellValue('J'.$numrow, $h['process6']);
-			$excel->setActiveSheetIndex(0)->setCellValue('K'.$numrow, $h['process7']);
-			$excel->setActiveSheetIndex(0)->setCellValue('L'.$numrow, $h['process8']);
-			$excel->setActiveSheetIndex(0)->setCellValue('M'.$numrow, $h['error_process']);
-			$excel->setActiveSheetIndex(0)->setCellValue('N'.$numrow, $h['defect_name']);
-			$excel->setActiveSheetIndex(0)->setCellValue('O'.$numrow, $h['location']);
-			$excel->setActiveSheetIndex(0)->setCellValue('P'.$numrow, $h['cause']);
-			$excel->setActiveSheetIndex(0)->setCellValue('Q'.$numrow, $h['action']);
-
-			$excel->setActiveSheetIndex(0)->setCellValue('R'.$numrow, $h['repair_defect']);
-			$excel->setActiveSheetIndex(0)->setCellValue('S'.$numrow, $h['repair_location']);
-			$excel->setActiveSheetIndex(0)->setCellValue('T'.$numrow, $h['repair_action']);
-			$excel->setActiveSheetIndex(0)->setCellValue('U'.$numrow, $h['repair1']);
-			$excel->setActiveSheetIndex(0)->setCellValue('V'.$numrow, $h['repair2']);
-			$excel->setActiveSheetIndex(0)->setCellValue('X'.$numrow, $h['repair3']);
-			$excel->setActiveSheetIndex(0)->setCellValue('Y'.$numrow, $h['repair4']);
-			$excel->setActiveSheetIndex(0)->setCellValue('W'.$numrow, $h['repair5']);
-			$excel->setActiveSheetIndex(0)->setCellValue('Z'.$numrow, $h['repair6']);
-			$excel->setActiveSheetIndex(0)->setCellValue('AA'.$numrow, $h['remark']);
+			$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow, $h['createdon']);
+			$excel->setActiveSheetIndex(0)->setCellValue('C'.$numrow, '');
+			$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow, $h['partmodel']);
+			$excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow, $h['partnumber']);
+            $excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow, $h['serial_no']);
+            $excel->setActiveSheetIndex(0)->setCellValue('G'.$numrow, $h['process1']);
+            $excel->setActiveSheetIndex(0)->setCellValue('H'.$numrow, $h['process2']);
+            $excel->setActiveSheetIndex(0)->setCellValue('I'.$numrow, $h['process3']);
+			$excel->setActiveSheetIndex(0)->setCellValue('J'.$numrow, $h['process4']);
+			$excel->setActiveSheetIndex(0)->setCellValue('K'.$numrow, $h['process5']);
+			$excel->setActiveSheetIndex(0)->setCellValue('L'.$numrow, $h['process6']);
+			$excel->setActiveSheetIndex(0)->setCellValue('M'.$numrow, $h['process7']);
+			$excel->setActiveSheetIndex(0)->setCellValue('N'.$numrow, $h['process8']);
+			$excel->setActiveSheetIndex(0)->setCellValue('O'.$numrow, $h['process9']);
+			$excel->setActiveSheetIndex(0)->setCellValue('P'.$numrow, $h['error_process']);
+			$excel->setActiveSheetIndex(0)->setCellValue('Q'.$numrow, $h['defect_name']);
+			$excel->setActiveSheetIndex(0)->setCellValue('R'.$numrow, $h['location']);
+			$excel->setActiveSheetIndex(0)->setCellValue('S'.$numrow, $h['cause']);
+			$excel->setActiveSheetIndex(0)->setCellValue('T'.$numrow, $h['action']);
+			$excel->setActiveSheetIndex(0)->setCellValue('U'.$numrow, $h['repair_defect']);
+			$excel->setActiveSheetIndex(0)->setCellValue('V'.$numrow, $h['repair_location']);
+			$excel->setActiveSheetIndex(0)->setCellValue('X'.$numrow, $h['repair_action']);
+			$excel->setActiveSheetIndex(0)->setCellValue('Y'.$numrow, $h['repair1']);
+			$excel->setActiveSheetIndex(0)->setCellValue('Z'.$numrow, $h['repair2']);
+			$excel->setActiveSheetIndex(0)->setCellValue('AA'.$numrow, $h['repair3']);
+			$excel->setActiveSheetIndex(0)->setCellValue('AB'.$numrow, $h['repair4']);
+			$excel->setActiveSheetIndex(0)->setCellValue('AC'.$numrow, $h['repair5']);
+			$excel->setActiveSheetIndex(0)->setCellValue('AD'.$numrow, $h['repair6']);
+			$excel->setActiveSheetIndex(0)->setCellValue('AE'.$numrow, $h['remark']);
 			
 			// Apply style row yang telah kita buat tadi ke masing-masing baris (isi tabel)
 			$excel->getActiveSheet()->getStyle('A'.$numrow)->applyFromArray($style_row);
@@ -178,6 +185,10 @@ class Exportdata extends Controller{
             $excel->getActiveSheet()->getStyle('Y'.$numrow)->applyFromArray($style_row);
 			$excel->getActiveSheet()->getStyle('Z'.$numrow)->applyFromArray($style_row);
 			$excel->getActiveSheet()->getStyle('AA'.$numrow)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('AB'.$numrow)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('AC'.$numrow)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('AD'.$numrow)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('AE'.$numrow)->applyFromArray($style_row);
 			
 			$no++; // Tambah 1 setiap kali looping
 			$numrow++; // Tambah 1 setiap kali looping

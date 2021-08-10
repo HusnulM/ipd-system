@@ -12,11 +12,7 @@ class Material extends Controller {
         $check = $this->model('Home_model')->checkUsermenu('material','Read');
         if ($check){
             $data['title'] = 'Material Master';
-            $data['menu']  = 'Material Master';
-
-            // Wajib di semua route ke view
-            $data['setting']  = $this->model('Setting_model')->getgensetting();
-            $data['appmenu']  = $this->model('Home_model')->getUsermenu();         
+            $data['menu']  = 'Material Master';      
 
             $data['material'] = $this->model('Material_model')->getListBarang();   
 
@@ -35,11 +31,6 @@ class Material extends Controller {
             $data['title'] = 'Create Material';
             $data['menu']  = 'Create New Material';
 
-            // Wajib di semua route ke view
-            $data['setting']  = $this->model('Setting_model')->getgensetting();
-            $data['appmenu']  = $this->model('Home_model')->getUsermenu();       
-            
-
             $this->view('templates/header_a', $data);
             $this->view('material/create', $data);
             $this->view('templates/footer_a');
@@ -55,18 +46,10 @@ class Material extends Controller {
         $check = $this->model('Home_model')->checkUsermenu('material','Update');
         if ($check){
             $data['title'] = 'Change Material';
-            $data['menu']  = 'Change Material Master';
-
-            // Wajib di semua route ke view
-            $data['setting']  = $this->model('Setting_model')->getgensetting();
-            $data['appmenu']  = $this->model('Home_model')->getUsermenu();         
+            $data['menu']  = 'Change Material Master';        
 
             $data['material'] = $this->model('Material_model')->getBarangByKode($material);
-            // $data['altuom']   = $this->model('Barang_model')->getBarangBaseUomByKode($material, $data['material']['matunit']);
             
-            // $data['mattype']   = $this->model('Barang_model')->getListMatType();
-            // $data['cmattype']  = $this->model('Barang_model')->geMatTypeById($data['material']['mattype']);
-
             $this->view('templates/header_a', $data);
             $this->view('material/edit', $data);
             $this->view('templates/footer_a');

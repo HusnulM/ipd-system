@@ -13,17 +13,10 @@ class Master extends Controller {
         $check = $this->model('Home_model')->checkUsermenu('master/defect','Read');
         if ($check){
             $data['title'] = 'Defect List';
-            $data['menu']  = 'Defect List';
-
-            // Mandatory In All View Call
-            // ==========================================================================*
-            $data['setting']  = $this->model('Setting_model')->getgensetting();         //
-            $data['appmenu']  = $this->model('Home_model')->getUsermenu();              //
-            // ==========================================================================*        
+            $data['menu']  = 'Defect List';     
 
             $data['defect'] = $this->model('Defect_model')->getDefectList();   
 
-            // echo json_encode($data['showprice']);
             $this->view('templates/header_a', $data);
             $this->view('master-data/defect/index', $data);
             $this->view('templates/footer_a');
@@ -38,14 +31,6 @@ class Master extends Controller {
             $data['title'] = 'Create New Defect List';
             $data['menu']  = 'Create New Defect List';
 
-            // Mandatory In All View Call
-            // ==========================================================================*
-            $data['setting']  = $this->model('Setting_model')->getgensetting();         //
-            $data['appmenu']  = $this->model('Home_model')->getUsermenu();              //
-            // ==========================================================================*        
-
-
-            // echo json_encode($data['showprice']);
             $this->view('templates/header_a', $data);
             $this->view('master-data/defect/create', $data);
             $this->view('templates/footer_a');
@@ -58,16 +43,9 @@ class Master extends Controller {
         $check = $this->model('Home_model')->checkUsermenu('master/defect','Update');
         if ($check){
             $data['title'] = 'Create New Defect List';
-            $data['menu']  = 'Create New Defect List';
-
-            // Mandatory In All View Call
-            // ==========================================================================*
-            $data['setting']  = $this->model('Setting_model')->getgensetting();         //
-            $data['appmenu']  = $this->model('Home_model')->getUsermenu();              //
-            // ==========================================================================*  
+            $data['menu']  = 'Create New Defect List'; 
             
             $data['defect']   = $this->model('Defect_model')->getDefectByid($id);
-
 
             $this->view('templates/header_a', $data);
             $this->view('master-data/defect/edit', $data);
@@ -119,13 +97,7 @@ class Master extends Controller {
         $check = $this->model('Home_model')->checkUsermenu('master/location','Read');
         if ($check){
             $data['title'] = 'Location List';
-            $data['menu']  = 'Location List';
-
-            // Mandatory In All View Call
-            // ==========================================================================*
-            $data['setting']  = $this->model('Setting_model')->getgensetting();         //
-            $data['appmenu']  = $this->model('Home_model')->getUsermenu();              //
-            // ==========================================================================*        
+            $data['menu']  = 'Location List';      
 
             $data['location'] = $this->model('Location_model')->getLocationList();   
 
@@ -144,14 +116,6 @@ class Master extends Controller {
             $data['title'] = 'Create New Location List';
             $data['menu']  = 'Create New Location List';
 
-            // Mandatory In All View Call
-            // ==========================================================================*
-            $data['setting']  = $this->model('Setting_model')->getgensetting();         //
-            $data['appmenu']  = $this->model('Home_model')->getUsermenu();              //
-            // ==========================================================================*        
-
-
-            // echo json_encode($data['showprice']);
             $this->view('templates/header_a', $data);
             $this->view('master-data/location/create', $data);
             $this->view('templates/footer_a');
@@ -165,15 +129,8 @@ class Master extends Controller {
         if ($check){
             $data['title'] = 'Change Location List';
             $data['menu']  = 'Change Location List';
-
-            // Mandatory In All View Call
-            // ==========================================================================*
-            $data['setting']  = $this->model('Setting_model')->getgensetting();         //
-            $data['appmenu']  = $this->model('Home_model')->getUsermenu();              //
-            // ==========================================================================*  
             
             $data['location']   = $this->model('Location_model')->getLocationByid($id);
-
 
             $this->view('templates/header_a', $data);
             $this->view('master-data/location/edit', $data);
@@ -225,17 +182,10 @@ class Master extends Controller {
         $check = $this->model('Home_model')->checkUsermenu('master/cause','Read');
         if ($check){
             $data['title'] = 'Cause List';
-            $data['menu']  = 'Cause List';
-
-            // Mandatory In All View Call
-            // ==========================================================================*
-            $data['setting']  = $this->model('Setting_model')->getgensetting();         //
-            $data['appmenu']  = $this->model('Home_model')->getUsermenu();              //
-            // ==========================================================================*        
+            $data['menu']  = 'Cause List';    
 
             $data['cause'] = $this->model('Cause_model')->getCauseList();   
 
-            // echo json_encode($data['showprice']);
             $this->view('templates/header_a', $data);
             $this->view('master-data/cause/index', $data);
             $this->view('templates/footer_a');
@@ -249,15 +199,7 @@ class Master extends Controller {
         if ($check){
             $data['title'] = 'Create New Cause List';
             $data['menu']  = 'Create New Cause List';
-
-            // Mandatory In All View Call
-            // ==========================================================================*
-            $data['setting']  = $this->model('Setting_model')->getgensetting();         //
-            $data['appmenu']  = $this->model('Home_model')->getUsermenu();              //
-            // ==========================================================================*        
-
-
-            // echo json_encode($data['showprice']);
+            
             $this->view('templates/header_a', $data);
             $this->view('master-data/cause/create', $data);
             $this->view('templates/footer_a');
@@ -270,16 +212,9 @@ class Master extends Controller {
         $check = $this->model('Home_model')->checkUsermenu('master/cause','Update');
         if ($check){
             $data['title'] = 'Change Cause List';
-            $data['menu']  = 'Change Cause List';
-
-            // Mandatory In All View Call
-            // ==========================================================================*
-            $data['setting']  = $this->model('Setting_model')->getgensetting();         //
-            $data['appmenu']  = $this->model('Home_model')->getUsermenu();              //
-            // ==========================================================================*  
+            $data['menu']  = 'Change Cause List'; 
             
             $data['cause']   = $this->model('Cause_model')->getCauseByid($id);
-
 
             $this->view('templates/header_a', $data);
             $this->view('master-data/cause/edit', $data);
@@ -331,17 +266,10 @@ class Master extends Controller {
         $check = $this->model('Home_model')->checkUsermenu('master/action','Read');
         if ($check){
             $data['title'] = 'Action List';
-            $data['menu']  = 'Action List';
-
-            // Mandatory In All View Call
-            // ==========================================================================*
-            $data['setting']  = $this->model('Setting_model')->getgensetting();         //
-            $data['appmenu']  = $this->model('Home_model')->getUsermenu();              //
-            // ==========================================================================*        
+            $data['menu']  = 'Action List';      
 
             $data['action'] = $this->model('Action_model')->getActionList();   
 
-            // echo json_encode($data['showprice']);
             $this->view('templates/header_a', $data);
             $this->view('master-data/action/index', $data);
             $this->view('templates/footer_a');
@@ -356,14 +284,6 @@ class Master extends Controller {
             $data['title'] = 'Create New Action List';
             $data['menu']  = 'Create New Action List';
 
-            // Mandatory In All View Call
-            // ==========================================================================*
-            $data['setting']  = $this->model('Setting_model')->getgensetting();         //
-            $data['appmenu']  = $this->model('Home_model')->getUsermenu();              //
-            // ==========================================================================*        
-
-
-            // echo json_encode($data['showprice']);
             $this->view('templates/header_a', $data);
             $this->view('master-data/action/create', $data);
             $this->view('templates/footer_a');
@@ -377,15 +297,8 @@ class Master extends Controller {
         if ($check){
             $data['title'] = 'Change Action List';
             $data['menu']  = 'Change Action List';
-
-            // Mandatory In All View Call
-            // ==========================================================================*
-            $data['setting']  = $this->model('Setting_model')->getgensetting();         //
-            $data['appmenu']  = $this->model('Home_model')->getUsermenu();              //
-            // ==========================================================================*  
             
             $data['action']   = $this->model('Action_model')->getActionByid($id);
-
 
             $this->view('templates/header_a', $data);
             $this->view('master-data/action/edit', $data);

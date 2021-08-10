@@ -22,7 +22,8 @@
                         </h2>
                     </div>
                     <div class="body">
-                        <form action="<?= BASEURL; ?>/transaction/saveprocess" method="POST">
+                    <!-- action="<?= BASEURL; ?>/transaction/saveprocess" -->
+                        <form id="form-process-data" method="POST">
                             <div class="row">
                                 <div class="col-lg-6">
                                     <?php if($isFirstProcess): ?>
@@ -227,6 +228,10 @@
 
         $('#lotnumber').keydown(function(e){
             var inputSerial = this.value;
+
+            const currentDate = new Date();
+            const timestamp = currentDate.getTime();
+
             if(e.keyCode == 13) {
                 $.ajax({
                     url: base_url+'/transaction/getserialprocess/data?serial='+inputSerial,
@@ -265,7 +270,7 @@
                             }
                         }else{
                             $('#_lotnumber').val(inputSerial);
-                            $('#formid').val(formID);   
+                            $('#formid').val(timestamp);   
                         }                                             
                     }else{
                         if(data){
@@ -304,10 +309,48 @@
             }
         });
 
+        $('#form-process-data').on('submit', function(event){
+            event.preventDefault();
+                
+            var formData = new FormData(this);
+            console.log($(this).serialize())
+                $.ajax({
+                    url:base_url+'/transaction/saveprocess',
+                    method:'post',
+                    data:formData,
+                    dataType:'JSON',
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    beforeSend:function(){
+                        $('#btn-save').attr('disabled','disabled');
+                    },
+                    success:function(data)
+                    {
+                    	console.log(data);
+                    },
+                    error:function(err){
+                        showErrorMessage(JSON.stringify(err))
+                    }
+                }).done(function(result){
+                    if(result.msgtype === "1"){
+                        showSuccessMessage(result.message);
+                    }else if(result.msgtype === "2"){
+                        showErrorMessage(JSON.stringify(result.message))            
+                    }
+                    $("#btn-save").attr("disabled", false);
+                    $('#_lotnumber').val('');
+                    $('#formid').val('');   
+                    $('#status').val('');
+                    document.getElementById("lotnumber").focus();
+                })
+            })
+
         function showSuccessMessage(message) {
             swal({title: "Success!", text: message, type: "success"},
                 function(){ 
                     // window.location.href = base_url+'/wos';
+                    document.getElementById("lotnumber").focus();
                 }
             );
         }

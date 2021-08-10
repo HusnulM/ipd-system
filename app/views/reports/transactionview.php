@@ -1,4 +1,4 @@
-<section class="content">
+    <section class="content">
         <div class="container-fluid">
             <div class="row clearfix">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -23,6 +23,8 @@
                                         <thead>
                                             <tr>
                                                 <th>No</th>
+                                                <th>DATE PROD</th>
+                                                <th>TEN NO</th>
                                                 <th>MODEL</th>
                                                 <th>ASSY NO</th>
                                                 <th>LOT / SERIAL NO</th>
@@ -34,6 +36,7 @@
                                                 <th>AOI HW-TOP</th>
                                                 <th>AOI HW-BOTTOM</th>
                                                 <th>FVI</th>
+                                                <th>QQA</th>
                                                 <th>ERROR PROCESS</th>
                                                 <th>DEFECT NAME</th>
                                                 <th>LOCATION</th>
@@ -57,6 +60,8 @@
                                                 <?php $no++; ?>
                                                 <tr>
                                                     <td><?= $no; ?></td>
+                                                    <td><?= $row['createdon'] ?></td>
+                                                    <td></td>
                                                     <td><?= $row['partmodel'] ?></td>
                                                     <td><?= $row['partnumber'] ?></td>
                                                     <td><?= $row['serial_no'] ?></td>
@@ -68,6 +73,7 @@
                                                     <td><?= $row['process6'] ?></td>
                                                     <td><?= $row['process7'] ?></td>
                                                     <td><?= $row['process8'] ?></td>
+                                                    <td><?= $row['process9'] ?></td>
                                                     <td><?= $row['error_process'] ?></td>
                                                     <td><?= $row['defect_name'] ?></td>
                                                     <td><?= $row['location'] ?></td>
