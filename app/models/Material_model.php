@@ -107,29 +107,14 @@ class Material_model{
 
     public function  update($data){
       $currentDate = date('Y-m-d h:m:s');
-        $query = "INSERT INTO t_material (material,matdesc,mattype,partname,partnumber,color,size,matunit,minstock,orderunit,stdprice,stdpriceusd,active,createdon,createdby) 
-                      VALUES(:material,:matdesc,:mattype,:partname,:partnumber,:color,:size,:matunit,:minstock,:orderunit,:stdprice,:stdpriceusd,:active,:createdon,:createdby)
-              ON DUPLICATE KEY UPDATE matdesc=:matdesc,mattype=:mattype,partname=:partname,partnumber=:partnumber,color=:color,size=:size,matunit=:matunit,minstock=:minstock,orderunit=:orderunit,stdprice=:stdprice,stdpriceusd=:stdpriceusd";
+        $query = "INSERT INTO t_material (material,matdesc,matunit,createdon,createdby) 
+        VALUES(:material,:matdesc,:matunit,:createdon,:createdby)
+              ON DUPLICATE KEY UPDATE matdesc=:matdesc,matunit=:matunit";
         $this->db->query($query);
-
-        if($data['inp_min_stock'] === ""){
-          $data['inp_min_stock'] = 0;
-        }
         
         $this->db->bind('material',  $data['kodebrg']);
         $this->db->bind('matdesc',   $data['namabrg']);
-        $this->db->bind('mattype',   $data['mattype']);
-        $this->db->bind('partname',  $data['partname']);
-        $this->db->bind('partnumber',$data['partnumber']);
-        $this->db->bind('color',     null);
-        $this->db->bind('size',      null);
         $this->db->bind('matunit',   $data['satuan']);
-        $this->db->bind('minstock',  0);
-        $this->db->bind('orderunit', $data['satuan']);
-        $this->db->bind('stdprice',  0);
-        $this->db->bind('stdpriceusd',  '0');
-
-        $this->db->bind('active',    '1');
         $this->db->bind('createdon', $currentDate);
         $this->db->bind('createdby', $_SESSION['usr']['user']);
         $this->db->execute();

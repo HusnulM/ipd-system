@@ -66,7 +66,9 @@
     <link href="<?= BASEURL; ?>/css/ui-autocomplete.css" rel="stylesheet">
     <link href="<?= BASEURL; ?>/plugins/multi-select/css/multi-select.css" rel="stylesheet">
     <script>
-        var base_url = window.location.origin+'/ipd-system';
+        var base_url = "<?= BASEURL; ?>";
+        // window.location.origin+'/ipd-system';
+        
     </script>
 
     <style>

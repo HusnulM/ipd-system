@@ -41,7 +41,7 @@
                                                 <td><?= $barang['matunit']; ?></td>
                                                 <td>
                                                     <a href="<?= BASEURL; ?>/material/edit/data?material=<?= $barang['material']; ?>" type="button" class="btn btn-success">Edit</a>
-                                                    <a href="<?= BASEURL; ?>/material/delete/data?material=<?= $barang['material']; ?>" type="button" class="btn btn-danger">Hapus</a>
+                                                    <a href="<?= BASEURL; ?>/material/delete/data?material=<?= $barang['material']; ?>" type="button" class="btn btn-danger">Delete</a>
                                                 </td>
                                             </tr>
                                         <?php endforeach; ?>

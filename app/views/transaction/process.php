@@ -341,7 +341,7 @@
                     $("#btn-save").attr("disabled", false);
                     $('#_lotnumber').val('');
                     $('#formid').val('');   
-                    $('#status').val('');
+                    // $('#status').val('');
                     document.getElementById("lotnumber").focus();
                 })
             })
