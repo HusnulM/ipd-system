@@ -14,7 +14,7 @@
 
     <style>
       .bgImage{
-        background-image: url('<?= BASEURL; ?>/images/bg-image-login.jpeg');
+        background: url('<?= BASEURL; ?>/images/bg-image-login.jpeg') no-repeat center center fixed;
         /* no-repeat center center fixed */
         -webkit-background-size: cover;
         -moz-background-size: cover;
@@ -25,7 +25,7 @@
 </head>
 <body class="bgImage">
   <main>
-    <div class="container" style="margin-top:40px; border-radius: 50%;">
+    <div class="container" style="margin-top:100px; border-radius: 50%;">
       <div class="row justify-content-center">
         <div class="col-lg-6 login-wrapper my-auto login-section-wrapper">
           
@@ -50,11 +50,6 @@
           <a href="#!" class="forgot-password-link"></a>
           <p class="login-wrapper-footer-text"><a href="#!" class="text-reset"></a></p>
         </div>
-          <!-- <div class="login-wrapper my-auto">
-        </div> -->
-        <!-- <div class="col-sm-4 px-0 d-none d-sm-block">
-          <img src="<?= BASEURL; ?>/images/login-wlp2.jpg" alt="login image" class="login-img">
-        </div> -->
       </div>
     </div>
   </main>
