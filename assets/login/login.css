@@ -31,7 +31,9 @@ body {
   width: 300px;
   max-width: 100%;
   padding-top: 24px;
-  padding-bottom: 24px; }
+  padding-bottom: 24px; 
+  border-radius:2%;
+}
   @media (max-width: 575px) {
     .login-wrapper {
       width: 100%; } }

@@ -27,6 +27,7 @@
                                                 <th>TEN NO</th>
                                                 <th>MODEL</th>
                                                 <th>ASSY NO</th>
+                                                <th>LOT CODE</th>
                                                 <th>LOT / SERIAL NO</th>
                                                 <th>AOI SMT-BOTTOM (1st)</th>
                                                 <th>AOI SMT-TOP (2nd)</th>
@@ -64,6 +65,7 @@
                                                     <td></td>
                                                     <td><?= $row['partmodel'] ?></td>
                                                     <td><?= $row['partnumber'] ?></td>
+                                                    <td></td>
                                                     <td><?= $row['serial_no'] ?></td>
                                                     <td><?= $row['process1'] ?></td>
                                                     <td><?= $row['process2'] ?></td>

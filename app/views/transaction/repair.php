@@ -83,14 +83,14 @@
                                             <input type="text" name="actionName" id="actionName" class="form-control" readonly="true"/>
                                         </div>
                                     </div>
-                                    <?php if($data['process']['sequence'] == 6): ?>
-                                        <div class="row">
+                                    <!-- <?php if($data['process']['sequence'] == 6): ?>
+                                        <?php endif; ?> -->
+                                        <div class="row showRemark" style="display:none;">
                                             <div class="col-lg-12 col-md-12 col-sm-12 col-xm-12">
                                                 <label for="remark">REMARK</label>
                                                 <input type="text" name="remark" id="remark" class="form-control"/>
                                             </div>
                                         </div>
-                                    <?php endif; ?>
                                 </div>
                                 
                                 <div class="col-lg-12">
@@ -141,10 +141,10 @@
         document.getElementById("lotnumber").focus();
 
         $('#status').on('change', function(){
-            if(this.value === "Other"){
-                $('#otherstatus').show();
+            if(this.value === "NOT PASS"){
+                $('.showRemark').show();
             }else{
-                $('#otherstatus').hide();
+                $('.showRemark').hide();
             }
         });
 
