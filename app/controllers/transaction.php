@@ -53,8 +53,8 @@ class Transaction extends Controller {
     public function repair(){
         $check = $this->model('Home_model')->checkUsermenu('transaction/process','Create');
         if ($check){
-            $data['title'] = 'Transaction Repair';
-            $data['menu']  = 'Transaction Repair';
+            $data['title'] = 'Transaction Repairer';
+            $data['menu']  = 'Transaction Repairer';
 
             $data['setting']  = $this->model('Setting_model')->getgensetting();
             $data['appmenu']  = $this->model('Home_model')->getUsermenu();  
