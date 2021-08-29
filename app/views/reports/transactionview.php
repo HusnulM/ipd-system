@@ -65,7 +65,7 @@
                                                     <td></td>
                                                     <td><?= $row['partmodel'] ?></td>
                                                     <td><?= $row['partnumber'] ?></td>
-                                                    <td></td>
+                                                    <td><?= $row['lotcode'] ?></td>
                                                     <td><?= $row['serial_no'] ?></td>
                                                     <td><?= $row['process1'] ?></td>
                                                     <td><?= $row['process2'] ?></td>

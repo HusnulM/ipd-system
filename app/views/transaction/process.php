@@ -28,9 +28,13 @@
                                 <div class="col-lg-6">
                                     <?php if($isFirstProcess): ?>
                                     <div class="row">
-                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xm-12">
+                                        <div class="col-lg-6 col-md-12 col-sm-12 col-xm-12">
                                             <label for="partcode">SCAN ASSY NO</label>
                                             <input type="text" name="partcode" id="partcode" class="form-control" autocomplete="off"/>
+                                        </div>
+                                        <div class="col-lg-6 col-md-12 col-sm-12 col-xm-12">
+                                            <label for="scanlotcode">LOT CODE</label>
+                                            <input type="text" name="scanlotcode" id="scanlotcode" class="form-control" autocomplete="off"/>
                                         </div>
                                     </div>
                                     <?php endif; ?>
@@ -59,9 +63,13 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xm-12">
+                                        <div class="col-lg-6 col-md-12 col-sm-12 col-xm-12">
                                             <label for="partnumber">ASSY NO</label>
                                             <input type="text" name="partnumber" id="partnumber" class="form-control" readonly="true" required/>
+                                        </div>
+                                        <div class="col-lg-6 col-md-12 col-sm-12 col-xm-12">
+                                            <label for="lotcode">LOT CODE</label>
+                                            <input type="text" name="lotcode" id="lotcode" class="form-control" readonly="true" required/>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -218,13 +226,27 @@
                     if(data){
                         $('#partnumber').val(inputMaterial);
                         $('#partmodel').val(data.matdesc);
-                        document.getElementById("lotnumber").focus();
+                        // document.getElementById("lotnumber").focus();
+                        if(isFirstprocess == 1){
+                            document.getElementById("scanlotcode").focus();
+                        }else{
+                            document.getElementById("lotnumber").focus();
+                        }
                     }else{
                         showErrorMessage('Assy NO, Not Found');
                     }
 
                     $('#partcode').val('');
                 })
+            }
+        });
+
+        $('#scanlotcode').keydown(function(e){
+            var inputLotcode = this.value;
+            if(e.keyCode == 13) {
+                $('#lotcode').val(inputLotcode);
+                document.getElementById("lotnumber").focus();
+                $('#scanlotcode').val('');
             }
         });
 
@@ -254,6 +276,7 @@
                             $('#formid').val(data.transactionid);
                             $('#partnumber').val(data.partnumber);
                             $('#partmodel').val(data.partmodel);
+                            $('#lotcode').val(data.lotcode);
                             document.getElementById("lotnumber").focus();
     
                             var lastProc = 'process'+data.lastprocess;
@@ -280,6 +303,7 @@
                             $('#formid').val(data.transactionid);
                             $('#partnumber').val(data.partnumber);
                             $('#partmodel').val(data.partmodel);
+                            $('#lotcode').val(data.lotcode);
                             document.getElementById("lotnumber").focus();
     
                             var lastProc = 'process'+data.lastprocess;
@@ -302,6 +326,7 @@
                             $('#formid').val('');
                             $('#partnumber').val('');
                             $('#partmodel').val('');
+                            $('#lotcode').val('');
                             document.getElementById("lotnumber").focus();
                         }
                     }

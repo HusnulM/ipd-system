@@ -40,15 +40,19 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xm-12">
+                                        <div class="col-lg-6 col-md-12 col-sm-12 col-xm-12">
                                             <label for="partnumber">PART CODE</label>
                                             <input type="text" name="partnumber" id="partnumber" class="form-control" readonly="true" required/>
+                                        </div>
+                                        <div class="col-lg-6 col-md-12 col-sm-12 col-xm-12">
+                                            <label for="lotcode">LOT CODE</label>
+                                            <input type="text" name="lotcode" id="lotcode" class="form-control" readonly="true" />
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xm-12">
                                             <label for="status">STATUS</label>
-                                            <select name="status" id="status" class="form-control" required>
+                                            <select name="status" id="status" class="form-control">
                                                 <option value=""></option>
                                                 <option value="PASS">PASS</option>
                                                 <option value="NOT PASS">NOT PASS</option>
@@ -80,7 +84,7 @@
                                     <div class="row">
                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xm-12">
                                             <label for="action">ACTION</label>
-                                            <input type="text" name="actionName" id="actionName" class="form-control" readonly="true"/>
+                                            <input type="text" name="actionName" id="actionName" class="form-control"/>
                                         </div>
                                     </div>
                                     <!-- <?php if($data['process']['sequence'] == 6): ?>
@@ -169,10 +173,11 @@
                         $('#formid').val(data.transactionid);
                         $('#partnumber').val(data.partnumber);
                         $('#partmodel').val(data.partmodel);
+                        $('#lotcode').val(data.lotcode);
                         $('#defectname').val(data.repair_defect);
                         $('#location').val(data.repair_location);
                         $('#cause').val(data.cause);
-                        $('#actionName').val(data.repair_action);
+                        // $('#actionName').val(data.repair_action);
                         document.getElementById("lotnumber").focus();
 
                         if(data.lastrepair == null){

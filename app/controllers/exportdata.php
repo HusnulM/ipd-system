@@ -130,7 +130,7 @@ class Exportdata extends Controller{
 			$excel->setActiveSheetIndex(0)->setCellValue('C'.$numrow, '');
 			$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow, $h['partmodel']);
 			$excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow, $h['partnumber']);
-            $excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow, '');
+            $excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow, $h['lotcode']);
 			$excel->setActiveSheetIndex(0)->setCellValue('G'.$numrow, $h['serial_no']);
             $excel->setActiveSheetIndex(0)->setCellValue('H'.$numrow, $h['process1']);
             $excel->setActiveSheetIndex(0)->setCellValue('I'.$numrow, $h['process2']);

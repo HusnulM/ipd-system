@@ -123,8 +123,8 @@ class Transaction_model{
         }else{
             if($processSequence['sequence'] == 1){
 
-                $query1 = "INSERT INTO t_ipd_forms (transactionid,prod_date,partnumber,partmodel,serial_no,createdon,createdby) 
-                      VALUES(:transactionid,:prod_date,:partnumber,:partmodel,:serial_no,:createdon,:createdby)";
+                $query1 = "INSERT INTO t_ipd_forms (transactionid,prod_date,partnumber,partmodel,serial_no,lotcode,createdon,createdby) 
+                      VALUES(:transactionid,:prod_date,:partnumber,:partmodel,:serial_no,:lotcode,:createdon,:createdby)";
                 $this->db->query($query1);
                 
                 $this->db->bind('transactionid', $data['formid']);
@@ -132,6 +132,7 @@ class Transaction_model{
                 $this->db->bind('partnumber',    $data['partnumber']);
                 $this->db->bind('partmodel',     $data['partmodel']);
                 $this->db->bind('serial_no',     $data['_lotnumber']);
+                $this->db->bind('lotcode',       $data['lotcode']);
                 $this->db->bind('createdon',     $currentDate);
                 $this->db->bind('createdby',     $_SESSION['usr']['user']);
                 $this->db->execute();
