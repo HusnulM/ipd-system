@@ -46,6 +46,7 @@
                                                 <th>REPAIR DEFECT</th>
                                                 <th>REPAIR LOCATION</th>
                                                 <th>REPAIR ACTION</th>
+                                                <th>REPAIRER</th>
                                                 <th>AFTER REPAIR-ICT</th>
                                                 <th>AFTER REPAIR-QPIT</th>
                                                 <th>AFTER REPAIR-AOI TOP</th>
@@ -91,6 +92,7 @@
                                                     <td><?= $row['repair4'] ?></td>
                                                     <td><?= $row['repair5'] ?></td>
                                                     <td><?= $row['repair6'] ?></td>
+                                                    <td><?= $row['repair7'] ?></td>
                                                     <td><?= $row['remark'] ?></td>
                                                 </tr>
                                             <?php endforeach; ?>

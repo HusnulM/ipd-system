@@ -10,7 +10,11 @@
                 <div class="card">
                     <div class="header">
                         <h2>
-                            <?= $data['menu']; ?> <b>[ <?= $data['process']['processname']; ?> ]</b>
+                            <?php if($data['process']['sequence'] === "1"): ?>
+                                <?= $data['menu']; ?>
+                            <?php else: ?>
+                                <?= $data['menu']; ?> <b>[ <?= $data['process']['processname']; ?> ]</b>
+                            <?php endif; ?>
                         </h2>
                     </div>
                     <div class="body">
@@ -49,6 +53,7 @@
                                             <input type="text" name="lotcode" id="lotcode" class="form-control" readonly="true" />
                                         </div>
                                     </div>
+                                    <!-- style="<?= $data['process']['sequence'] === "1" ? 'display:none' : ''; ?>" -->
                                     <div class="row">
                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xm-12">
                                             <label for="status">STATUS</label>
@@ -84,7 +89,7 @@
                                     <div class="row">
                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xm-12">
                                             <label for="action">ACTION</label>
-                                            <input type="text" name="actionName" id="actionName" class="form-control"/>
+                                            <input type="text" name="actionName" id="actionName" class="form-control" <?= $data['process']['sequence'] === "1" ? '' : 'readonly'; ?>/>
                                         </div>
                                     </div>
                                     <!-- <?php if($data['process']['sequence'] == 6): ?>
@@ -177,7 +182,7 @@
                         $('#defectname').val(data.repair_defect);
                         $('#location').val(data.repair_location);
                         $('#cause').val(data.cause);
-                        // $('#actionName').val(data.repair_action);
+                        $('#actionName').val(data.repair_action);
                         document.getElementById("lotnumber").focus();
 
                         if(data.lastrepair == null){

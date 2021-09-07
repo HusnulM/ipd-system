@@ -166,14 +166,14 @@ class Transaction_model{
     }
 
     public function createRepairForm($data){
-        $query = "INSERT INTO t_ipd_repair (transactionid,defect_name,location,action) 
-                  VALUES(:transactionid,:defect_name,:location,:action)";
+        $query = "INSERT INTO t_ipd_repair (transactionid,defect_name,location) 
+                  VALUES(:transactionid,:defect_name,:location)";
         $this->db->query($query);
 
         $this->db->bind('transactionid', $data['formid']);
         $this->db->bind('defect_name',   $data['defect']);
         $this->db->bind('location',      $data['location']);
-        $this->db->bind('action',        $data['action']);
+        // $this->db->bind('action',        $data['action']);
         $this->db->execute();
     }
 
@@ -193,13 +193,14 @@ class Transaction_model{
             $processStatus = $data['status'];
         }
 
-        $query = "UPDATE t_ipd_repair SET process".$sequence."=:process".$sequence.",lastrepair=:lastrepair, remark=:remark WHERE transactionid=:transactionid";
+        $query = "UPDATE t_ipd_repair SET process".$sequence."=:process".$sequence.",lastrepair=:lastrepair, remark=:remark, action=:action WHERE transactionid=:transactionid";
         
         $this->db->query($query);
             
         $this->db->bind('transactionid',      $data['formid']);
         $this->db->bind('process'.$sequence,  $processStatus);        
         $this->db->bind('remark',             $remark);
+        $this->db->bind('action',             $data['actionName']);
         $this->db->bind('lastrepair',         $processSequence['sequence']);
         $this->db->execute();
         return $this->db->rowCount();

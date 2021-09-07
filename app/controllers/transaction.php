@@ -51,7 +51,7 @@ class Transaction extends Controller {
     }
 
     public function repair(){
-        $check = $this->model('Home_model')->checkUsermenu('transaction/process','Create');
+        $check = $this->model('Home_model')->checkUsermenu('transaction/repair','Create');
         if ($check){
             $data['title'] = 'Transaction Repairer';
             $data['menu']  = 'Transaction Repairer';
@@ -62,9 +62,10 @@ class Transaction extends Controller {
             $data['defect']   = $this->model('Defect_model')->getDefectList();
             $data['location'] = $this->model('Location_model')->getLocationList();
             $data['cause']    = $this->model('Cause_model')->getCauseList();
-            $data['action']   = $this->model('Action_model')->getActionList();
+            // $data['action']   = $this->model('Action_model')->getActionList();
             $data['process']  = $this->model('Transaction_model')->getProcessSequence('repair');
-
+            // echo json_encode($data['process']);
+            
             $this->view('templates/header_a', $data);
             $this->view('transaction/repair', $data);
             $this->view('templates/footer_a');

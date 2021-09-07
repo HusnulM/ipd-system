@@ -78,13 +78,14 @@ class Exportdata extends Controller{
 		$excel->setActiveSheetIndex(0)->setCellValue('V1', "REPAIR-DEFECT");
 		$excel->setActiveSheetIndex(0)->setCellValue('W1', "REPAIR-LOCATION");
 		$excel->setActiveSheetIndex(0)->setCellValue('X1', "REPAIR-ACTION");
-		$excel->setActiveSheetIndex(0)->setCellValue('Y1', "AFTER REPAIR-ICT");
-		$excel->setActiveSheetIndex(0)->setCellValue('Z1', "AFTER REPAIR-QPIT");
-		$excel->setActiveSheetIndex(0)->setCellValue('AA1', "AFTER REPAIR-AOI TOP");
-		$excel->setActiveSheetIndex(0)->setCellValue('AB1', "AFTER REPAIR-BOT");
-		$excel->setActiveSheetIndex(0)->setCellValue('AC1', "AFTER REPAIR-FVI");
-		$excel->setActiveSheetIndex(0)->setCellValue('AD1', "QQA");
-		$excel->setActiveSheetIndex(0)->setCellValue('AE1', "QQA REMARK");												
+		$excel->setActiveSheetIndex(0)->setCellValue('Y1', "REPAIRER");
+		$excel->setActiveSheetIndex(0)->setCellValue('Z1', "AFTER REPAIR-ICT");
+		$excel->setActiveSheetIndex(0)->setCellValue('AA1', "AFTER REPAIR-QPIT");
+		$excel->setActiveSheetIndex(0)->setCellValue('AB1', "AFTER REPAIR-AOI TOP");
+		$excel->setActiveSheetIndex(0)->setCellValue('AC1', "AFTER REPAIR-BOT");
+		$excel->setActiveSheetIndex(0)->setCellValue('AD1', "AFTER REPAIR-FVI");
+		$excel->setActiveSheetIndex(0)->setCellValue('AE1', "QQA");		
+		$excel->setActiveSheetIndex(0)->setCellValue('AF1', "QQA REMARK");												
 
 
 		// Apply style header yang telah kita buat tadi ke masing-masing kolom header
@@ -119,6 +120,7 @@ class Exportdata extends Controller{
 		$excel->getActiveSheet()->getStyle('AC1')->applyFromArray($style_col);
 		$excel->getActiveSheet()->getStyle('AD1')->applyFromArray($style_col);
 		$excel->getActiveSheet()->getStyle('AE1')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('AF1')->applyFromArray($style_col);
         // $excel->getActiveSheet()->getStyle('H4')->applyFromArray($style_col);
 
 		
@@ -155,7 +157,8 @@ class Exportdata extends Controller{
 			$excel->setActiveSheetIndex(0)->setCellValue('AB'.$numrow, $h['repair4']);
 			$excel->setActiveSheetIndex(0)->setCellValue('AC'.$numrow, $h['repair5']);
 			$excel->setActiveSheetIndex(0)->setCellValue('AD'.$numrow, $h['repair6']);
-			$excel->setActiveSheetIndex(0)->setCellValue('AE'.$numrow, $h['remark']);
+			$excel->setActiveSheetIndex(0)->setCellValue('AE'.$numrow, $h['repair7']);
+			$excel->setActiveSheetIndex(0)->setCellValue('AF'.$numrow, $h['remark']);
 			
 			// Apply style row yang telah kita buat tadi ke masing-masing baris (isi tabel)
 			$excel->getActiveSheet()->getStyle('A'.$numrow)->applyFromArray($style_row);
@@ -191,6 +194,7 @@ class Exportdata extends Controller{
 			$excel->getActiveSheet()->getStyle('AC'.$numrow)->applyFromArray($style_row);
 			$excel->getActiveSheet()->getStyle('AD'.$numrow)->applyFromArray($style_row);
 			$excel->getActiveSheet()->getStyle('AE'.$numrow)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('AF'.$numrow)->applyFromArray($style_row);
 			
 			$no++; // Tambah 1 setiap kali looping
 			$numrow++; // Tambah 1 setiap kali looping
