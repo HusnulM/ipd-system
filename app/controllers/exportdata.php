@@ -213,4 +213,129 @@ class Exportdata extends Controller{
 		$write->save('php://output');
 		
 	}
+
+	public function exportplanning($strdate, $enddate){
+		$data['setting']  = $this->model('Setting_model')->getgensetting();
+		$data['expdata']  = $this->model('Production_model')->getPlanningByDate($strdate, $enddate);
+
+		$excel = new PHPExcel();
+		$excel->getProperties()->setCreator($_SESSION['usr']['user'])
+             ->setLastModifiedBy($_SESSION['usr']['user'])
+             ->setTitle("Planning Data")
+             ->setSubject("Planning Data")
+             ->setDescription("Planning Data")
+             ->setKeywords("Planning Data");
+		
+		$style_col = array(
+			'font' => array('bold' => true), // Set font nya jadi bold
+			'alignment' => array(
+				'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER, // Set text jadi ditengah secara horizontal (center)
+				'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER // Set text jadi di tengah secara vertical (middle)
+			),
+			'borders' => array(
+				'top' => array('style'  => PHPExcel_Style_Border::BORDER_THIN), // Set border top dengan garis tipis
+				'right' => array('style'  => PHPExcel_Style_Border::BORDER_THIN),  // Set border right dengan garis tipis
+				'bottom' => array('style'  => PHPExcel_Style_Border::BORDER_THIN), // Set border bottom dengan garis tipis
+				'left' => array('style'  => PHPExcel_Style_Border::BORDER_THIN) // Set border left dengan garis tipis
+			)
+		);
+		
+		$style_row = array(
+			'alignment' => array(
+				'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER // Set text jadi di tengah secara vertical (middle)
+			),
+			'borders' => array(
+			'top' => array('style'  => PHPExcel_Style_Border::BORDER_THIN), // Set border top dengan garis tipis
+			'right' => array('style'  => PHPExcel_Style_Border::BORDER_THIN),  // Set border right dengan garis tipis
+			'bottom' => array('style'  => PHPExcel_Style_Border::BORDER_THIN), // Set border bottom dengan garis tipis
+			'left' => array('style'  => PHPExcel_Style_Border::BORDER_THIN) // Set border left dengan garis tipis
+			)
+		);
+
+		$style_aligment_left = array(
+			'alignment' => array(
+				'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+			)
+		);
+
+		$style_cell_bgcolor_red = array(
+			'fill' => array(
+				'type' => PHPExcel_Style_Fill::FILL_SOLID,
+				'color' => array('rgb' => 'FF0000')
+			)
+		);
+
+		$style_cell_bgcolor_green = array(
+			'fill' => array(
+				'type' => PHPExcel_Style_Fill::FILL_SOLID,
+				'color' => array('rgb' => '80FF00')
+			)
+		);
+
+		// Buat header tabel nya pada baris ke 3
+		$excel->setActiveSheetIndex(0)->setCellValue('A1', "NO"); 
+		$excel->setActiveSheetIndex(0)->setCellValue('B1', "PLAN DATE");
+		$excel->setActiveSheetIndex(0)->setCellValue('C1', "LINE");
+		$excel->setActiveSheetIndex(0)->setCellValue('D1', "MODEL");
+		$excel->setActiveSheetIndex(0)->setCellValue('E1', "SHIFT");
+		$excel->setActiveSheetIndex(0)->setCellValue('F1', "PLAN QTY"); 
+		$excel->setActiveSheetIndex(0)->setCellValue('G1', "OUTPUT QTY");											
+
+
+		// Apply style header yang telah kita buat tadi ke masing-masing kolom header
+		$excel->getActiveSheet()->getStyle('A1')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('B1')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('C1')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('D1')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('E1')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('F1')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('G1')->applyFromArray($style_col);
+
+		
+		$no = 1; 
+		$numrow = 2;
+		foreach($data['expdata'] as $i => $h){ // Ambil semua data dari hasil eksekusi $sql
+			$excel->setActiveSheetIndex(0)->setCellValue('A'.$numrow, $no);
+			$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow, $h['plandate']);
+			$excel->setActiveSheetIndex(0)->setCellValue('C'.$numrow, $h['linename']);
+			$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow, $h['model']);
+			if($h['shift'] == 1){
+				$excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow, 'Day Shift');
+			}else{
+				$excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow, 'Night Shift');
+			}
+            $excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow, $h['plan_qty']);
+			$excel->setActiveSheetIndex(0)->setCellValue('G'.$numrow, $h['outputqty']);
+			
+			// Apply style row yang telah kita buat tadi ke masing-masing baris (isi tabel)
+			$excel->getActiveSheet()->getStyle('A'.$numrow)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('B'.$numrow)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('C'.$numrow)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('D'.$numrow)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('E'.$numrow)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('F'.$numrow)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('G'.$numrow)->applyFromArray($style_row);
+			if($h['outputqty'] < $h['plan_qty']){
+				$excel->getActiveSheet()->getStyle('G'.$numrow)->applyFromArray($style_cell_bgcolor_red);
+			}else{
+				$excel->getActiveSheet()->getStyle('G'.$numrow)->applyFromArray($style_cell_bgcolor_green);
+			}
+			
+			$no++; // Tambah 1 setiap kali looping
+			$numrow++; // Tambah 1 setiap kali looping
+		}
+
+		// Set orientasi kertas jadi LANDSCAPE
+		$excel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
+		// Set judul file excel nya
+		$excel->getActiveSheet(0)->setTitle("Transaction Report");
+		$excel->setActiveSheetIndex(0);
+		// Proses file excel
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header('Content-Disposition: attachment; filename="Planning-Report.xlsx"'); // Set nama file excel nya
+		header('Cache-Control: max-age=0');
+		$write = PHPExcel_IOFactory::createWriter($excel, 'Excel2007');
+		$write->save('php://output');
+		
+	}
 }

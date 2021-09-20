@@ -52,15 +52,18 @@
 
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
     <link href="<?= BASEURL; ?>/css/themes/all-themes.css" rel="stylesheet" />
-
+    <link href="<?= BASEURL; ?>/assets/select2/select2.min.css" rel="stylesheet" />
+    
     <script src="<?= BASEURL; ?>/plugins/jquery/jquery.min.js"></script>
+    <script src="<?= BASEURL; ?>/assets/select2/select2.min.js"></script>
+
     
 
-    <link rel="stylesheet" type="text/css" href="<?= BASEURL; ?>/assets/easyui/resource/themes/default/easyui.css">
+    <!-- <link rel="stylesheet" type="text/css" href="<?= BASEURL; ?>/assets/easyui/resource/themes/default/easyui.css">
     <link rel="stylesheet" type="text/css" href="<?= BASEURL; ?>/assets/easyui/resource/themes/icon.css">
     <script type="text/javascript" src="<?= BASEURL; ?>/assets/easyui/resource/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="<?= BASEURL; ?>/assets/easyui/datagrid-detailview.js"></script>
-    <script type="text/javascript" src="<?= BASEURL; ?>/assets/js/datagrid-filter.js"></script>
+    <script type="text/javascript" src="<?= BASEURL; ?>/assets/js/datagrid-filter.js"></script> -->
     
     <script src="<?= BASEURL; ?>/plugins/jquery/jquery-ui.min.js"></script>
     <link href="<?= BASEURL; ?>/css/ui-autocomplete.css" rel="stylesheet">
@@ -134,6 +137,20 @@
             -webkit-box-shadow: none;
             box-shadow: none;
             margin: 20px !important;
+        }
+
+        .select2-container {
+            display: block;
+            width: 100% !important;
+        }
+
+        .select2-container .select2-selection--single {
+            height: 33px;
+            width: 500px;
+        }
+
+        .select2-selection__rendered{
+            width: 500px;
         }
 
         /* @media(max-width: 520px) {

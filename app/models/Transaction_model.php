@@ -43,7 +43,7 @@ class Transaction_model{
 
     public function saveform($data){
         $transid = date_create();
-        $currentDate = date('Y-m-d');
+        $currentDate = date('Y-m-d H:m:s');
         
         $query = "INSERT INTO t_ipd_forms (transactionid,prod_date,partnumber,partmodel,serial_no,createdon,createdby) 
                       VALUES(:transactionid,:prod_date,:partnumber,:partmodel,:serial_no,:createdon,:createdby)";
