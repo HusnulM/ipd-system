@@ -9,6 +9,16 @@ class Production_model{
 		$this->db = new Database;
     }
 
+    public function planningMonitoring(){
+        $this->db->query("CALL sp_ProductionView()");
+        return $this->db->resultSet();
+    }
+
+    public function planningMonitoringDate(){
+        $this->db->query("CALL sp_ProductionViewDate()");
+        return $this->db->single();
+    }
+
     public function getPlanningData($data){
         $plandate = $data['plandate'];
         $prodline = $data['prodline'];

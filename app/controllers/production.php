@@ -64,6 +64,20 @@ class Production extends Controller {
         echo json_encode($data);
     }
 
+    public function productionview(){
+        // 
+        // echo json_encode($data);
+            $data['title'] = 'Production View';
+            $data['menu']  = 'Production View';
+
+            $data['rdata'] = $this->model('Production_model')->planningMonitoring();
+            $data['hdata'] = $this->model('Production_model')->planningMonitoringDate();
+
+            $this->view('templates/header_a', $data);
+            $this->view('production/productionview', $data);
+            $this->view('templates/footer_a');
+    }
+
     public function saveactualdata(){
         if( $this->model('Production_model')->saveactualdata($_POST) > 0 ) {
 			$return = array(
