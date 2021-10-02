@@ -232,7 +232,11 @@
                                 <?php foreach($menuAll as $menu) : ?>
                                     <?php if($menu['menugroup'] === $menugroup['menugroup']) : ?>
                                         <li>
-                                            <a href="<?= BASEURL; ?>/<?= $menu['route']; ?>"><?= $menu['menu']; ?></a>
+                                            <?php if($menu['route'] === 'production/productionview'): ?>
+                                                <a href="<?= BASEURL; ?>/<?= $menu['route']; ?>" target="_blank"><?= $menu['menu']; ?></a>
+                                            <?php else: ?>
+                                                <a href="<?= BASEURL; ?>/<?= $menu['route']; ?>"><?= $menu['menu']; ?></a>
+                                            <?php endif; ?>
                                         </li>
                                     <?php endif; ?>
                                 <?php endforeach; ?>
