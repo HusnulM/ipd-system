@@ -214,9 +214,13 @@ class Exportdata extends Controller{
 		
 	}
 
-	public function exportplanning($strdate, $enddate){
+	public function exportplanning($strdate, $enddate, $params){
+		$url   = parse_url($_SERVER['REQUEST_URI']);
+        $data  = parse_str($url['query'], $params);
+        $model = $params['model'];
+
 		$data['setting']  = $this->model('Setting_model')->getgensetting();
-		$data['expdata']  = $this->model('Production_model')->getPlanningByDate($strdate, $enddate);
+		$data['expdata']  = $this->model('Production_model')->getPlanningByDate($strdate, $enddate, $model);
 
 		$excel = new PHPExcel();
 		$excel->getProperties()->setCreator($_SESSION['usr']['user'])
@@ -277,9 +281,10 @@ class Exportdata extends Controller{
 		$excel->setActiveSheetIndex(0)->setCellValue('B1', "PLAN DATE");
 		$excel->setActiveSheetIndex(0)->setCellValue('C1', "LINE");
 		$excel->setActiveSheetIndex(0)->setCellValue('D1', "MODEL");
-		$excel->setActiveSheetIndex(0)->setCellValue('E1', "SHIFT");
-		$excel->setActiveSheetIndex(0)->setCellValue('F1', "PLAN QTY"); 
-		$excel->setActiveSheetIndex(0)->setCellValue('G1', "OUTPUT QTY");											
+		$excel->setActiveSheetIndex(0)->setCellValue('E1', "LOT NUMBER");
+		$excel->setActiveSheetIndex(0)->setCellValue('F1', "SHIFT");
+		$excel->setActiveSheetIndex(0)->setCellValue('G1', "PLAN QTY"); 
+		$excel->setActiveSheetIndex(0)->setCellValue('H1', "OUTPUT QTY");											
 
 
 		// Apply style header yang telah kita buat tadi ke masing-masing kolom header
@@ -290,6 +295,7 @@ class Exportdata extends Controller{
 		$excel->getActiveSheet()->getStyle('E1')->applyFromArray($style_col);
 		$excel->getActiveSheet()->getStyle('F1')->applyFromArray($style_col);
 		$excel->getActiveSheet()->getStyle('G1')->applyFromArray($style_col);
+		$excel->getActiveSheet()->getStyle('H1')->applyFromArray($style_col);
 
 		
 		$no = 1; 
@@ -299,13 +305,14 @@ class Exportdata extends Controller{
 			$excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow, $h['plandate']);
 			$excel->setActiveSheetIndex(0)->setCellValue('C'.$numrow, $h['linename']);
 			$excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow, $h['model']);
+			$excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow, $h['lot_number']);
 			if($h['shift'] == 1){
-				$excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow, 'Day Shift');
+				$excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow, 'Day Shift');
 			}else{
-				$excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow, 'Night Shift');
+				$excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow, 'Night Shift');
 			}
-            $excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow, $h['plan_qty']);
-			$excel->setActiveSheetIndex(0)->setCellValue('G'.$numrow, $h['outputqty']);
+            $excel->setActiveSheetIndex(0)->setCellValue('G'.$numrow, $h['plan_qty']);
+			$excel->setActiveSheetIndex(0)->setCellValue('H'.$numrow, $h['outputqty']);
 			
 			// Apply style row yang telah kita buat tadi ke masing-masing baris (isi tabel)
 			$excel->getActiveSheet()->getStyle('A'.$numrow)->applyFromArray($style_row);
@@ -315,10 +322,11 @@ class Exportdata extends Controller{
 			$excel->getActiveSheet()->getStyle('E'.$numrow)->applyFromArray($style_row);
 			$excel->getActiveSheet()->getStyle('F'.$numrow)->applyFromArray($style_row);
 			$excel->getActiveSheet()->getStyle('G'.$numrow)->applyFromArray($style_row);
+			$excel->getActiveSheet()->getStyle('H'.$numrow)->applyFromArray($style_row);
 			if($h['outputqty'] < $h['plan_qty']){
-				$excel->getActiveSheet()->getStyle('G'.$numrow)->applyFromArray($style_cell_bgcolor_red);
+				$excel->getActiveSheet()->getStyle('H'.$numrow)->applyFromArray($style_cell_bgcolor_red);
 			}else{
-				$excel->getActiveSheet()->getStyle('G'.$numrow)->applyFromArray($style_cell_bgcolor_green);
+				$excel->getActiveSheet()->getStyle('H'.$numrow)->applyFromArray($style_cell_bgcolor_green);
 			}
 			
 			$no++; // Tambah 1 setiap kali looping

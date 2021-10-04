@@ -8,7 +8,7 @@
                                 <?= $data['menu']; ?>
                             </h2>
                             <ul class="header-dropdown m-r--5">                                
-                                <a href="<?= BASEURL; ?>/exportdata/exportplanning/<?= $data['strdate']; ?>/<?= $data['enddate']; ?>" target="_blank" class="btn bg-teal">
+                                <a href="<?= BASEURL; ?>/exportdata/exportplanning/<?= $data['strdate']; ?>/<?= $data['enddate']; ?>/data?model=<?= $data['model']; ?>" target="_blank" class="btn bg-teal">
                                    <i class="material-icons">cloud_download</i> EXPORT DATA
                                 </a>
 
@@ -26,6 +26,7 @@
                                                 <th>PLAN DATE</th>
                                                 <th>LINE</th>
                                                 <th>MODEL</th>
+                                                <th>LOT NUMBER</th>
                                                 <th>SHIFT</th>
                                                 <th style="text-align:right;">PLAN QTY</th>
                                                 <th style="text-align:right;">OUTPUT QTY</th>
@@ -40,6 +41,7 @@
                                                     <td><?= $row['plandate'] ?></td>
                                                     <td><?= $row['linename'] ?></td>
                                                     <td><?= $row['model'] ?></td>
+                                                    <td><?= $row['lot_number'] ?></td>
                                                     <td>
                                                         <?php if($row['shift'] == 1): ?>
                                                             Day Shift

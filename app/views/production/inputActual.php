@@ -52,7 +52,8 @@
                                         <table class="table">
                                             <thead>
                                                 <th>NO.</th>
-                                                <th style="width:500px;">MODEL</th>
+                                                <th style="width:300px;">MODEL</th>
+                                                <th style="width:200px;">LOT NUMBER</th>
                                                 <th style="text-align:right;">PLAN QTY</th>
                                                 <th style="text-align:right;">OUTPUT QTY</th>
                                                 <th></th>
@@ -81,6 +82,7 @@
                                     <table class="table">
                                         <thead>
                                             <th>Model</th>
+                                            <th>Lot Number</th>
                                             <th>Planning Quantity</th>
                                             <th>Output Quantity</th>
                                         </thead>
@@ -90,8 +92,11 @@
                                                     <input type="text" name="model_selected" id="model_selected" class="form-control" readonly>
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="plan_qty" id="displ_plan_qty" class="form-control" style="text-align:right;" readonly>
+                                                    <input type="text" name="lot_num" id="displ_lot_num" class="form-control" style="text-align:left;" readonly>
                                                 </td>
+                                                <td>
+                                                    <input type="text" name="plan_qty" id="displ_plan_qty" class="form-control" style="text-align:right;" readonly>
+                                                </td>                                                
                                                 <td>
                                                     <input type="text" name="output_qty" id="output_qty" class="form-control" onkeypress="return onlyNumberKey(event)" maxlength="11" style="text-align:right;">
                                                 </td>
@@ -114,6 +119,7 @@
                                             <th>Line</th>
                                             <th>Shift</th>
                                             <th>Model</th>
+                                            <th>Lot Number</th>
                                             <th>Output Qty</th>
                                             <th>Input Date</th>
                                         </thead>
@@ -176,10 +182,11 @@
                                 <tr>
                                     <td>`+ count +`</td>
                                     <td>`+ data[i].model +`</td>
+                                    <td>`+ data[i].lot_number +`</td>
                                     <td style="text-align:right;">`+ data[i].plan_qty +`</td>
                                     <td style="text-align:right;">`+ data[i].outputqty +`</td>
                                     <td style="text-align:center;">
-                                        <button type="button" class="btn btn-primary btn-sm btnInputActual" data-model="`+ data[i].model +`" data-planqty="`+ data[i].plan_qty +`">Input Actual Qty</button>
+                                        <button type="button" class="btn btn-primary btn-sm btnInputActual" data-model="`+ data[i].model +`" data-planqty="`+ data[i].plan_qty +`" data-lotnumber="`+ data[i].lot_number +`">Input Actual Qty</button>
                                     </td>
                                 </tr>
                             `);
@@ -190,6 +197,7 @@
                             console.log(_data);
                             $('#model_selected').val(_data.model);
                             $('#displ_plan_qty').val(_data.planqty);
+                            $('#displ_lot_num').val(_data.lotnumber);
                             getActualQuantity(_data.model);
                             $('#actualQtyModal').modal('show');
                             // document.getElementById("output_qty").focus();
@@ -238,6 +246,7 @@
                                 <td>`+ data[i].linename +`</td>
                                 <td>`+ _shift +`</td>
                                 <td>`+ data[i].model +`</td>
+                                <td>`+ data[i].lot_number +`</td>
                                 <td style="text-align:right;">`+ data[i].output_qty +`</td>
                                 <td>`+ data[i].createdon +`</td>
                             </tr>
@@ -250,14 +259,14 @@
                 if($('#output_qty').val() === "" ){
                     alert("Input Actual Quantity")
                 }else{
-                    saveActualQuantity($('#model_selected').val(),$('#output_qty').val());
+                    saveActualQuantity($('#model_selected').val(),$('#output_qty').val(),$('#displ_lot_num').val());
                 }
                 setTimeout(function() { 
                     $('#output_qty').focus();
                 }, 1000);
             });
 
-            function saveActualQuantity(_model, _quantity){
+            function saveActualQuantity(_model, _quantity, _lotnumber){
                 $.ajax({
                     url: base_url+'/production/saveactualdata',
                     type: 'POST',
@@ -267,6 +276,7 @@
                         prodline : $('#prodline').val(),
                         shift: $('#shift').val(),
                         model: _model,
+                        lot_number: _lotnumber,
                         quantity: _quantity
                     },
                     cache:false,

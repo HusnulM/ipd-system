@@ -51,7 +51,8 @@
                                                 <th>NO.</th>
                                                 <!-- <th>PLAN DATE</th> -->
                                                 <!-- <th>LINE</th> -->
-                                                <th style="width:500px;">MODEL</th>
+                                                <th style="width:200px;">MODEL</th>
+                                                <th style="width:300px;">LOT NUMBER</th>
                                                 <!-- <th>SHIFT</th> -->
                                                 <th>PLAN QTY</th>
                                                 <!-- <th>OUTPUT QTY</th> -->
@@ -63,7 +64,7 @@
                                             <tfoot>
                                                 <tr>
                                                     <td colspan="2"></td>
-                                                    <td colspan="2" style="text-align:right;">
+                                                    <td colspan="3" style="text-align:right;">
                                                         <button type="button" class="btn btn-success btnAddItem">
                                                             <i class="material-icons">add</i> ADD
                                                         </button>
@@ -129,7 +130,10 @@
                     <tr>
                         <td class="nurut"> </td>
                         <td>
-                            <select name="model[]" id="find-model`+count+`" class="find-model" style="width: 400px;"></select>
+                            <select name="model[]" id="find-model`+count+`" class="find-model" style="width: 200px;"></select>
+                        </td>
+                        <td>
+                            <input type="text" name="lotnumber[]" class="form-control" style="width: 300px;"> 
                         </td>
                         <td>
                             <input type="text" name="inputqty[]" class="form-control" > 

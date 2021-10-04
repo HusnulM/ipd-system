@@ -22,6 +22,7 @@
                                                 <tr>
                                                     <th>LINE</th>
                                                     <th>MODEL</th>
+                                                    <th>LOT NUMBER</th>
                                                     <th colspan="4" style="text-align:center;">
                                                         <?= $data['hdata']['date1']; ?>
                                                     </th>
@@ -33,7 +34,7 @@
                                                     </th>
                                                 </tr>
                                                 <tr>
-                                                    <th colspan="2"></th>
+                                                    <th colspan="3"></th>
                                                     <th colspan="2">Day Shift</th>
                                                     <th colspan="2">Night Shift</th>
                                                     <th colspan="2">Day Shift</th>
@@ -42,7 +43,7 @@
                                                     <th colspan="2">Night Shift</th>
                                                 </tr>
                                                 <tr>
-                                                    <th colspan="2"></th>
+                                                    <th colspan="3"></th>
                                                     <th colspan="1">Plan Qty</th>
                                                     <th colspan="1">Output Qty</th>
                                                     <th colspan="1">Plan Qty</th>
@@ -62,6 +63,7 @@
                                                 <tr>
                                                     <td><?= $row['linename']; ?></td>
                                                     <td><?= $row['model']; ?></td>
+                                                    <td><?= $row['lot_number']; ?></td>
                                                     <td><?= $row['planqtyd1s1']; ?></td>
                                                     <?php if($row['qtyoutd1s1'] < $row['planqtyd1s1']): ?>
                                                         <td style="background-color:red;color:white;"><?= $row['qtyoutd1s1']; ?></td>

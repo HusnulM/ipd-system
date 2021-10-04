@@ -146,11 +146,11 @@
 
         .select2-container .select2-selection--single {
             height: 33px;
-            width: 500px;
+            width: 300px;
         }
 
         .select2-selection__rendered{
-            width: 500px;
+            width: 300px;
         }
 
         /* @media(max-width: 520px) {

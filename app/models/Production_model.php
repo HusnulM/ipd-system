@@ -19,6 +19,11 @@ class Production_model{
         return $this->db->single();
     }
 
+    public function getMaterialData($material){
+        $this->db->query("SELECT * FROM t_material WHERE material='$material'");
+        return $this->db->single();
+    }
+
     public function getPlanningData($data){
         $plandate = $data['plandate'];
         $prodline = $data['prodline'];
@@ -28,9 +33,14 @@ class Production_model{
 		return $this->db->resultSet();
     }
 
-    public function getPlanningByDate($strdate, $enddate){
-        $this->db->query("SELECT a.*, b.description as 'linename', fGetProdTotalQtyOutput(a.plandate,a.productionline,a.shift,model) as 'outputqty' FROM t_planning as a inner join t_production_lines as b on a.productionline = b.id WHERE a.plandate BETWEEN '$strdate' AND '$enddate'");
-		return $this->db->resultSet();
+    public function getPlanningByDate($strdate, $enddate, $model){
+        if($model === "ALL"){
+            $this->db->query("SELECT a.*, b.description as 'linename', fGetProdTotalQtyOutput(a.plandate,a.productionline,a.shift,model) as 'outputqty' FROM t_planning as a inner join t_production_lines as b on a.productionline = b.id WHERE a.plandate BETWEEN '$strdate' AND '$enddate'");
+            return $this->db->resultSet();
+        }else{
+            $this->db->query("SELECT a.*, b.description as 'linename', fGetProdTotalQtyOutput(a.plandate,a.productionline,a.shift,model) as 'outputqty' FROM t_planning as a inner join t_production_lines as b on a.productionline = b.id WHERE a.plandate BETWEEN '$strdate' AND '$enddate' AND a.model ='$model'");
+            return $this->db->resultSet();
+        }
     }
 
     public function getActualData($data){
@@ -53,11 +63,15 @@ class Production_model{
         $currentDate = date('Y-m-d');
         $dataToInsert = array();
 
+        $materialdata = $this->getMaterialData($data['model']);
+
         $insertData = array(
             "plandate"       => $data['plandate'],
             "productionline" => $data['prodline'],
             "shift"          => $data['shift'],
             "model"          => $data['model'],
+            "partnumber"     => $materialdata['material'],
+            "lot_number"     => $data['lot_number'],
             "output_qty"     => $data['quantity'],
             "createdon"      => date('Y-m-d'),
             "createdby"      => $_SESSION['usr']['user']
@@ -75,10 +89,13 @@ class Production_model{
         // echo json_encode($data);
         $currentDate = date('Y-m-d');
         $model    = $data['model'];
+        $lotnumber= $data['lotnumber'];
         $quantity = $data['inputqty'];
         $inputqty = 0;
         $dataToInsert = array();
         for($i = 0; $i < sizeof($model); $i++){
+
+            $materialdata = $this->getMaterialData($model[$i]);
             if($quantity[$i] <= 0){
                 $inputqty = 0;
             }else{
@@ -88,7 +105,9 @@ class Production_model{
                 "plandate"       => $data['plandate'],
                 "productionline" => $data['prodline'],
                 "shift"          => $data['shift'],
-                "model"          => $model[$i],
+                "model"          => $materialdata['matdesc'],
+                "partnumber"     => $model[$i],
+                "lot_number"     => $lotnumber[$i],
                 "plan_qty"       => $inputqty,
                 "createdon"      => date('Y-m-d'),
                 "createdby"      => $_SESSION['usr']['user']
