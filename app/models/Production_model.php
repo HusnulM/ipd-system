@@ -29,16 +29,16 @@ class Production_model{
         $prodline = $data['prodline'];
         $shift    = $data['shift'];
 
-        $this->db->query("SELECT a.*, b.description as 'linename', fGetProdTotalQtyOutput(a.plandate,a.productionline,a.shift,model) as 'outputqty' FROM t_planning as a inner join t_production_lines as b on a.productionline = b.id WHERE a.plandate = '$plandate' AND a.productionline = '$prodline' AND a.shift = '$shift'");
+        $this->db->query("SELECT a.*, b.description as 'linename', fGetProdTotalQtyOutput(a.plandate,a.productionline,a.shift,a.model,a.lot_number) as 'outputqty' FROM t_planning as a inner join t_production_lines as b on a.productionline = b.id WHERE a.plandate = '$plandate' AND a.productionline = '$prodline' AND a.shift = '$shift'");
 		return $this->db->resultSet();
     }
 
     public function getPlanningByDate($strdate, $enddate, $model){
         if($model === "ALL"){
-            $this->db->query("SELECT a.*, b.description as 'linename', fGetProdTotalQtyOutput(a.plandate,a.productionline,a.shift,model) as 'outputqty' FROM t_planning as a inner join t_production_lines as b on a.productionline = b.id WHERE a.plandate BETWEEN '$strdate' AND '$enddate'");
+            $this->db->query("SELECT a.*, b.description as 'linename', fGetProdTotalQtyOutput(a.plandate,a.productionline,a.shift,a.model,a.lot_number) as 'outputqty' FROM t_planning as a inner join t_production_lines as b on a.productionline = b.id WHERE a.plandate BETWEEN '$strdate' AND '$enddate'");
             return $this->db->resultSet();
         }else{
-            $this->db->query("SELECT a.*, b.description as 'linename', fGetProdTotalQtyOutput(a.plandate,a.productionline,a.shift,model) as 'outputqty' FROM t_planning as a inner join t_production_lines as b on a.productionline = b.id WHERE a.plandate BETWEEN '$strdate' AND '$enddate' AND a.model ='$model'");
+            $this->db->query("SELECT a.*, b.description as 'linename', fGetProdTotalQtyOutput(a.plandate,a.productionline,a.shift,a.model,a.lot_number) as 'outputqty' FROM t_planning as a inner join t_production_lines as b on a.productionline = b.id WHERE a.plandate BETWEEN '$strdate' AND '$enddate' AND a.model ='$model'");
             return $this->db->resultSet();
         }
     }
