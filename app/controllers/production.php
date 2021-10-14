@@ -71,8 +71,11 @@ class Production extends Controller {
             $data['menu']  = 'Production View';
 
             $data['rdata'] = $this->model('Production_model')->planningMonitoring();
+            $data['rday1'] = $this->model('Production_model')->planningMonitoringDay1();
+            $data['rday2'] = $this->model('Production_model')->planningMonitoringDay2();
+            $data['rday3'] = $this->model('Production_model')->planningMonitoringDay3();
             $data['hdata'] = $this->model('Production_model')->planningMonitoringDate();
-
+            // echo json_encode($data);
             $this->view('templates/header_a', $data);
             $this->view('production/productionview', $data);
             $this->view('templates/footer_a');

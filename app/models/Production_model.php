@@ -14,6 +14,21 @@ class Production_model{
         return $this->db->resultSet();
     }
 
+    public function planningMonitoringDay1(){
+        $this->db->query("CALL sp_ProductionView1()");
+        return $this->db->resultSet();
+    }
+
+    public function planningMonitoringDay2(){
+        $this->db->query("CALL sp_ProductionView2()");
+        return $this->db->resultSet();
+    }
+
+    public function planningMonitoringDay3(){
+        $this->db->query("CALL sp_ProductionView3()");
+        return $this->db->resultSet();
+    }
+
     public function planningMonitoringDate(){
         $this->db->query("CALL sp_ProductionViewDate()");
         return $this->db->single();
