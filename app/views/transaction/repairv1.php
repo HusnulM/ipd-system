@@ -51,12 +51,10 @@
                                         <div class="col-lg-6 col-md-12 col-sm-12 col-xm-12">
                                             <label for="lotcode">LOT CODE</label>
                                             <input type="text" name="lotcode" id="lotcode" class="form-control" readonly="true" />
-                                            <input type="hidden" name="status" id="status">
-                                            <input type="hidden" name="otherstatus" id="otherstatus" class="form-control" style="display:none;">
                                         </div>
                                     </div>
                                     <!-- style="<?= $data['process']['sequence'] === "1" ? 'display:none' : ''; ?>" -->
-                                    <!-- <div class="row">
+                                    <div class="row">
                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xm-12">
                                             <label for="status">STATUS</label>
                                             <select name="status" id="status" class="form-control">
@@ -66,7 +64,7 @@
                                             </select>
                                             <input type="text" name="otherstatus" id="otherstatus" class="form-control" style="display:none;">
                                         </div>
-                                    </div> -->
+                                    </div>
                                 </div>
                                 
                                 <div class="col-lg-6">
@@ -108,20 +106,8 @@
                                     <div class="row">
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                             <div class="form-group">
-                                                <button type="submit" id="btn-save" class="btn btn-primary" style="height: 50px; width:150px;">
-                                                    <i class="material-icons">done</i> PASS
-                                                </button>
-                                                <button type="button" id="btn-no-good" class="btn btn-danger" style="height: 50px; width:150px;">
-                                                    <i class="material-icons">close</i> NOT PASS
-                                                </button>
-                                                <button type="submit" id="btn-save-nogood" class="btn btn-primary" style="height: 50px; width:150px;display:none;">
-                                                    <i class="material-icons">save</i> SAVE
-                                                </button>
-                                                <button type="button" id="btn-cancel" class="btn btn-danger" style="height: 50px; width:150px; display:none;">
-                                                    <i class="material-icons">close</i> CANCEL
-                                                </button>
-                                                <!-- <button type="submit" id="btn-save" class="btn btn-primary">SAVE</button> -->
-                                                <!-- <a href="<?= BASEURL; ?>" class="btn btn-danger">CANCEL</a> -->
+                                                <button type="submit" id="btn-save" class="btn btn-primary">SAVE</button>
+                                                <a href="<?= BASEURL; ?>" class="btn btn-danger">CANCEL</a>
                                             </div>
                                         </div>
                                     </div>
@@ -154,9 +140,6 @@
 <script src="<?= BASEURL; ?>/plugins/sweetalert/sweetalert.min.js"></script>
 <script>
     $(document).ready(function(){
-        var processStatus = 'PASS';
-        $('#status').val('PASS');
-
         $(window).keydown(function(event){
             if(event.keyCode == 13) {
                 event.preventDefault();
@@ -165,32 +148,6 @@
         });
 
         document.getElementById("lotnumber").focus();
-
-        $('#btn-no-good').on('click', function(){
-            $('#btn-save').hide();
-            $('#btn-save-nogood').show();
-            $('#btn-cancel').show();
-            $('#btn-no-good').hide();
-            $('.showRemark').show();
-            processStatus = 'NOT PASS';
-
-            $('#status').val('NOT PASS');
-        });
-
-        $('#btn-cancel').on('click', function(){
-            $('#btn-save').show();
-            $('#btn-save-nogood').hide();
-            $('#btn-cancel').hide();
-            $('#btn-no-good').show();
-
-            $('.showRemark').hide();
-            $('#defect').val('');
-            $('#location').val('');
-            $('#cause').val('');
-            $('#action').val('');
-            processStatus = 'Good';
-            $('#status').val('Good');
-        });
 
         $('#status').on('change', function(){
             if(this.value === "NOT PASS"){
