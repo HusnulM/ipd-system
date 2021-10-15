@@ -70,9 +70,11 @@
                                         <div class="col-lg-6 col-md-12 col-sm-12 col-xm-12">
                                             <label for="lotcode">LOT CODE</label>
                                             <input type="text" name="lotcode" id="lotcode" class="form-control" readonly="true" required/>
+                                            <input type="hidden" name="status" id="status">
+                                            <input type="hidden" name="otherstatus" id="otherstatus" class="form-control" style="display:none;">
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <!-- <div class="row">
                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xm-12">
                                             <label for="status">STATUS</label>
                                             <select name="status" id="status" class="form-control" required>
@@ -83,7 +85,7 @@
                                             </select>
                                             <input type="text" name="otherstatus" id="otherstatus" class="form-control" style="display:none;">
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
                                 
                                 <div class="col-lg-6 ngInput" style="display:none;">
@@ -113,24 +115,12 @@
                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xm-12">
                                             <label for="cause">CAUSE NAME</label>
                                             <input type="text" name="cause" id="cause" class="form-control">
-                                            <!-- <select name="cause" id="cause" class="form-control">
-                                                <option value=""></option>
-                                                <?php foreach($data['cause'] as $row) : ?>
-                                                    <option value="<?= $row['causename']; ?>"><?= $row['causename']; ?></option>
-                                                <?php endforeach; ?>
-                                            </select> -->
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xm-12">
                                             <label for="action">ACTION</label>
                                             <input type="text" name="action" id="action" class="form-control">
-                                            <!-- <select name="action" id="action" class="form-control">
-                                                <option value=""></option>
-                                                <?php foreach($data['action'] as $row) : ?>
-                                                    <option value="<?= $row['actionname']; ?>"><?= $row['actionname']; ?></option>
-                                                <?php endforeach; ?>
-                                            </select> -->
                                         </div>
                                     </div>
                                 </div>
@@ -139,8 +129,19 @@
                                     <div class="row">
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                             <div class="form-group">
-                                                <button type="submit" id="btn-save" class="btn btn-primary">SAVE</button>
-                                                <a href="<?= BASEURL; ?>" class="btn btn-danger">CANCEL</a>
+                                                <button type="submit" id="btn-save" class="btn btn-primary" style="height: 50px; width:150px;">
+                                                    <i class="material-icons">done</i> GOOD
+                                                </button>
+                                                <button type="button" id="btn-no-good" class="btn btn-danger" style="height: 50px; width:150px;">
+                                                    <i class="material-icons">close</i> NO GOOD
+                                                </button>
+                                                <button type="submit" id="btn-save-nogood" class="btn btn-primary" style="height: 50px; width:150px;display:none;">
+                                                    <i class="material-icons">save</i> SAVE
+                                                </button>
+                                                <button type="button" id="btn-cancel" class="btn btn-danger" style="height: 50px; width:150px; display:none;">
+                                                    <i class="material-icons">close</i> CANCEL
+                                                </button>
+                                                <!-- <a href="<?= BASEURL; ?>" class="btn btn-danger">NO GOOD</a> -->
                                             </div>
                                         </div>
                                     </div>
@@ -174,6 +175,9 @@
 <script>
 
     $(document).ready(function(){
+        var processStatus = 'Good';
+        $('#status').val('Good');
+
         var isFirstprocess = "<?= $isFirstProcess; ?>";
         var formID = "<?= $formid; ?>";
         $(window).keydown(function(event){
@@ -191,23 +195,49 @@
             document.getElementById("lotnumber").focus();
         }
 
-        $('#status').on('change', function(){
-            if(this.value === "Other"){
-                $('#otherstatus').show();
-            }else{
-                $('#otherstatus').hide();
-            }
+        $('#btn-no-good').on('click', function(){
+            $('#btn-save').hide();
+            $('#btn-save-nogood').show();
+            $('#btn-cancel').show();
+            $('#btn-no-good').hide();
+            $('.ngInput').show();
+            processStatus = 'NG';
 
-            if(this.value === "NG"){
-                $('.ngInput').show();
-            }else{
-                $('.ngInput').hide();
-                $('#defect').val('');
-                $('#location').val('');
-                $('#cause').val('');
-                $('#action').val('');
-            }
+            $('#status').val('NG');
         });
+
+        $('#btn-cancel').on('click', function(){
+            $('#btn-save').show();
+            $('#btn-save-nogood').hide();
+            $('#btn-cancel').hide();
+            $('#btn-no-good').show();
+
+            $('.ngInput').hide();
+            $('#defect').val('');
+            $('#location').val('');
+            $('#cause').val('');
+            $('#action').val('');
+            processStatus = 'Good';
+            $('#status').val('Good');
+        });
+
+        // $('#status').on('change', function(){
+        //     if(this.value === "Other"){
+        //         $('#otherstatus').show();
+        //     }else{
+        //         $('#otherstatus').hide();
+        //     }
+
+        //     if(this.value === "NG"){
+        //         $('.ngInput').show();
+        //     }else{
+        //         $('.ngInput').hide();
+        //         $('#defect').val('');
+        //         $('#location').val('');
+        //         $('#cause').val('');
+        //         $('#action').val('');
+        //     }
+        // });
 
         $('#partcode').keydown(function(e){
             var inputMaterial = this.value;
@@ -372,7 +402,19 @@
                     $('#formid').val('');   
                     // $('#status').val('');
                     document.getElementById("lotnumber").focus();
-                })
+                    $('#btn-save').show();
+                    $('#btn-save-nogood').hide();
+                    $('#btn-cancel').hide();
+                    $('#btn-no-good').show();
+
+                    $('.ngInput').hide();
+                    $('#defect').val('');
+                    $('#location').val('');
+                    $('#cause').val('');
+                    $('#action').val('');
+                    processStatus = 'Good';
+                    $('#status').val('Good');
+                });
             })
 
         function showSuccessMessage(message) {

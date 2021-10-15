@@ -137,7 +137,7 @@ class Transaction extends Controller {
                     // header('location: '. BASEURL . '/transaction/process');
                     $return = array(
                         "msgtype" => "2",
-                        "message" => 'Cannot Process Serial No '. $_POST['lotnumber'] .', Status is NG in Previous Process '. $sequence['processname']
+                        "message" => 'Cannot Process Serial No '. $_POST['_lotnumber'] .', Status is NG in Previous Process '. $sequence['processname']
                     );
                     echo json_encode($return);
                     exit;
