@@ -10,22 +10,22 @@ class Transaction_model{
     }
 
     public function getDataBySerial($serialno){
-        $this->db->query("SELECT * FROM v_report_transaction where serial_no='$serialno'");
+        $this->db->query("SELECT * FROM v_report_transaction where serial_no='$serialno' order by process_counter desc");
 		return $this->db->single();
     }
 
     public function getDataTransid($transid){
-        $this->db->query("SELECT * FROM t_ipd_process where transactionid='$transid'");
+        $this->db->query("SELECT * FROM t_ipd_process where transactionid='$transid' order by counter desc");
 		return $this->db->single();
     }
 
     public function getRepairDataTransid($transid){
-        $this->db->query("SELECT * FROM t_ipd_repair where transactionid='$transid'");
+        $this->db->query("SELECT * FROM t_ipd_repair where transactionid='$transid' order by counter desc");
 		return $this->db->single();
     }
 
     public function checNGStatus($transid){
-        $this->db->query("SELECT * FROM t_ipd_process where transactionid='$transid' AND ( process1='NG' OR process2='NG' OR process3='NG' OR process4='NG' OR process5='NG' OR process6='NG')");
+        $this->db->query("SELECT * FROM t_ipd_process where transactionid='$transid' AND status = 'Open' AND ( process1='NG' OR process2='NG' OR process3='NG' OR process4='NG' OR process5='NG' OR process6='NG') order by counter desc");
 		return $this->db->single();
     }
 
@@ -63,6 +63,7 @@ class Transaction_model{
 
     public function saveprocess($data){
         $processSequence = $this->getProcessSequence('process');
+        $transactionData = $this->getDataTransid($data['formid']);
         $currentDate = date('Y-m-d');
         $processStatus = '';
 
@@ -77,7 +78,7 @@ class Transaction_model{
                 $sequence = $processSequence['sequence'];
 
                 if($processStatus === "NG"){
-                    $query = "UPDATE t_ipd_process SET process".$sequence."=:process".$sequence.",error_process=:error_process, defect_name=:defect_name, location=:location, cause=:cause, action=:action, lastprocess=:lastprocess WHERE transactionid=:transactionid";
+                    $query = "UPDATE t_ipd_process SET process".$sequence."=:process".$sequence.",error_process=:error_process, defect_name=:defect_name, location=:location, cause=:cause, action=:action, lastprocess=:lastprocess WHERE transactionid=:transactionid and counter=:counter";
                     $this->db->query($query);
             
                     $this->db->bind('transactionid',      $data['formid']);
@@ -92,6 +93,7 @@ class Transaction_model{
                     $this->db->bind('cause',       $data['cause']);
                     $this->db->bind('action',      $data['action']);
                     $this->db->bind('lastprocess', $processSequence['sequence']);
+                    $this->db->bind('counter',     $transactionData['counter']);
                     $this->db->execute();
                     
                     if($processStatus === "NG"){
@@ -100,7 +102,7 @@ class Transaction_model{
 
                     return $this->db->rowCount();
                 }else{
-                    $query = "UPDATE t_ipd_process SET process".$sequence."=:process".$sequence.",error_process=:error_process, lastprocess=:lastprocess WHERE transactionid=:transactionid";
+                    $query = "UPDATE t_ipd_process SET process".$sequence."=:process".$sequence.",error_process=:error_process, lastprocess=:lastprocess WHERE transactionid=:transactionid and counter=:counter";
                     $this->db->query($query);
             
                     $this->db->bind('transactionid',      $data['formid']);
@@ -111,6 +113,7 @@ class Transaction_model{
                         $this->db->bind('error_process',  '');
                     }
                     $this->db->bind('lastprocess',  $processSequence['sequence']);
+                    $this->db->bind('counter',      $transactionData['counter']);
                     $this->db->execute();
                     
                     if($processStatus === "NG"){
@@ -137,11 +140,13 @@ class Transaction_model{
                 $this->db->bind('createdby',     $_SESSION['usr']['user']);
                 $this->db->execute();
 
-                $query = "INSERT INTO t_ipd_process (transactionid,process1,error_process,defect_name,location,cause,action,lastprocess) 
-                VALUES(:transactionid,:process1,:error_process,:defect_name,:location,:cause,:action,:lastprocess)";
+                $query = "INSERT INTO t_ipd_process (transactionid,counter,status,process1,error_process,defect_name,location,cause,action,lastprocess) 
+                VALUES(:transactionid,:counter,:status,:process1,:error_process,:defect_name,:location,:cause,:action,:lastprocess)";
                 $this->db->query($query);
         
                 $this->db->bind('transactionid',  $data['formid']);
+                $this->db->bind('counter',        1);
+                $this->db->bind('status',         'Open');
                 $this->db->bind('process1',       $processStatus);
                 if($processStatus === "NG"){
                     $this->db->bind('error_process',  $processSequence['processname']);
@@ -166,14 +171,16 @@ class Transaction_model{
     }
 
     public function createRepairForm($data){
-        $query = "INSERT INTO t_ipd_repair (transactionid,defect_name,location) 
-                  VALUES(:transactionid,:defect_name,:location)";
+        $lastRepair = $this->getRepairDataTransid($data['formid']);
+        $query = "INSERT INTO t_ipd_repair (transactionid,counter,status,defect_name,location) 
+                  VALUES(:transactionid,:counter,:status,:defect_name,:location)";
         $this->db->query($query);
 
         $this->db->bind('transactionid', $data['formid']);
+        $this->db->bind('counter',       $lastRepair['counter']+1);
+        $this->db->bind('status',        'Open');
         $this->db->bind('defect_name',   $data['defect']);
         $this->db->bind('location',      $data['location']);
-        // $this->db->bind('action',        $data['action']);
         $this->db->execute();
     }
 
@@ -203,6 +210,44 @@ class Transaction_model{
         $this->db->bind('action',             $data['actionName']);
         $this->db->bind('lastrepair',         $processSequence['sequence']);
         $this->db->execute();
+
+        // Close repaired transaction process
+        $transactionData = $this->getDataTransid($data['formid']);
+        $query2 = "UPDATE t_ipd_process SET status=:status WHERE transactionid=:transactionid and counter=:counter";
+        $this->db->query($query2);
+        $this->db->bind('transactionid', $data['formid']);
+        $this->db->bind('counter',       $transactionData['counter']);
+        $this->db->bind('status',        'Closed');
+        $this->db->execute();
+
+        // Insert New Transaction Process
+        
+        if($transactionData['lastprocess'] == 1 || $transactionData['lastprocess'] == 2){
+            $query3 = "INSERT INTO t_ipd_process (transactionid,counter,status,process1,error_process,lastprocess) 
+            VALUES(:transactionid,:counter,:status,:process1,:error_process,:lastprocess)";
+            $this->db->query($query3);
+
+            $this->db->bind('transactionid',  $data['formid']);
+            $this->db->bind('counter',        $transactionData['counter']+1);
+            $this->db->bind('status',         'Open');
+            $this->db->bind('process1',       null);
+            $this->db->bind('error_process',  null);
+            $this->db->bind('lastprocess',    0);
+            $this->db->execute();
+        }else if($transactionData['lastprocess'] == 3 || $transactionData['lastprocess'] == 4){
+            $query3 = "INSERT INTO t_ipd_process (transactionid,counter,status,process1,error_process,lastprocess) 
+            VALUES(:transactionid,:counter,:status,:process3,:error_process,:lastprocess)";
+            $this->db->query($query3);
+
+            $this->db->bind('transactionid',  $data['formid']);
+            $this->db->bind('counter',        $transactionData['counter']+1);
+            $this->db->bind('status',         'Open');
+            $this->db->bind('process3',       null);
+            $this->db->bind('error_process',  null);
+            $this->db->bind('lastprocess',    2);
+            $this->db->execute();
+        }        
+
         return $this->db->rowCount();
     }
 }

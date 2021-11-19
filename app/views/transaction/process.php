@@ -303,17 +303,33 @@
                 }).done(function(data){
                     console.log(data)
                     if(isFirstprocess == 1){
-                        if(data._lastprocess){
+                        if(data._lastprocess || data._lastprocess == 0){
                             $('#_lotnumber').val(inputSerial);
                             $('#formid').val(data.transactionid);
                             $('#partnumber').val(data.partnumber);
                             $('#partmodel').val(data.partmodel);
                             $('#lotcode').val(data.lotcode);
                             document.getElementById("lotnumber").focus();
+                            
+                            if(data._lastprocess == 0){
+                                $('#tbl-body-lastproc').html('');
+                                $('#tbl-body-lastproc').append(`
+                                    <tr>
+                                        <td>`+ data.partmodel +`</td>
+                                        <td>`+ data.partnumber +`</td>
+                                        <td>`+ data.serial_no +`</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                `);
+                            }else{
+                                var lastProc = 'process'+data.lastprocess;
+                                var lastProcessStatus = data[lastProc];
+
+                                if(lastProcessStatus === null || lastProcessStatus === 'null'){
+                                    lastProcessStatus = '';
+                                }
     
-                            var lastProc = 'process'+data.lastprocess;
-    
-                            if(data._lastprocess){
                                 $('#tbl-body-lastproc').html('');
                                 $('#tbl-body-lastproc').append(`
                                     <tr>
@@ -321,7 +337,7 @@
                                         <td>`+ data.partnumber +`</td>
                                         <td>`+ data.serial_no +`</td>
                                         <td>`+ data._lastprocess.processname +`</td>
-                                        <td>`+ data[lastProc] +`</td>
+                                        <td>`+ lastProcessStatus +`</td>
                                     </tr>
                                 `);
                             }
@@ -339,6 +355,11 @@
                             document.getElementById("lotnumber").focus();
     
                             var lastProc = 'process'+data.lastprocess;
+                            var lastProcessStatus = data[lastProc];
+
+                            if(lastProcessStatus === null || lastProcessStatus === 'null'){
+                                lastProcessStatus = '';
+                            }
     
                             if(data._lastprocess){
                                 $('#tbl-body-lastproc').html('');
@@ -348,7 +369,7 @@
                                         <td>`+ data.partnumber +`</td>
                                         <td>`+ data.serial_no +`</td>
                                         <td>`+ data._lastprocess.processname +`</td>
-                                        <td>`+ data[lastProc] +`</td>
+                                        <td>`+ lastProcessStatus +`</td>
                                     </tr>
                                 `);
                             }
@@ -398,8 +419,8 @@
                         showErrorMessage(JSON.stringify(result.message))            
                     }
                     $("#btn-save").attr("disabled", false);
-                    $('#_lotnumber').val('');
-                    $('#formid').val('');   
+                    // $('#_lotnumber').val('');
+                    // $('#formid').val('');   
                     // $('#status').val('');
                     document.getElementById("lotnumber").focus();
                     $('#btn-save').show();

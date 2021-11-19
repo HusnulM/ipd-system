@@ -131,6 +131,13 @@ class Transaction extends Controller {
                 );
                 echo json_encode($return);
                 exit;
+            }else if($checkProcess < 0){
+                $return = array(
+                    "msgtype" => "2",
+                    "message" => 'You Cannot Process Serial NO '. $_POST['_lotnumber'] .', Serial already processed to the next process'
+                );
+                echo json_encode($return);
+                exit;
             }else{
                 if($checkNG){
                     // Flasher::setMessage('Cannot Process Serial No '. $_POST['lotnumber'] .', Status is NG in Previous Process '. $sequence['processname'],'','danger');
