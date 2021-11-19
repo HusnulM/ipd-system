@@ -171,6 +171,7 @@ class Transaction_model{
     }
 
     public function createRepairForm($data){
+        $transactionData = $this->getDataTransid($data['formid']);
         $lastRepair = $this->getRepairDataTransid($data['formid']);
         $query = "INSERT INTO t_ipd_repair (transactionid,counter,status,defect_name,location) 
                   VALUES(:transactionid,:counter,:status,:defect_name,:location)";
@@ -178,7 +179,11 @@ class Transaction_model{
 
         $this->db->bind('transactionid', $data['formid']);
         $this->db->bind('counter',       $lastRepair['counter']+1);
-        $this->db->bind('status',        'Open');
+        if($transactionData['lastprocess'] < 5){
+            $this->db->bind('status',        'Open');
+        }else{
+            $this->db->bind('status',        'Closed');
+        }
         $this->db->bind('defect_name',   $data['defect']);
         $this->db->bind('location',      $data['location']);
         $this->db->execute();
@@ -200,7 +205,7 @@ class Transaction_model{
             $processStatus = $data['status'];
         }
 
-        $query = "UPDATE t_ipd_repair SET process".$sequence."=:process".$sequence.",lastrepair=:lastrepair, remark=:remark, action=:action WHERE transactionid=:transactionid";
+        $query = "UPDATE t_ipd_repair SET process".$sequence."=:process".$sequence.",lastrepair=:lastrepair, remark=:remark, action=:action WHERE transactionid=:transactionid and status=:status";
         
         $this->db->query($query);
             
@@ -209,20 +214,23 @@ class Transaction_model{
         $this->db->bind('remark',             $remark);
         $this->db->bind('action',             $data['actionName']);
         $this->db->bind('lastrepair',         $processSequence['sequence']);
+        $this->db->bind('status',             'Open');
         $this->db->execute();
 
         // Close repaired transaction process
         $transactionData = $this->getDataTransid($data['formid']);
-        $query2 = "UPDATE t_ipd_process SET status=:status WHERE transactionid=:transactionid and counter=:counter";
-        $this->db->query($query2);
-        $this->db->bind('transactionid', $data['formid']);
-        $this->db->bind('counter',       $transactionData['counter']);
-        $this->db->bind('status',        'Closed');
-        $this->db->execute();
+        
 
         // Insert New Transaction Process
         
         if($transactionData['lastprocess'] == 1 || $transactionData['lastprocess'] == 2){
+            $query2 = "UPDATE t_ipd_process SET status=:status WHERE transactionid=:transactionid and counter=:counter";
+            $this->db->query($query2);
+            $this->db->bind('transactionid', $data['formid']);
+            $this->db->bind('counter',       $transactionData['counter']);
+            $this->db->bind('status',        'Closed');
+            $this->db->execute();
+
             $query3 = "INSERT INTO t_ipd_process (transactionid,counter,status,process1,error_process,lastprocess) 
             VALUES(:transactionid,:counter,:status,:process1,:error_process,:lastprocess)";
             $this->db->query($query3);
@@ -235,13 +243,22 @@ class Transaction_model{
             $this->db->bind('lastprocess',    0);
             $this->db->execute();
         }else if($transactionData['lastprocess'] == 3 || $transactionData['lastprocess'] == 4){
-            $query3 = "INSERT INTO t_ipd_process (transactionid,counter,status,process1,error_process,lastprocess) 
-            VALUES(:transactionid,:counter,:status,:process3,:error_process,:lastprocess)";
+            $query2 = "UPDATE t_ipd_process SET status=:status WHERE transactionid=:transactionid and counter=:counter";
+            $this->db->query($query2);
+            $this->db->bind('transactionid', $data['formid']);
+            $this->db->bind('counter',       $transactionData['counter']);
+            $this->db->bind('status',        'Closed');
+            $this->db->execute();
+
+            $query3 = "INSERT INTO t_ipd_process (transactionid,counter,status,process1,process2,process3,error_process,lastprocess) 
+            VALUES(:transactionid,:counter,:status,:process1,:process2,:process3,:error_process,:lastprocess)";
             $this->db->query($query3);
 
             $this->db->bind('transactionid',  $data['formid']);
             $this->db->bind('counter',        $transactionData['counter']+1);
             $this->db->bind('status',         'Open');
+            $this->db->bind('process1',       'Good');
+            $this->db->bind('process2',       'Good');
             $this->db->bind('process3',       null);
             $this->db->bind('error_process',  null);
             $this->db->bind('lastprocess',    2);

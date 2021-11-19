@@ -302,35 +302,33 @@
                     }
                 }).done(function(data){
                     console.log(data)
+                    $('#tbl-body-lastproc').html('');
+                    
                     if(isFirstprocess == 1){
-                        if(data._lastprocess || data._lastprocess == 0){
+                        if(data._lastprocess){
                             $('#_lotnumber').val(inputSerial);
                             $('#formid').val(data.transactionid);
                             $('#partnumber').val(data.partnumber);
                             $('#partmodel').val(data.partmodel);
                             $('#lotcode').val(data.lotcode);
                             document.getElementById("lotnumber").focus();
-                            
-                            if(data._lastprocess == 0){
-                                $('#tbl-body-lastproc').html('');
+                            var lastProc = 'process'+data.lastprocess;
+                            var lastProcessStatus = data[lastProc];
+                            if(data._lastprocess){
                                 $('#tbl-body-lastproc').append(`
                                     <tr>
                                         <td>`+ data.partmodel +`</td>
                                         <td>`+ data.partnumber +`</td>
                                         <td>`+ data.serial_no +`</td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>`+ data._lastprocess.processname +`</td>
+                                        <td>`+ lastProcessStatus +`</td>
                                     </tr>
                                 `);
                             }else{
-                                var lastProc = 'process'+data.lastprocess;
-                                var lastProcessStatus = data[lastProc];
 
                                 if(lastProcessStatus === null || lastProcessStatus === 'null'){
                                     lastProcessStatus = '';
                                 }
-    
-                                $('#tbl-body-lastproc').html('');
                                 $('#tbl-body-lastproc').append(`
                                     <tr>
                                         <td>`+ data.partmodel +`</td>
@@ -342,8 +340,33 @@
                                 `);
                             }
                         }else{
-                            $('#_lotnumber').val(inputSerial);
-                            $('#formid').val(timestamp);   
+                            if(data.lastprocess == 0){
+                                // alert(data.lastprocess)
+                                // var lastProc = 'process'+data.lastprocess;
+                                // var lastProcessStatus = data[lastProc];
+                                // alert(lastProcessStatus)
+                                $('#_lotnumber').val(inputSerial);
+                                $('#formid').val(data.transactionid);
+                                $('#partnumber').val(data.partnumber);
+                                $('#partmodel').val(data.partmodel);
+                                $('#lotcode').val(data.lotcode);
+
+                                // if(lastProcessStatus === null || lastProcessStatus === 'null'){
+                                //     lastProcessStatus = '';
+                                // }
+                                $('#tbl-body-lastproc').append(`
+                                    <tr>
+                                        <td>`+ data.partmodel +`</td>
+                                        <td>`+ data.partnumber +`</td>
+                                        <td>`+ data.serial_no +`</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                `);
+                            }else{
+                                $('#_lotnumber').val(inputSerial);
+                                $('#formid').val(timestamp);
+                            }
                         }                                             
                     }else{
                         if(data){
