@@ -14,6 +14,11 @@ class Transaction_model{
 		return $this->db->single();
     }
 
+    public function getRepairDataBySerial($serialno){
+        $this->db->query("SELECT * FROM v_report_transaction where serial_no='$serialno' order by repair_counter desc");
+		return $this->db->single();
+    }
+
     public function getDataTransid($transid){
         $this->db->query("SELECT * FROM t_ipd_process where transactionid='$transid' order by counter desc");
 		return $this->db->single();
@@ -173,19 +178,20 @@ class Transaction_model{
     public function createRepairForm($data){
         $transactionData = $this->getDataTransid($data['formid']);
         $lastRepair = $this->getRepairDataTransid($data['formid']);
-        $query = "INSERT INTO t_ipd_repair (transactionid,counter,status,defect_name,location) 
-                  VALUES(:transactionid,:counter,:status,:defect_name,:location)";
+        $query = "INSERT INTO t_ipd_repair (transactionid,counter,process_counter,status,defect_name,location) 
+                  VALUES(:transactionid,:counter,:process_counter,:status,:defect_name,:location)";
         $this->db->query($query);
 
-        $this->db->bind('transactionid', $data['formid']);
-        $this->db->bind('counter',       $lastRepair['counter']+1);
-        if($transactionData['lastprocess'] < 5){
-            $this->db->bind('status',        'Open');
+        $this->db->bind('transactionid',   $data['formid']);
+        $this->db->bind('counter',         $lastRepair['counter']+1);
+        $this->db->bind('process_counter', $transactionData['counter']);
+        if($transactionData['lastprocess'] >= 5){
+            $this->db->bind('status',      'Open');
         }else{
-            $this->db->bind('status',        'Closed');
+            $this->db->bind('status',      'Closed');
         }
-        $this->db->bind('defect_name',   $data['defect']);
-        $this->db->bind('location',      $data['location']);
+        $this->db->bind('defect_name',     $data['defect']);
+        $this->db->bind('location',        $data['location']);
         $this->db->execute();
     }
 
@@ -263,6 +269,31 @@ class Transaction_model{
             $this->db->bind('error_process',  null);
             $this->db->bind('lastprocess',    2);
             $this->db->execute();
+        }else{
+            if($data['status'] === "NOT PASS"){
+                $repairData = $this->getRepairDataTransid($data['formid']);
+                $closeRepair = "UPDATE t_ipd_repair SET status=:status WHERE transactionid=:transactionid and counter=:counter";
+                
+                $this->db->query($closeRepair);
+                $this->db->bind('transactionid',      $data['formid']);
+                $this->db->bind('counter',            $repairData['counter']);
+                $this->db->bind('status',             'Closed');
+                $this->db->execute();         
+                
+                
+                //Insert New Repair Data
+                $insertNewRepair = "INSERT INTO t_ipd_repair (transactionid,counter,process_counter,status,defect_name,location) 
+                  VALUES(:transactionid,:counter,:process_counter,:status,:defect_name,:location)";
+                $this->db->query($insertNewRepair);
+
+                $this->db->bind('transactionid', $data['formid']);
+                $this->db->bind('counter',       $repairData['counter']+1);
+                $this->db->bind('process_counter', $transactionData['counter']);
+                $this->db->bind('status',        'Open');
+                $this->db->bind('defect_name',   $repairData['defect_name']);
+                $this->db->bind('location',      $repairData['location']);
+                $this->db->execute();
+            }
         }        
 
         return $this->db->rowCount();

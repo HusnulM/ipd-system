@@ -89,7 +89,7 @@ class Transaction extends Controller {
         $data = parse_str($url['query'], $params);
         $serial = $params['serial'];
 
-        $data = $this->model('Transaction_model')->getDataBySerial($serial);
+        $data = $this->model('Transaction_model')->getRepairDataBySerial($serial);
         $data['_lastrepair'] = $this->model('Transaction_model')->getProcessSequenceNumber($data['lastrepair'],'repair');
         echo json_encode($data);
     }
