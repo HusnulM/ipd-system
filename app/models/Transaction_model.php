@@ -238,8 +238,8 @@ class Transaction_model{
             $this->db->bind('status',        'Closed');
             $this->db->execute();
 
-            $query3 = "INSERT INTO t_ipd_process (transactionid,counter,status,process1,error_process,lastprocess,action) 
-            VALUES(:transactionid,:counter,:status,:process1,:error_process,:lastprocess,:action)";
+            $query3 = "INSERT INTO t_ipd_process (transactionid,counter,status,process1,error_process,lastprocess) 
+            VALUES(:transactionid,:counter,:status,:process1,:error_process,:lastprocess)";
             $this->db->query($query3);
 
             $this->db->bind('transactionid',  $data['formid']);
@@ -248,7 +248,7 @@ class Transaction_model{
             $this->db->bind('process1',       null);
             $this->db->bind('error_process',  null);
             $this->db->bind('lastprocess',    0);
-	    $this->db->bind('action',        $transactionData['action']);
+	    //$this->db->bind('action',        $transactionData['action']);
             $this->db->execute();
         }else if($transactionData['lastprocess'] == 3 || $transactionData['lastprocess'] == 4){
             $query2 = "UPDATE t_ipd_process SET status=:status WHERE transactionid=:transactionid and counter=:counter";
@@ -258,8 +258,8 @@ class Transaction_model{
             $this->db->bind('status',        'Closed');
             $this->db->execute();
 
-            $query3 = "INSERT INTO t_ipd_process (transactionid,counter,status,process1,process2,process3,error_process,lastprocess,action) 
-            VALUES(:transactionid,:counter,:status,:process1,:process2,:process3,:error_process,:lastprocess,:action)";
+            $query3 = "INSERT INTO t_ipd_process (transactionid,counter,status,process1,process2,process3,error_process,lastprocess) 
+            VALUES(:transactionid,:counter,:status,:process1,:process2,:process3,:error_process,:lastprocess)";
             $this->db->query($query3);
 
             $this->db->bind('transactionid',  $data['formid']);
@@ -270,7 +270,7 @@ class Transaction_model{
             $this->db->bind('process3',       null);
             $this->db->bind('error_process',  null);
             $this->db->bind('lastprocess',    2);
-	    $this->db->bind('action',        $transactionData['action']);
+	    //$this->db->bind('action',        $transactionData['action']);
             $this->db->execute();
         }else{
             if($data['status'] === "NOT PASS"){
@@ -285,8 +285,8 @@ class Transaction_model{
                 
                 
                 //Insert New Repair Data
-                $insertNewRepair = "INSERT INTO t_ipd_repair (transactionid,counter,process_counter,status,defect_name,location) 
-                  VALUES(:transactionid,:counter,:process_counter,:status,:defect_name,:location)";
+                $insertNewRepair = "INSERT INTO t_ipd_repair (transactionid,counter,process_counter,status,defect_name,location,action) 
+                  VALUES(:transactionid,:counter,:process_counter,:status,:defect_name,:location,:action)";
                 $this->db->query($insertNewRepair);
 
                 $this->db->bind('transactionid', $data['formid']);
@@ -295,6 +295,7 @@ class Transaction_model{
                 $this->db->bind('status',        'Open');
                 $this->db->bind('defect_name',   $repairData['defect_name']);
                 $this->db->bind('location',      $repairData['location']);
+		$this->db->bind('action',        $repairData['action']);
                 $this->db->execute();
             }
         }        
