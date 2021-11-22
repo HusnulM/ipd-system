@@ -238,8 +238,8 @@ class Transaction_model{
             $this->db->bind('status',        'Closed');
             $this->db->execute();
 
-            $query3 = "INSERT INTO t_ipd_process (transactionid,counter,status,process1,error_process,lastprocess) 
-            VALUES(:transactionid,:counter,:status,:process1,:error_process,:lastprocess)";
+            $query3 = "INSERT INTO t_ipd_process (transactionid,counter,status,process1,error_process,lastprocess,action) 
+            VALUES(:transactionid,:counter,:status,:process1,:error_process,:lastprocess,:action)";
             $this->db->query($query3);
 
             $this->db->bind('transactionid',  $data['formid']);
@@ -248,6 +248,7 @@ class Transaction_model{
             $this->db->bind('process1',       null);
             $this->db->bind('error_process',  null);
             $this->db->bind('lastprocess',    0);
+	    $this->db->bind('action',        $transactionData['action']);
             $this->db->execute();
         }else if($transactionData['lastprocess'] == 3 || $transactionData['lastprocess'] == 4){
             $query2 = "UPDATE t_ipd_process SET status=:status WHERE transactionid=:transactionid and counter=:counter";
@@ -257,8 +258,8 @@ class Transaction_model{
             $this->db->bind('status',        'Closed');
             $this->db->execute();
 
-            $query3 = "INSERT INTO t_ipd_process (transactionid,counter,status,process1,process2,process3,error_process,lastprocess) 
-            VALUES(:transactionid,:counter,:status,:process1,:process2,:process3,:error_process,:lastprocess)";
+            $query3 = "INSERT INTO t_ipd_process (transactionid,counter,status,process1,process2,process3,error_process,lastprocess,action) 
+            VALUES(:transactionid,:counter,:status,:process1,:process2,:process3,:error_process,:lastprocess,:action)";
             $this->db->query($query3);
 
             $this->db->bind('transactionid',  $data['formid']);
@@ -269,6 +270,7 @@ class Transaction_model{
             $this->db->bind('process3',       null);
             $this->db->bind('error_process',  null);
             $this->db->bind('lastprocess',    2);
+	    $this->db->bind('action',        $transactionData['action']);
             $this->db->execute();
         }else{
             if($data['status'] === "NOT PASS"){
