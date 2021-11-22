@@ -178,8 +178,8 @@ class Transaction_model{
     public function createRepairForm($data){
         $transactionData = $this->getDataTransid($data['formid']);
         $lastRepair = $this->getRepairDataTransid($data['formid']);
-        $query = "INSERT INTO t_ipd_repair (transactionid,counter,process_counter,status,defect_name,location) 
-                  VALUES(:transactionid,:counter,:process_counter,:status,:defect_name,:location)";
+        $query = "INSERT INTO t_ipd_repair (transactionid,counter,process_counter,status,defect_name,location,action) 
+                  VALUES(:transactionid,:counter,:process_counter,:status,:defect_name,:location,:action)";
         $this->db->query($query);
 
         $this->db->bind('transactionid',   $data['formid']);
@@ -192,6 +192,7 @@ class Transaction_model{
         }
         $this->db->bind('defect_name',     $data['defect']);
         $this->db->bind('location',        $data['location']);
+	$this->db->bind('action',          $data['action']);    
         $this->db->execute();
     }
 
