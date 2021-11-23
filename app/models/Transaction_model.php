@@ -178,8 +178,8 @@ class Transaction_model{
     public function createRepairForm($data){
         $transactionData = $this->getDataTransid($data['formid']);
         $lastRepair = $this->getRepairDataTransid($data['formid']);
-        $query = "INSERT INTO t_ipd_repair (transactionid,counter,process_counter,status,defect_name,location) 
-                  VALUES(:transactionid,:counter,:process_counter,:status,:defect_name,:location)";
+        $query = "INSERT INTO t_ipd_repair (transactionid,counter,process_counter,action,status,defect_name,location) 
+                  VALUES(:transactionid,:counter,:process_counter,:action,:status,:defect_name,:location)";
         $this->db->query($query);
 
         $this->db->bind('transactionid',   $data['formid']);
@@ -187,18 +187,21 @@ class Transaction_model{
         $this->db->bind('process_counter', $transactionData['counter']);
         if($transactionData['lastprocess'] >= 5){
             $this->db->bind('status',      'Open');
+            $this->db->bind('action',          null);    
         }else{
             $this->db->bind('status',      'Closed');
+            $this->db->bind('action',          null);
+            // $this->db->bind('action',          $data['action']);    
         }
         $this->db->bind('defect_name',     $data['defect']);
         $this->db->bind('location',        $data['location']);
-	//$this->db->bind('action',          $data['action']);    
         $this->db->execute();
     }
 
     public function saveRepairForm($data){
         $processSequence = $this->getProcessSequence('repair');
         $sequence = $processSequence['sequence'];
+        $lastRepairData = $this->getRepairDataTransid($data['formid']);
 
         $remark = null;
 
@@ -212,16 +215,16 @@ class Transaction_model{
             $processStatus = $data['status'];
         }
 
-        $query = "UPDATE t_ipd_repair SET process".$sequence."=:process".$sequence.",lastrepair=:lastrepair, remark=:remark, action=:action WHERE transactionid=:transactionid and status=:status";
+        $query = "UPDATE t_ipd_repair SET process".$sequence."=:process".$sequence.",lastrepair=:lastrepair, remark=:remark, action=:action WHERE transactionid=:transactionid and counter=:counter";
         
         $this->db->query($query);
             
         $this->db->bind('transactionid',      $data['formid']);
+        $this->db->bind('counter',            $lastRepairData['counter']);
         $this->db->bind('process'.$sequence,  $processStatus);        
         $this->db->bind('remark',             $remark);
-        $this->db->bind('action',             $data['actionName']);
         $this->db->bind('lastrepair',         $processSequence['sequence']);
-        $this->db->bind('status',             'Open');
+        $this->db->bind('action',             $data['actionName']);
         $this->db->execute();
 
         // Close repaired transaction process
@@ -295,7 +298,7 @@ class Transaction_model{
                 $this->db->bind('status',        'Open');
                 $this->db->bind('defect_name',   $repairData['defect_name']);
                 $this->db->bind('location',      $repairData['location']);
-		$this->db->bind('action',        $repairData['action']);
+		        $this->db->bind('action',        $repairData['action']);
                 $this->db->execute();
             }
         }        
