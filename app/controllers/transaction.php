@@ -43,7 +43,7 @@ class Transaction extends Controller {
             $data['process']  = $this->model('Transaction_model')->getProcessSequence('process');
 
             $this->view('templates/header_a', $data);
-            $this->view('transaction/process', $data);
+            $this->view('transaction/processv2', $data);
             $this->view('templates/footer_a');
         }else{
             $this->view('templates/401');
@@ -67,11 +67,16 @@ class Transaction extends Controller {
             // echo json_encode($data['process']);
             
             $this->view('templates/header_a', $data);
-            $this->view('transaction/repair', $data);
+            $this->view('transaction/repairv2', $data);
             $this->view('templates/footer_a');
         }else{
             $this->view('templates/401');
         }        
+    }
+
+    public function getDefectData($transid){
+        $data = $this->model('Transaction_model')->readDefectData($transid);
+        echo json_encode($data);
     }
 
     public function getserialprocess($params){

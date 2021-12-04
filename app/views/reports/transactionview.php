@@ -78,14 +78,14 @@
                                                     <td><?= $row['process8'] ?></td>
                                                     <td><?= $row['process9'] ?></td>
                                                     <td><?= $row['error_process'] ?></td>
-                                                    <td><?= $row['defect_name'] ?></td>
-                                                    <td><?= $row['location'] ?></td>
-                                                    <td><?= $row['cause'] ?></td>
-                                                    <td><?= $row['action'] ?></td>
+                                                    <td><?= $row['itmdefect'] ?></td>
+                                                    <td><?= $row['itmlocation'] ?></td>
+                                                    <td><?= $row['itmcause'] ?></td>
+                                                    <td><?= $row['itmaction'] ?></td>
         
                                                     <td><?= $row['repair_defect'] ?></td>
                                                     <td><?= $row['repair_location'] ?></td>
-                                                    <td><?= $row['repair_action'] ?></td>
+                                                    <td><?= $row['raction'] ?></td>
                                                     <td><?= $row['repair1'] ?></td>
                                                     <td><?= $row['repair2'] ?></td>
                                                     <td><?= $row['repair3'] ?></td>
@@ -93,7 +93,7 @@
                                                     <td><?= $row['repair5'] ?></td>
                                                     <td><?= $row['repair6'] ?></td>
                                                     <td><?= $row['repair7'] ?></td>
-                                                    <td><?= $row['remark'] ?></td>
+                                                    <td><?= $row['repairremark'] ?></td>
                                                 </tr>
                                             <?php endforeach; ?>
                                         </tbody>
