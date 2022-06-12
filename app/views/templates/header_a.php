@@ -145,12 +145,12 @@
         }
 
         .select2-container .select2-selection--single {
-            height: 33px;
-            width: 300px;
+            height: 35px;
+            width: 100% !important;
         }
 
         .select2-selection__rendered{
-            width: 300px;
+            width: 100% !important;
         }
 
         /* @media(max-width: 520px) {
@@ -253,7 +253,7 @@
                     <a href="javascript:void(0);">IPD - System</a>.
                 </div>
                 <div class="version">
-                    <b>Version: </b> 1.0.0
+                    <b>Version: </b> 2.0.0
                 </div>
             </div>
             <!-- #Footer -->

@@ -24,7 +24,7 @@
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Part Code</th>
+                                            <th>Assy Code</th>
                                             <th>Description / Model</th>
                                             <th>Base Unit</th>
                                             <th style="width:100px;">Action</th>
