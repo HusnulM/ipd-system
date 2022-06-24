@@ -15,7 +15,7 @@
                         </h2>
                     </div>
                     <div class="body">
-                        <form action="<?= BASEURL; ?>/partscontrol/saveWhIssuance" method="POST">
+                        <form action="<?= BASEURL; ?>/warehouseissuance/saveWhIssuance" method="POST">
                             <div class="row">
                                 <div class="col-lg-6 col-md-12 col-sm-12 col-xm-12">
                                     <label for="assycode">PART NUMBER</label>
@@ -39,14 +39,14 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-4 col-md-6 col-sm-12 col-xm-12">
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xm-12">
                                     <label for="quantity">QUANTITY</label>
                                     <input type="text" name="quantity" id="quantity" class="form-control" style="text-align:right;" autocomplete="off" required/>
                                 </div>
-                                <div class="col-lg-2 col-md-6 col-sm-12 col-xm-12">
+                                <!-- <div class="col-lg-2 col-md-6 col-sm-12 col-xm-12">
                                     <label for="uom">UNIT</label>
                                     <input type="text" name="uom" id="uom" class="form-control" readonly autocomplete="off"/>
-                                </div>
+                                </div> -->
                             </div>
                             <div class="row">
                                 
@@ -145,7 +145,7 @@
             if(e.keyCode == 13) {
                 xdata = [];
                 $.ajax({
-                    url: base_url+'/assycodeloc/getMaterialbyCode/data?material='+inputMaterial,
+                    url: base_url+'/partlocation/getMaterialbyCode/data?material='+inputMaterial,
                     type: 'GET',
                     dataType: 'json',
                     cache:false,
@@ -158,8 +158,8 @@
                 }).done(function(data){
                     // console.log(data)
                     if(data){
-                        $('#partmodel').val(data['mat'].matdesc);
-                        $('#uom').val(data['mat'].matunit);
+                        // $('#partmodel').val(data['mat'].matdesc);
+                        // $('#uom').val(data['mat'].matunit);
                         document.getElementById("lotnumber").focus();
 
                         $("#assy_line").html('');

@@ -14,7 +14,7 @@
                         </h2>
                         
                         <ul class="header-dropdown m-r--5">                                
-                        <a href="<?= BASEURL; ?>/assycodeloc/create" class="btn btn-success waves-effect pull-right">Create Location</a>
+                        <a href="<?= BASEURL; ?>/partlocation/create" class="btn btn-success waves-effect pull-right">Create Location</a>
                         </ul>
                     </div>
                     
@@ -24,10 +24,10 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Assy Code</th>
-                                        <th>Description / Model</th>
-                                        <th>Location</th>
                                         <th>Part Number</th>
+                                        <!-- <th>Description / Model</th> -->
+                                        <th>Location</th>
+                                        <!-- <th>Part Number</th> -->
                                         <th style="width:100px;">Action</th>
                                     </tr>
                                 </thead>
@@ -37,13 +37,13 @@
                                         <?php $no++; ?>
                                         <tr>
                                             <td><?= $no; ?></td>
-                                            <td><?= $barang['assy_code']; ?></td>
-                                            <td><?= $barang['model']; ?></td>
-                                            <td><?= $barang['assy_location']; ?></td>
+                                            <!-- <td><?= $barang['assy_code']; ?></td> -->
+                                            <!-- <td><?= $barang['model']; ?></td> -->
                                             <td><?= $barang['part_number']; ?></td>
+                                            <td><?= $barang['assy_location']; ?></td>
                                             <td>
-                                                <a href="<?= BASEURL; ?>/assycodeloc/edit/<?= $barang['uniq_id']; ?>" type="button" class="btn btn-success">Edit</a>
-                                                <a href="<?= BASEURL; ?>/assycodeloc/delete/<?= $barang['uniq_id']; ?>" type="button" class="btn btn-danger">Delete</a>
+                                                <a href="<?= BASEURL; ?>/partlocation/edit/<?= $barang['uniq_id']; ?>" type="button" class="btn btn-success">Edit</a>
+                                                <a href="<?= BASEURL; ?>/partlocation/delete/<?= $barang['uniq_id']; ?>" type="button" class="btn btn-danger">Delete</a>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>

@@ -1,6 +1,6 @@
 <?php
 
-class Assycodeloc extends Controller {
+class Partlocation extends Controller {
     public function __construct(){
 		if( isset($_SESSION['usr']) ){
 		}else{
@@ -9,15 +9,15 @@ class Assycodeloc extends Controller {
     }
 
     public function index(){
-      $check = $this->model('Home_model')->checkUsermenu('assycodeloc','Read');
+      $check = $this->model('Home_model')->checkUsermenu('partlocation','Read');
       if ($check){
           $data['title'] = 'ASSY CODE LOCATION';
           $data['menu']  = 'ASSY CODE LOCATION';  
 
-          $data['location'] = $this->model('Assycodeloc_model')->getLocation();
+          $data['location'] = $this->model('Partlocation_model')->getLocation();
 
           $this->view('templates/header_a', $data);
-          $this->view('assycodeloc/index', $data);
+          $this->view('partlocation/index', $data);
           $this->view('templates/footer_a');
       }else{
           $this->view('templates/401');
@@ -25,15 +25,15 @@ class Assycodeloc extends Controller {
     }
 
     public function create(){
-      $check = $this->model('Home_model')->checkUsermenu('assycodeloc','Create');
+      $check = $this->model('Home_model')->checkUsermenu('partlocation','Create');
       if ($check){
           $data['title'] = 'ADD ASSY CODE LOCATION';
           $data['menu']  = 'ADD ASSY CODE LOCATION';  
 
-          // $data['location'] = $this->model('Assycodeloc_model')->getLocation();
+          // $data['location'] = $this->model('Partlocation_model')->getLocation();
 
           $this->view('templates/header_a', $data);
-          $this->view('assycodeloc/create', $data);
+          $this->view('partlocation/create', $data);
           $this->view('templates/footer_a');
       }else{
           $this->view('templates/401');
@@ -41,53 +41,64 @@ class Assycodeloc extends Controller {
     }
 
     public function edit($uniq_id){
-      $check = $this->model('Home_model')->checkUsermenu('assycodeloc','Create');
+      $check = $this->model('Home_model')->checkUsermenu('partlocation','Create');
       if ($check){
           $data['title'] = 'CHANGE ASSY CODE LOCATION';
           $data['menu']  = 'CHANGE ASSY CODE LOCATION';  
 
-          $data['location'] = $this->model('Assycodeloc_model')->getLocationById($uniq_id);
+          $data['location'] = $this->model('Partlocation_model')->getLocationById($uniq_id);
 
           $this->view('templates/header_a', $data);
-          $this->view('assycodeloc/edit', $data);
+          $this->view('partlocation/edit', $data);
           $this->view('templates/footer_a');
       }else{
           $this->view('templates/401');
       }    
     }
 
+    public function getMaterialbyCode($params){
+      $url = parse_url($_SERVER['REQUEST_URI']);
+      $data = parse_str($url['query'], $params);
+      $material = $params['material'];
+
+      // $data['mat'] = $this->model('Material_model')->getBarangByKode($material);
+      $data['loc'] = $this->model('Partlocation_model')->getLocationByPart($material);
+
+      echo json_encode($data);
+    }
+
     public function save(){
-      if( $this->model('Assycodeloc_model')->save($_POST) > 0 ) {
+      if( $this->model('Partlocation_model')->save($_POST) > 0 ) {
           Flasher::setMessage('ASSY CODE LOCATION CREATED','','success');
-          header('location: '. BASEURL . '/assycodeloc');
+          header('location: '. BASEURL . '/partlocation');
           exit;			
         }else{
           Flasher::setMessage('FAILED CREATE ASSY CODE LOCATION,','','danger');
-          header('location: '. BASEURL . '/assycodeloc');
+          header('location: '. BASEURL . '/partlocation');
           exit;	
         }
     }
 
     public function update(){
-      if( $this->model('Assycodeloc_model')->update($_POST) > 0 ) {
+      if( $this->model('Partlocation_model')->update($_POST) > 0 ) {
           Flasher::setMessage('ASSY CODE LOCATION UPDATED','','success');
-          header('location: '. BASEURL . '/assycodeloc');
+          header('location: '. BASEURL . '/partlocation');
           exit;			
         }else{
           Flasher::setMessage('FAILED UPDATE ASSY CODE LOCATION,','','danger');
-          header('location: '. BASEURL . '/assycodeloc');
+          header('location: '. BASEURL . '/partlocation');
           exit;	
         }
     }
 
     public function delete($uniq_id){
-      if( $this->model('Assycodeloc_model')->delete($uniq_id) > 0 ) {
+      if( $this->model('Partlocation_model')->delete($uniq_id) > 0 ) {
           Flasher::setMessage('ASSY CODE LOCATION DELETED','','success');
-          header('location: '. BASEURL . '/assycodeloc');
+          header('location: '. BASEURL . '/partlocation');
           exit;			
         }else{
           Flasher::setMessage('FAILED DELETE ASSY CODE LOCATION,','','danger');
-          header('location: '. BASEURL . '/assycodeloc');
+          header('location: '. BASEURL . '/partlocation');
           exit;	
         }
     }

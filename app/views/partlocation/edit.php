@@ -1,7 +1,7 @@
 <section class="content">
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <form action="<?= BASEURL; ?>/assycodeloc/save" method="POST">
+            <form action="<?= BASEURL; ?>/partlocation/update" method="POST">
                 <div class="card">
                     <div class="header">
                         <h2>
@@ -12,7 +12,7 @@
                                 <i class="material-icons">save</i> <span>SAVE</span>
                             </button>
 
-                            <a href="<?= BASEURL; ?>/assycodeloc" type="button" id="btn-back" class="btn bg-red"  data-type="success">
+                            <a href="<?= BASEURL; ?>/partlocation" type="button" id="btn-back" class="btn bg-red"  data-type="success">
                                 <i class="material-icons">highlight_off</i> <span>CANCEL</span>
                             </a>
                         </ul>
@@ -28,31 +28,31 @@
 
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane fade in active" id="basic_data_view">
-                                <div class="row clearfix">
-                                    <div class="col-sm-6">
+                                <!-- <div class="row clearfix">
+                                    <div class="col-sm-6" style="display:none;">
                                         <div class="form-group">
                                             <div class="form-line">
                                                 <label for="">Description / Model</label>
                                                 <select name="model" id="find-model" class="find-model"></select>
-                                                <!-- <input type="text" name="namabrg" id="namabrg" class="form-control" placeholder="Description / Model" required="true" autocomplete="off"> -->
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-12">
                                         <div class="form-group">
                                             <div class="form-line">
                                                 <label for="">Assy Code</label>
-                                                <input type="text" name="assy_code" id="assy_code" class="form-control" placeholder="Assy Code" required="true" autocomplete="off" readonly>
+                                                <input type="text" name="assy_code" id="assy_code" class="form-control" placeholder="Assy Code" required="true" autocomplete="off" readonly value="<?= $data['location']['assy_code']; ?>">
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <div class="form-line">
                                                 <label for="">Part Number</label>
-                                                <input type="text" name="part_number" id="part_number" class="form-control" placeholder="Part Number" autocomplete="off" required="true">
+                                                <input type="text" name="part_number" id="part_number" class="form-control" placeholder="Part Number" autocomplete="off" required="true" value="<?= $data['location']['part_number']; ?>">
+                                                <input type="hidden" name="uniq_id" value="<?= $data['location']['uniq_id']; ?>">
                                             </div>
                                         </div>
                                     </div>
@@ -62,7 +62,7 @@
                                         <div class="form-group">
                                             <div class="form-line">
                                                 <label for="">Location</label>
-                                                <input type="text" name="assy_location" id="assy_location" class="form-control" placeholder="Location" required="true" autocomplete="off">
+                                                <input type="text" name="assy_location" id="assy_location" class="form-control" placeholder="Location" required="true" autocomplete="off" value="<?= $data['location']['assy_location']; ?>">
                                             </div>
                                         </div>
                                     </div>

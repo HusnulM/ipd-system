@@ -15,57 +15,59 @@
                         </h2>
                     </div>
                     <div class="body">
-                        <form action="<?= BASEURL; ?>/partscontrol/saveWhIssuance" method="POST">
+                        <form action="<?= BASEURL; ?>/smtprocess/save" method="POST">
                             <div class="row">
                                 <div class="col-lg-6 col-md-12 col-sm-12 col-xm-12">
-                                    <label for="assycode">PART NUMBER</label>
+                                    <label for="assycode">ASSY CODE</label>
                                     <input type="text" name="assycode" id="assycode" class="form-control" autocomplete="off" required/>
                                 </div>
                             </div>
-                            <!-- <div class="row">
+                            <div class="row">
                                 <div class="col-lg-6 col-md-12 col-sm-12 col-xm-12">
                                     <label for="partmodel">MODEL</label>
                                     <input type="text" name="partmodel" id="partmodel" class="form-control"  readonly="true"/>
                                 </div>
-                            </div> -->
+                            </div>
                             <div class="row">
-                                <div class="col-lg-4 col-md-12 col-sm-12 col-xm-12">
+                                <div class="col-lg-6 col-md-12 col-sm-12 col-xm-12">
+                                    <label for="kepilot">KEPI LOT NO</label>
+                                    <input type="text" name="kepilot" id="kepilot" class="form-control" autocomplete="off" required/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-12 col-sm-12 col-xm-12">
                                     <label for="lotnumber">PART LOT NO</label>
                                     <input type="text" name="lotnumber" id="lotnumber" class="form-control" autocomplete="off" required/>
                                 </div>
-                                <div class="col-lg-2 col-md-12 col-sm-12 col-xm-12">
-                                    <label for="issue_date">ISSUANCE DATE</label>
+                                <!-- <div class="col-lg-2 col-md-12 col-sm-12 col-xm-12">
+                                    <label for="issue_date">SMT DATE Process</label>
                                     <input type="date" name="issue_date" id="issue_date" class="form-control" value="<?= date('Y-m-d'); ?>" required/>
+                                </div> -->
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-12 col-sm-12 col-xm-12">
+                                    <label for="smtline">SMT LINE</label>
+                                    <input type="text" name="smtline" id="smtline" class="form-control" autocomplete="off" required/>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-4 col-md-6 col-sm-12 col-xm-12">
-                                    <label for="quantity">QUANTITY</label>
-                                    <input type="text" name="quantity" id="quantity" class="form-control" style="text-align:right;" autocomplete="off" required/>
-                                </div>
-                                <div class="col-lg-2 col-md-6 col-sm-12 col-xm-12">
-                                    <label for="uom">UNIT</label>
-                                    <input type="text" name="uom" id="uom" class="form-control" readonly autocomplete="off"/>
+                                <div class="col-lg-6 col-md-12 col-sm-12 col-xm-12">
+                                    <label for="smtshift">SMT SHIFT</label>
+                                    <input type="text" name="smtshift" id="smtshift" class="form-control" autocomplete="off" required/>
                                 </div>
                             </div>
-                            <div class="row">
-                                
+                            <!-- <div class="row">                                
                                 <div class="col-lg-3 col-md-6 col-sm-12 col-xm-12">
                                     <label for="line">LINE</label>
                                     <select name="assy_line" id="find-line" class="find-line select2 form-control"></select>
-                                    <!-- <select name="assy_line"  id="assy_line" class="form-control" style="width:200px;">
-                                        <option value="">Select Line</option>
-                                        <option value="Apel">Apel</option>
-                                        <option value="Mangga">Mangga</option>
-                                    </select> -->
                                 </div>
                                 <div class="col-lg-3 col-md-6 col-sm-12 col-xm-12">
                                     <label for="status">STATUS</label>
                                     <input type="text" name="status" id="status" class="form-control" autocomplete="off"/>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="row">
-                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
 									<div class="form-group">
                                         <button type="submit" id="btn-save" class="btn btn-primary">SAVE</button>
 										<a href="<?= BASEURL; ?>" class="btn btn-danger">CANCEL</a>
@@ -145,7 +147,7 @@
             if(e.keyCode == 13) {
                 xdata = [];
                 $.ajax({
-                    url: base_url+'/assycodeloc/getMaterialbyCode/data?material='+inputMaterial,
+                    url: base_url+'/material/getMaterialbyCode/data?material='+inputMaterial,
                     type: 'GET',
                     dataType: 'json',
                     cache:false,
@@ -158,37 +160,43 @@
                 }).done(function(data){
                     // console.log(data)
                     if(data){
-                        $('#partmodel').val(data['mat'].matdesc);
-                        $('#uom').val(data['mat'].matunit);
-                        document.getElementById("lotnumber").focus();
+                        $('#partmodel').val(data.matdesc);
+                        $('#uom').val(data.matunit);
+                        document.getElementById("kepilot").focus();
 
-                        $("#assy_line").html('');
+                        // $("#assy_line").html('');
                         
-                        for (var x = 0; x < data['loc'].length; x++) {
-                            xdata.push({
-                                id: data['loc'][x]['assy_location'],
-                                text: data['loc'][x]['assy_location']
-                            });
-                        };
+                        // for (var x = 0; x < data['loc'].length; x++) {
+                        //     xdata.push({
+                        //         id: data['loc'][x]['assy_location'],
+                        //         text: data['loc'][x]['assy_location']
+                        //     });
+                        // };
                         
                     }else{
-                        showErrorMessage('Part Code Not Found');
+                        showErrorMessage('Assy Code Not Found');
                     }
 
-                    setLineItems();
+                    // setLineItems();
                 });
             }
         });
 
         $('#lotnumber').keydown(function(e){
             if(e.keyCode == 13) {
-                document.getElementById("quantity").focus();
+                document.getElementById("smtline").focus();
             }
         });
 
-        $('#quantity').keydown(function(e){
+        $('#smtline').keydown(function(e){
             if(e.keyCode == 13) {
-                // document.getElementById("line").focus();
+                document.getElementById("smtshift").focus();
+            }
+        });
+
+        $('#kepilot').keydown(function(e){
+            if(e.keyCode == 13) {
+                document.getElementById("lotnumber").focus();
             }
         });
 
