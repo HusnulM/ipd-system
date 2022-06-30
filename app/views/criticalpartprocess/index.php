@@ -15,45 +15,66 @@
                         </h2>
                     </div>
                     <div class="body">
-                        <form action="<?= BASEURL; ?>/smtprocess/save" method="POST">
+                        <!-- action="<?= BASEURL; ?>/smtprocess/save" -->
+                        <form id="form-smt-data" method="POST">
                             <div class="row">
-                                <div class="col-lg-6 col-md-12 col-sm-12 col-xm-12">
-                                    <label for="assycode">ASSY CODE</label>
-                                    <input type="text" name="assycode" id="assycode" class="form-control" autocomplete="off" required/>
+                                <div class="col-lg-6">
+                                    <div class="row">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xm-12">
+                                            <label for="assycode">ASSY CODE</label>
+                                            <input type="text" name="assycode" id="assycode" class="form-control" autocomplete="off" required/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xm-12">
+                                            <label for="partmodel">MODEL</label>
+                                            <input type="text" name="partmodel" id="partmodel" class="form-control"  readonly="true"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xm-12">
+                                            <label for="kepilot">KEPI LOT NO</label>
+                                            <input type="text" name="kepilot" id="kepilot" class="form-control" autocomplete="off" required/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xm-12">
+                                            <label for="barcode">BARCODE SERIAL</label>
+                                            <input type="text" name="barcode" id="barcode" class="form-control" autocomplete="off" required/>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xm-12">
+                                            <label for="lotnumber">PART LOT NO</label>
+                                            <input type="text" name="lotnumber" id="lotnumber" class="form-control" autocomplete="off" readonly/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xm-12">
+                                            <label for="partnumber">PART NO</label>
+                                            <input type="text" name="partnumber" id="partnumber" class="form-control" autocomplete="off" readonly/>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xm-12">
+                                            <label for="partlocation">PART LOCATION</label>
+                                            <input type="text" name="partlocation" id="partlocation" class="form-control" autocomplete="off" readonly/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-12 col-sm-12 col-xm-12">
+                                            <label for="smtline">SMT LINE</label>
+                                            <input type="text" name="smtline" id="smtline" class="form-control" autocomplete="off" required/>
+                                        </div>
+                                        <div class="col-lg-6 col-md-12 col-sm-12 col-xm-12">
+                                            <label for="smtshift">SMT SHIFT</label>
+                                            <input type="text" name="smtshift" id="smtshift" class="form-control" autocomplete="off" required/>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-6 col-md-12 col-sm-12 col-xm-12">
-                                    <label for="partmodel">MODEL</label>
-                                    <input type="text" name="partmodel" id="partmodel" class="form-control"  readonly="true"/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-6 col-md-12 col-sm-12 col-xm-12">
-                                    <label for="kepilot">KEPI LOT NO</label>
-                                    <input type="text" name="kepilot" id="kepilot" class="form-control" autocomplete="off" required/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-6 col-md-12 col-sm-12 col-xm-12">
-                                    <label for="lotnumber">PART LOT NO</label>
-                                    <input type="text" name="lotnumber" id="lotnumber" class="form-control" autocomplete="off" required/>
-                                </div>
-                                <!-- <div class="col-lg-2 col-md-12 col-sm-12 col-xm-12">
-                                    <label for="issue_date">SMT DATE Process</label>
-                                    <input type="date" name="issue_date" id="issue_date" class="form-control" value="<?= date('Y-m-d'); ?>" required/>
-                                </div> -->
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-6 col-md-12 col-sm-12 col-xm-12">
-                                    <label for="smtline">SMT LINE</label>
-                                    <input type="text" name="smtline" id="smtline" class="form-control" autocomplete="off" required/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-6 col-md-12 col-sm-12 col-xm-12">
-                                    <label for="smtshift">SMT SHIFT</label>
-                                    <input type="text" name="smtshift" id="smtshift" class="form-control" autocomplete="off" required/>
+                                <div id="msg-success-div" class="col-lg-6 msg-alert" style="display:none;">
+                                    <div>
+                                        <img src="<?= BASEURL; ?>/images/successgif.gif" alt="Success" class="center-block img-rounded img-responsive" style="width:300px; height:240px; margin-top:20px;">
+                                    </div>
+                                    <div style="text-align:center; font-size: 15px; font-weight: bold; margin:5px;">
+                                        SMT Line Process Success!
+                                    </div>
                                 </div>
                             </div>
                             <!-- <div class="row">                                
@@ -70,7 +91,8 @@
                                 <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
 									<div class="form-group">
                                         <button type="submit" id="btn-save" class="btn btn-primary">SAVE</button>
-										<a href="<?= BASEURL; ?>" class="btn btn-danger">CANCEL</a>
+										<a href="<?= BASEURL; ?>/smtprocess" class="btn btn-danger">CANCEL</a>
+                                        <!-- <button type="submit" id="btn-cancel" class="btn btn-danger">CANCEL</button> -->
 									</div>
 								</div>
                             </div>
@@ -132,10 +154,6 @@
                 // $("#find-line").select2("val", "");
                 $('#find-line').html('');
             }
-
-            // $('#find-line').on('select2:select', async function (e) {
-            //     const _data = e.params.data
-            // });
         }
 
         document.getElementById("assycode").focus();
@@ -182,9 +200,35 @@
             }
         });
 
-        $('#lotnumber').keydown(function(e){
+        $('#barcode').keydown(function(e){
             if(e.keyCode == 13) {
-                document.getElementById("smtline").focus();
+                var inputBarcode = this.value;
+                $.ajax({
+                    url: base_url+'/barcodeserial/barcodeDetail/data?barcode='+inputBarcode,
+                    type: 'GET',
+                    dataType: 'json',
+                    cache:false,
+                    success: function(result){
+
+                    },
+                    error: function(err){
+                        console.log(err)
+                    }
+                }).done(function(data){
+                    console.log(data)
+                    if(data['barcode']){
+                        $('#partnumber').val(data['barcode'].part_number);
+                        $('#lotnumber').val(data['barcode'].part_lot);
+                        $('#partlocation').val(data['location'][0].assy_location);
+                        document.getElementById("smtline").focus();
+                    }else{
+                        showErrorMessage('Barcode Serial '+ inputBarcode +'  Not Found');
+                        $('#barcode').val('');
+                    }
+
+                    // setLineItems();
+                });
+                
             }
         });
 
@@ -196,7 +240,7 @@
 
         $('#kepilot').keydown(function(e){
             if(e.keyCode == 13) {
-                document.getElementById("lotnumber").focus();
+                document.getElementById("barcode").focus();
             }
         });
 
@@ -211,5 +255,49 @@
         function showErrorMessage(message){
             swal("", message, "warning");
         }
+
+        $('#form-smt-data').on('submit', function(event){
+            event.preventDefault();
+                
+            var formData = new FormData(this);
+            console.log($(this).serialize())
+            $.ajax({
+                url:base_url+'/smtprocess/savesmtline',
+                method:'post',
+                data:formData,
+                dataType:'JSON',
+                contentType: false,
+                cache: false,
+                processData: false,
+                beforeSend:function(){
+                    // showBasicMessage();
+                },
+                success:function(data)
+                {
+                    console.log(data);
+                },
+                error:function(err){
+                    // showErrorMessage(JSON.stringify(err))
+                }
+            }).done(function(result){
+                console.log(result);
+                if(result.msgtype === "1"){
+                    $("#barcode").val('');
+                    $("#partnumber").val('');
+                    $("#lotnumber").val('');
+                    $("#partlocation").val('');
+                    $("#smtline").val('');
+                    $("#smtshift").val('');
+                    document.getElementById("barcode").focus();
+                    $('#msg-success-div').show();
+
+                    setTimeout(function(){ 
+                        $('.msg-alert').hide();
+                    }, 5000);
+                }else{
+                    
+                }
+            });
+        });
     });
 </script>

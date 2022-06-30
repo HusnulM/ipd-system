@@ -11,11 +11,12 @@ class Smtprocess_model{
 
     public function save($data){
         // t_smt_line_process
-        $query = "INSERT INTO t_smt_line_process (assy_code, kepi_lot, part_lot, smt_line, smt_shift, createdby, createdon) VALUES (:assy_code, :kepi_lot, :part_lot, :smt_line, :smt_shift, :createdby, :createdon)";
+        $query = "INSERT INTO t_smt_line_process (assy_code, kepi_lot, barcode_serial, part_lot, smt_line, smt_shift, createdby, createdon) VALUES (:assy_code, :kepi_lot, :barcode_serial, :part_lot, :smt_line, :smt_shift, :createdby, :createdon)";
         $this->db->query($query);
 
         $this->db->bind('assy_code', $data['assycode']);
         $this->db->bind('kepi_lot',  $data['kepilot']);
+        $this->db->bind('barcode_serial',  $data['barcode']);
         $this->db->bind('part_lot',  $data['lotnumber']);
         $this->db->bind('smt_line',  $data['smtline'] ?? null);
         $this->db->bind('smt_shift', $data['smtshift'] ?? null);
