@@ -11,8 +11,8 @@ class Partlocation extends Controller {
     public function index(){
       $check = $this->model('Home_model')->checkUsermenu('partlocation','Read');
       if ($check){
-          $data['title'] = 'ASSY CODE LOCATION';
-          $data['menu']  = 'ASSY CODE LOCATION';  
+          $data['title'] = 'PART CODE LOCATION';
+          $data['menu']  = 'PART CODE LOCATION';  
 
           $data['location'] = $this->model('Partlocation_model')->getLocation();
 
@@ -27,8 +27,8 @@ class Partlocation extends Controller {
     public function create(){
       $check = $this->model('Home_model')->checkUsermenu('partlocation','Create');
       if ($check){
-          $data['title'] = 'ADD ASSY CODE LOCATION';
-          $data['menu']  = 'ADD ASSY CODE LOCATION';  
+          $data['title'] = 'ADD PART CODE LOCATION';
+          $data['menu']  = 'ADD PART CODE LOCATION';  
 
           // $data['location'] = $this->model('Partlocation_model')->getLocation();
 
@@ -43,8 +43,8 @@ class Partlocation extends Controller {
     public function edit($uniq_id){
       $check = $this->model('Home_model')->checkUsermenu('partlocation','Create');
       if ($check){
-          $data['title'] = 'CHANGE ASSY CODE LOCATION';
-          $data['menu']  = 'CHANGE ASSY CODE LOCATION';  
+          $data['title'] = 'CHANGE PART CODE LOCATION';
+          $data['menu']  = 'CHANGE PART CODE LOCATION';  
 
           $data['location'] = $this->model('Partlocation_model')->getLocationById($uniq_id);
 
@@ -69,11 +69,11 @@ class Partlocation extends Controller {
 
     public function save(){
       if( $this->model('Partlocation_model')->save($_POST) > 0 ) {
-          Flasher::setMessage('ASSY CODE LOCATION CREATED','','success');
+          Flasher::setMessage('PART CODE LOCATION CREATED','','success');
           header('location: '. BASEURL . '/partlocation');
           exit;			
         }else{
-          Flasher::setMessage('FAILED CREATE ASSY CODE LOCATION,','','danger');
+          Flasher::setMessage('FAILED CREATE PART CODE LOCATION,','','danger');
           header('location: '. BASEURL . '/partlocation');
           exit;	
         }

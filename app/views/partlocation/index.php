@@ -14,7 +14,7 @@
                         </h2>
                         
                         <ul class="header-dropdown m-r--5">                                
-                        <a href="<?= BASEURL; ?>/partlocation/create" class="btn btn-success waves-effect pull-right">Create Location</a>
+                        <a href="<?= BASEURL; ?>/partlocation/create" class="btn btn-success waves-effect pull-right">Create Part Code Location</a>
                         </ul>
                     </div>
                     
