@@ -92,12 +92,8 @@
 									<div class="form-group">
                                         <button type="submit" id="btn-save" class="btn btn-primary">SAVE</button>
 										<a href="<?= BASEURL; ?>/smtprocess" class="btn btn-danger">CANCEL</a>
-                                        <!-- <button type="submit" id="btn-cancel" class="btn btn-danger">CANCEL</button> -->
 									</div>
 								</div>
-                            </div>
-                            <div class="row" id="additional-component">
-
                             </div>
                         </form>
                     </div>

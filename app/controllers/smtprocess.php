@@ -17,7 +17,7 @@ class Smtprocess extends Controller {
             // $data['location'] = $this->model('Smtprocess_model')->getLocation();
   
             $this->view('templates/header_a', $data);
-            $this->view('criticalpartprocess/index', $data);
+            $this->view('criticalpartprocess/smtline', $data);
             $this->view('templates/footer_a');
         }else{
             $this->view('templates/401');
@@ -34,6 +34,20 @@ class Smtprocess extends Controller {
             header('location: '. BASEURL . '/smtprocess');
             exit;	
         }
+    }
+
+    public function getbarcodedetail($params){
+        $url = parse_url($_SERVER['REQUEST_URI']);
+        $data = parse_str($url['query'], $params);
+        $barcode = $params['barcode'];
+
+		$data['barcode'] = $this->model('Warehouseissuance_model')->getWareHouseIssuanceByBarcode($barcode);
+		if($data['barcode']){
+			$data['location'] = $this->model('Partlocation_model')->getLocationByPart($data['barcode']['part_number']);
+		}else{
+			$data['location'] = null;
+		}
+		echo json_encode($data);
     }
 
     public function savesmtline(){

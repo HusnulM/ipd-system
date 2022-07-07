@@ -40,4 +40,24 @@ class Handworkprocess extends Controller {
             $this->view('templates/401');
         }  
     }
+
+    public function saveshandwork(){
+        if( $this->model('Handworkprocess_model')->save($_POST) > 0 ) {
+            $result = array(
+                "msgtype" => "1",
+                "message" => "Success"
+            );
+            echo json_encode($result);
+            // echo json_encode($nextNumb['nextnumb']);
+            exit;			
+        }else{
+            // $result = ["msg"=>"error"];
+            $result = array(
+                "msgtype" => "2",
+                "message" => "Error"
+            );
+            echo json_encode($result);
+            exit;	
+        }
+    }
 }

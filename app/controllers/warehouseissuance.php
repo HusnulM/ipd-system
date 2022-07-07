@@ -17,7 +17,7 @@ class Warehouseissuance extends Controller {
           $data['lines'] = $this->model('Line_model')->getListProductionLines();
 
           $this->view('templates/header_a', $data);
-          $this->view('warehouseissuance/index', $data);
+          $this->view('warehouseissuance/index2', $data);
           $this->view('templates/footer_a');
       }else{
           $this->view('templates/401');
