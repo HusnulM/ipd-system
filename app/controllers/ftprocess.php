@@ -24,6 +24,18 @@ class Ftprocess extends Controller {
         }    
     }
 
+    public function getLotByKepi($params){
+		$url = parse_url($_SERVER['REQUEST_URI']);
+        $data = parse_str($url['query'], $params);
+        $kepi_lot = $params['kepilot'];
+		$check['data'] = $this->model('Ftprocess_model')->getPartLotList($kepi_lot);
+		if($check['data']){
+			echo json_encode($check);
+		}else{
+			echo 'false';
+		}
+	}
+
     public function save(){
         if( $this->model('Ftprocess_model')->save($_POST) > 0 ) {
             Flasher::setMessage('FT Process Created','','success');
@@ -32,6 +44,27 @@ class Ftprocess extends Controller {
         }else{
             Flasher::setMessage('FT Process Failed','','danger');
             header('location: '. BASEURL . '/ftprocess');
+            exit;	
+        }
+    }
+
+    public function savesft(){
+        if( $this->model('Ftprocess_model')->save($_POST) > 0 ) {
+            $result = array(
+                "msgtype" => "1",
+                "message" => "Success"
+            );
+            echo json_encode($result);
+            // Flasher::setMessage('Ageing Process Created','','success');
+            exit;			
+        }else{
+            // $result = ["msg"=>"error"];
+            $result = array(
+                "msgtype" => "2",
+                "message" => "Error"
+            );
+            echo json_encode($result);
+			// Flasher::setMessage('Ageing Process Failed','','danger');
             exit;	
         }
     }

@@ -8,25 +8,20 @@
                         Flasher::msgInfo();
                     ?>
                 </div>
-                <div id="msg-box" style="display:none;">
-                    <div class="alert alert-success alert-dismissible" role="alert" id="msg-box-success" style="display:none;">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <strong>QA Process Created</strong>
-                    </div>
-                    <div class="alert alert-danger alert-dismissible" role="alert" id="msg-box-error" style="display:none;">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <strong>QA Process Failed</strong>
-                    </div>
-                </div>
                 <div class="card">
                     <div class="header">
                         <h2>
                             <?= $data['menu']; ?>
                         </h2>
+
+                        <ul class="header-dropdown m-r--5">                                
+                            <button type="button" class="btn bg-green" id="btn-select-part-lot">
+                                <i class="material-icons">add</i> <span>Select Part Lot</span>
+                            </button>
+                        </ul>
                     </div>
                     <div class="body">
-                    <!-- id="form-submit-data"  -->
-                        <form action="<?= BASEURL; ?>/qainspection/save" method="POST">
+                        <form action="<?= BASEURL; ?>/ftprocess/save" method="POST">
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="row">
@@ -49,41 +44,58 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xm-12">
-                                            <label for="qa_result">QA RESULT</label>
-                                            <select name="qa_result" id="qa_result" class="form-control">
-                                                <option value="">Select QA Result</option>
-                                                <option value="GOOD">GOOD</option>
-                                                <option value="NG">NG</option>
-                                                <option value="HOLD">HOLD</option>
-                                            </select>
+                                            <label for="ft_jig_no">FT JIG NO</label>
+                                            <input type="text" name="ft_jig_no" id="ft_jig_no" class="form-control" autocomplete="off" required/>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
-                                    <div class="row">
+                                    <!-- <div class="row">
                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xm-12">
                                             <label for="assycode">ASSY CODE</label>
                                             <input type="text" name="assycode" id="assycode" class="form-control" autocomplete="off" readonly="true"/>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xm-12">
+                                        <div class="col-lg-6 col-md-12 col-sm-12 col-xm-12">
                                             <label for="partmodel">MODEL</label>
                                             <input type="text" name="partmodel" id="partmodel" class="form-control"  readonly="true"/>
                                         </div>
-                                        <!-- <div class="col-lg-6 col-md-12 col-sm-12 col-xm-12">
+                                        <div class="col-lg-6 col-md-12 col-sm-12 col-xm-12">
                                             <label for="lotnumber">PART LOT NO</label>
                                             <input type="text" name="lotnumber" id="lotnumber" class="form-control" autocomplete="off" readonly="true"/>
-                                        </div> -->
-                                    </div>      
-                                    <div class="row qa_result" style="display:none;">
-                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xm-12">
-                                            <label for="qa_remark">FAILURE REMARK</label>
-                                            <input type="text" name="qa_remark" id="qa_remark" class="form-control" autocomplete="off"/>
                                         </div>
+                                    </div>       -->
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-12 col-sm-12 col-xm-12">
+                                            <label for="assycode">ASSY CODE</label>
+                                            <input type="text" name="assycode" id="assycode" class="form-control" autocomplete="off" readonly="true"/>
+                                        </div>
+                                        <div class="col-lg-6 col-md-12 col-sm-12 col-xm-12">
+                                            <label for="partmodel">MODEL</label>
+                                            <input type="text" name="partmodel" id="partmodel" class="form-control"  readonly="true"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-12 col-sm-12 col-xm-12">
+                                            <label for="qrcode">BARCODE SERIAL</label>
+                                            <input type="text" name="qrcode" id="qrcode" class="form-control" autocomplete="off" readonly="true"/>
+                                        </div>
+                                        <div class="col-lg-6 col-md-12 col-sm-12 col-xm-12">
+                                            <label for="lotnumber">PART LOT NO</label>
+                                            <input type="text" name="lotnumber" id="lotnumber" class="form-control" autocomplete="off" readonly="true"/>
+                                        </div>
+                                    </div>   
+                                    <div class="row">
                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xm-12">
-                                            <label for="qa_defect_qty">QA DEFECT QUANTITY</label>
-                                            <input type="text" name="qa_defect_qty" id="qa_defect_qty" class="form-control" autocomplete="off"/>
+                                            <label for="ft_result">FT RESULT</label>
+                                            <input type="text" name="ft_result" id="ft_result" class="form-control" autocomplete="off" required/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xm-12">
+                                            <label for="ft_remark">FAILURE REMARK</label>
+                                            <input type="text" name="ft_remark" id="ft_remark" class="form-control" autocomplete="off" required/>
                                         </div>
                                     </div>                      
                                 </div>                                
@@ -98,6 +110,37 @@
                             </div>
                         </form>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalPartLotList" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modalPartLotListLabel">Lot Number List of KEPI</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-responsive" id="tbl-part-lot-list" style="width:100%;">
+                                <thead>
+                                    <th>Barcode Serial</th>
+                                    <th>Assy Code</th>
+                                    <th>Kepi Lot Number</th>
+                                    <th>Part Lot Number</th>
+                                    <th></th>
+                                </thead>
+                                <tbody id="tbl-part-lot-item">
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
                 </div>
             </div>
         </div>
@@ -213,61 +256,39 @@
             swal("", message, "warning");
         }
 
-        $('#qa_result').on('change',function(){
-            if(this.value === 'NG'){
-                $('.qa_result').show();
-                $("#qa_remark").prop('required',true);
-                $("#qa_defect_qty").prop('required',true);
-            }else{
-                $('.qa_result').hide();
-                $('#qa_remark').val('');
-                $('#qa_defect_qty').val('');
-                $("#qa_remark").prop('required',false);
-                $("#qa_defect_qty").prop('required',false);
-            }
-        });
+        $("#btn-select-part-lot").on('click', function(){
+            $('#modalPartLotList').modal('show');
+            var _KepiLot = $('#kepilot').val();
+            $('#tbl-part-lot-list').DataTable({
+                "ajax":{
+                    "url": base_url+'/ftprocess/getLotByKepi/data?kepilot='+_KepiLot+'&action=table_data',
+                    "dataType": "json",
+                    "type": "POST"
+                },
+                "bDestroy": true,
+                "paging":   true,
+                "searching":   true,
+                "columns": [
+                    { "data": "barcode_serial" },
+                    { "data": "assy_code" },
+                    { "data": "kepi_lot" },
+                    { "data": "part_lot" },
+                    {"defaultContent": 
+                        "<button class='btn btn-success btn-sm button-select'> Select</button>"
+                    }   
+                ]   
+            });
 
-        $('#form-submit-data').on('submit', function(event){
-            event.preventDefault();
+            $('#tbl-part-lot-list tbody').on( 'click', '.button-select', function () {
                 
-            var formData = new FormData(this);
-            // console.log($(this).serialize())
-            $.ajax({
-                url:base_url+'/qainspection/saveqa',
-                method:'post',
-                data:formData,
-                dataType:'JSON',
-                contentType: false,
-                cache: false,
-                processData: false,
-                beforeSend:function(){
-                    // showBasicMessage();
-                },
-                success:function(data)
-                {
-                    console.log(data);
-                },
-                error:function(err){
-                    // showErrorMessage(JSON.stringify(err))
-                    console.log(JSON.stringify(err));
-                }
-            }).done(function(result){
-                console.log(result);
-                $('#msg-box').show();
-                if(result.msgtype === "1"){
-                    // $("#qrcode, #failure_remark, #defect_qty").val('');
-                    $('#msg-box-success').show();
-                    $('#msg-box-error').hide();
-                    setTimeout(function(){ 
-                        $('#msg-box').hide();
-                    }, 5000);
-                }else{
-                    $('#msg-box-error').show();
-                    $('#msg-box-success').hide();
-                    setTimeout(function(){ 
-                        $('#msg-box').hide();
-                    }, 5000);
-                }
+                var table = $('#tbl-part-lot-list').DataTable();
+                selected_data = [];
+                selected_data = table.row($(this).closest('tr')).data();
+                // alert(selected_data.barcode_serial);
+                $('#lotnumber').val(selected_data.part_lot);
+                $('#qrcode').val(selected_data.barcode_serial);
+
+                $('#modalPartLotList').modal('hide');
             });
         });
     });

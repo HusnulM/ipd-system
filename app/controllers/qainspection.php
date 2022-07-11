@@ -35,4 +35,25 @@ class Qainspection extends Controller {
             exit;	
         }
     }
+
+    public function saveqa(){
+        if( $this->model('Qainspection_model')->save($_POST) > 0 ) {
+            $result = array(
+                "msgtype" => "1",
+                "message" => "Success"
+            );
+            echo json_encode($result);
+            // Flasher::setMessage('Ageing Process Created','','success');
+            exit;			
+        }else{
+            // $result = ["msg"=>"error"];
+            $result = array(
+                "msgtype" => "2",
+                "message" => "Error"
+            );
+            echo json_encode($result);
+			// Flasher::setMessage('Ageing Process Failed','','danger');
+            exit;	
+        }
+    }
 }

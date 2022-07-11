@@ -22,6 +22,19 @@ class Ageingprocess extends Controller {
         }    
     }
 
+	public function getLotByKepi($params){
+		$url = parse_url($_SERVER['REQUEST_URI']);
+        $data = parse_str($url['query'], $params);
+        $kepi_lot = $params['kepilot'];
+		// $assycode = $params['assycode'];
+		$check['data'] = $this->model('Ageingprocess_model')->getPartLotList($kepi_lot);
+		if($check['data']){
+			echo json_encode($check);
+		}else{
+			echo 'false';
+		}
+	}
+
 	public function checkKepiLot($params){
 		$url = parse_url($_SERVER['REQUEST_URI']);
         $data = parse_str($url['query'], $params);
@@ -61,5 +74,26 @@ class Ageingprocess extends Controller {
         }else{
             $this->view('templates/401');
         }  
+    }
+
+	public function savesageing(){
+        if( $this->model('Ageingprocess_model')->save($_POST) > 0 ) {
+            $result = array(
+                "msgtype" => "1",
+                "message" => "Success"
+            );
+            echo json_encode($result);
+            // Flasher::setMessage('Ageing Process Created','','success');
+            exit;			
+        }else{
+            // $result = ["msg"=>"error"];
+            $result = array(
+                "msgtype" => "2",
+                "message" => "Error"
+            );
+            echo json_encode($result);
+			// Flasher::setMessage('Ageing Process Failed','','danger');
+            exit;	
+        }
     }
 }
