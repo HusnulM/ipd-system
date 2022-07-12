@@ -11,7 +11,7 @@ class Ftprocess_model{
     }
 
     public function getPartLotList($kepi_lot){
-        $this->db->query("SELECT * FROM v_smt_handwork_data WHERE kepi_lot = '$kepi_lot' AND ft_process = 'N'");
+        $this->db->query("SELECT distinct assy_code, kepi_lot, barcode_serial, part_lot, fGetSMTAgeingProcess('1',kepi_lot, barcode_serial, part_lot) as smt_process, fGetSMTAgeingProcess('2',kepi_lot, barcode_serial, part_lot) as hw_process FROM v_smt_handwork_data WHERE kepi_lot = '$kepi_lot' AND ft_process = 'N'");
         return $this->db->resultSet();
     }
 

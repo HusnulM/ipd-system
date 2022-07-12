@@ -9,6 +9,16 @@ class Warehouseissuance_model{
 		  $this->db = new Database;
     }
 
+    public function getpartlotageing($partnumber,$partlot){
+        $this->db->query("SELECT * FROM t_ageing WHERE part_lot ='$partlot'");
+		return $this->db->single();
+    }
+
+    public function getpartlotft($partnumber,$partlot){
+        $this->db->query("SELECT * FROM t_ft_process WHERE part_lot ='$partlot'");
+		return $this->db->single();
+    }
+
     public function getAll(){
         $this->db->query("SELECT * FROM t_process_sequence");
 		return $this->db->resultSet();

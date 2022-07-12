@@ -24,6 +24,17 @@ class Warehouseissuance extends Controller {
       }    
     }
 
+    public function getpartlotageingft($params){
+        $url = parse_url($_SERVER['REQUEST_URI']);
+        $data = parse_str($url['query'], $params);
+        $partnumber = $params['partnumber'];
+        $partlot    = $params['partlotnum'];
+
+        $data['ageing'] = $this->model('Warehouseissuance_model')->getpartlotageing($partnumber,$partlot);
+        $data['ft']     = $this->model('Warehouseissuance_model')->getpartlotft($partnumber,$partlot);
+        echo json_encode($data);
+    }
+
     public function saveWhIssuance(){
       // echo json_encode($_POST);
       if( $this->model('Warehouseissuance_model')->saveWHIssuance($_POST) > 0 ) {

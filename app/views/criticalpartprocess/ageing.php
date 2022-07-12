@@ -131,11 +131,22 @@
                         <div class="table-responsive">
                             <table class="table table-responsive" id="tbl-part-lot-list" style="width:100%;">
                                 <thead>
-                                    <th>Barcode Serial</th>
-                                    <th>Assy Code</th>
-                                    <th>Kepi Lot Number</th>
-                                    <th>Part Lot Number</th>
-                                    <th></th>
+                                    <tr>
+                                        <th>Barcode Serial</th>
+                                        <th>Assy Code</th>
+                                        <th>Kepi Lot Number</th>
+                                        <th>Part Lot Number</th>
+                                        <th>SMT Process</th>
+                                        <th>HW Process</th>
+                                        <th></th>
+                                    </tr>
+                                    <!-- <tr>
+                                        <th colspan="4"></th>
+                                        <th>Tes</th>
+                                        <th>Coba</th>
+                                        <th>Tes</th>
+                                        <th>Coba</th>
+                                    </tr> -->
                                 </thead>
                                 <tbody id="tbl-part-lot-item">
                                     
@@ -292,10 +303,15 @@
                     { "data": "assy_code" },
                     { "data": "kepi_lot" },
                     { "data": "part_lot" },
+                    { "data": "smt_process" },
+                    { "data": "hw_process" },
                     {"defaultContent": 
                         "<button class='btn btn-success btn-sm button-select'> Select</button>"
                     }   
-                ]   
+                ],
+                // columnDefs: [
+                //     { orderable: false, targets: [ 1, 2, 3 ] } //This part is ok now
+                // ]   
             });
 
             $('#tbl-part-lot-list tbody').on( 'click', '.button-select', function () {

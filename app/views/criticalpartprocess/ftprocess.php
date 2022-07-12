@@ -56,7 +56,7 @@
                                         <div class="col-lg-6 col-md-12 col-sm-12 col-xm-12">
                                             <label for="ft_result">FT RESULT</label>
                                             <select name="ft_result" id="ft_result" class="form-control">
-                                                <option value="">Select Ageing Result</option>
+                                                <option value="">Select FT Result</option>
                                                 <option value="GOOD">GOOD</option>
                                                 <option value="NG">NG</option>
                                                 <option value="HOLD">HOLD</option>
@@ -130,6 +130,8 @@
                                     <th>Assy Code</th>
                                     <th>Kepi Lot Number</th>
                                     <th>Part Lot Number</th>
+                                    <th>SMT Process</th>
+                                    <th>HW Process</th>
                                     <th></th>
                                 </thead>
                                 <tbody id="tbl-part-lot-item">
@@ -287,6 +289,8 @@
                     { "data": "assy_code" },
                     { "data": "kepi_lot" },
                     { "data": "part_lot" },
+                    { "data": "smt_process" },
+                    { "data": "hw_process" },
                     {"defaultContent": 
                         "<button class='btn btn-success btn-sm button-select'> Select</button>"
                     }   

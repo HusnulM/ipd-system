@@ -51,11 +51,11 @@
                             <div class="row">
                                 <div class="col-lg-3 col-md-6 col-sm-12 col-xm-12">
                                     <label for="ageing_status">AGEING STATUS</label>
-                                    <input type="text" name="ageing_status" id="ageing_status" class="form-control" autocomplete="off"/>
+                                    <input type="text" name="ageing_status" id="ageing_status" class="form-control" autocomplete="off" readonly/>
                                 </div>
                                 <div class="col-lg-3 col-md-6 col-sm-12 col-xm-12">
                                     <label for="ft_status">FT STATUS</label>
-                                    <input type="text" name="ft_status" id="ft_status" class="form-control" autocomplete="off"/>
+                                    <input type="text" name="ft_status" id="ft_status" class="form-control" autocomplete="off" readonly/>
                                 </div>
                             </div>
                             <!-- <div class="row">
@@ -153,9 +153,50 @@
             // $('#find-line').val(null).trigger('change');
             var inputMaterial = this.value;
             if(e.keyCode == 13) {
-                xdata = [];
+                document.getElementById("lotnumber").focus();
+                // xdata = [];
+                // $.ajax({
+                //     url: base_url+'/partlocation/getMaterialbyCode/data?material='+inputMaterial,
+                //     type: 'GET',
+                //     dataType: 'json',
+                //     cache:false,
+                //     success: function(result){
+
+                //     },
+                //     error: function(err){
+                //         console.log(err)
+                //     }
+                // }).done(function(data){
+                //     // console.log(data)
+                //     if(data){
+                //         // $('#partmodel').val(data['mat'].matdesc);
+                //         // $('#uom').val(data['mat'].matunit);
+                //         document.getElementById("lotnumber").focus();
+
+                //         // $("#assy_line").html('');
+                        
+                //         // for (var x = 0; x < data['loc'].length; x++) {
+                //         //     xdata.push({
+                //         //         id: data['loc'][x]['assy_location'],
+                //         //         text: data['loc'][x]['assy_location']
+                //         //     });
+                //         // };
+                        
+                //     }else{
+                //         showErrorMessage('Part Code Not Found');
+                //     }
+
+                //     setLineItems();
+                // });
+            }
+        });
+
+        $('#lotnumber').keydown(function(e){
+            if(e.keyCode == 13) {
+                var _partNumber = $('#assycode').val();
+                var _partLot    = $('#lotnumber').val();
                 $.ajax({
-                    url: base_url+'/partlocation/getMaterialbyCode/data?material='+inputMaterial,
+                    url: base_url+'/warehouseissuance/getpartlotageingft/data?partnumber='+_partNumber+'&partlotnum='+_partLot,
                     type: 'GET',
                     dataType: 'json',
                     cache:false,
@@ -166,39 +207,19 @@
                         console.log(err)
                     }
                 }).done(function(data){
-                    // console.log(data)
-                    if(data){
-                        // $('#partmodel').val(data['mat'].matdesc);
-                        // $('#uom').val(data['mat'].matunit);
-                        document.getElementById("lotnumber").focus();
-
-                        $("#assy_line").html('');
-                        
-                        for (var x = 0; x < data['loc'].length; x++) {
-                            xdata.push({
-                                id: data['loc'][x]['assy_location'],
-                                text: data['loc'][x]['assy_location']
-                            });
-                        };
-                        
+                    console.log(data)
+                    if(data['ageing']){
+                        $('#ageing_status').val(data['ageing'].ageing_result);
                     }else{
-                        showErrorMessage('Part Code Not Found');
+                        $('#ageing_status').val('PENDING');
                     }
 
-                    setLineItems();
+                    if(data['ft']){
+                        $('#ft_status').val(data['ft'].ft_result);
+                    }else{
+                        $('#ft_status').val('PENDING');
+                    }
                 });
-            }
-        });
-
-        $('#lotnumber').keydown(function(e){
-            if(e.keyCode == 13) {
-                document.getElementById("quantity").focus();
-            }
-        });
-
-        $('#quantity').keydown(function(e){
-            if(e.keyCode == 13) {
-                // document.getElementById("line").focus();
             }
         });
 
