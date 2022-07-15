@@ -45,4 +45,36 @@ class Reports extends Controller{
             $this->view('templates/401');
         }          
     }
+
+	public function criticalpart(){
+		$check = $this->model('Home_model')->checkUsermenu('reports/criticalpart','Read');
+        if ($check){
+			$data['title']    = 'Report Critical Parts';
+			$data['menu']     = 'Report Critical Parts';
+
+			$this->view('templates/header_a', $data);
+			$this->view('reports/criticalpart', $data);
+			$this->view('templates/footer_a');
+		}else{
+            $this->view('templates/401');
+        }          
+    }
+
+    public function criticalpartview($strdate = null, $enddate = null){
+		$check = $this->model('Home_model')->checkUsermenu('reports/criticalpart','Read');
+        if ($check){
+			$data['title']    = 'Report Critical Parts';
+			$data['menu']     = 'Report Critical Parts';
+
+			$data['rdata']   = $this->model('Report_model')->rcriticalpart($strdate, $enddate);
+			$data['strdate'] = $strdate;
+			$data['enddate'] = $enddate;
+
+			$this->view('templates/header_a', $data);
+			$this->view('reports/criticalpartview', $data);
+			$this->view('templates/footer_a');
+		}else{
+            $this->view('templates/401');
+        }          
+    }
 }

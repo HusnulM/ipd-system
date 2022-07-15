@@ -33,7 +33,7 @@ class Qainspection_model{
         $this->db->bind('qa_operator',          $data['manpower_name']);
         $this->db->bind('qa_date',              date('Y-m-d'));
         $this->db->bind('qa_result',            $data['qa_result']);
-        $this->db->bind('failure_remark',       $data['qa_remark']);
+        $this->db->bind('failure_remark',       $data['qa_remark'] ?? null);
         $this->db->bind('defect_qty',           $defectQty);
         // $this->db->bind('qa_result',            $data['qa_result']);
         $this->db->bind('createdby',            $_SESSION['usr']['user']);

@@ -15,4 +15,9 @@ class Report_model{
         // $this->db->query("SELECT a.*, b.defect as 'itmdefect', b.location as 'itmlocation', b.cause as 'itmcause', b.action as 'itmaction', b.repairaction as 'raction', b.repairremark FROM v_report_transaction as a left join t_defect_process as b on a.transactionid = b.transactionid and a.process_counter = b.counter where a.createdon BETWEEN '$strdate' AND '$enddate' order by a.transactionid, b.id, a.process_counter, a.repair_counter asc");
         return $this->db->resultSet();
     }
+
+    public function rcriticalpart($strdate, $enddate){
+      $this->db->query("SELECT * FROM v_critichal_part1 where smt_date BETWEEN '$strdate' AND '$enddate' ORDER BY kepi_lot, part_lot ASC");
+      return $this->db->resultSet();
+    }
 }
