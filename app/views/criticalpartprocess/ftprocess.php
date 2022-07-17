@@ -61,8 +61,19 @@
                                                 <option value="NG">NG</option>
                                                 <option value="HOLD">HOLD</option>
                                             </select>
-                                            <!-- <input type="text" name="ageing_result" id="ageing_result" class="form-control" autocomplete="off" required/> -->
                                         </div>
+                                        <div class="col-lg-8 col-md-12 col-sm-12 col-xm-12 ageing-result" style="display:none;">
+                                            <label for="failure_remark">FAILURE REMARK</label>
+                                            <input type="text" name="failure_remark" id="failure_remark" class="form-control" autocomplete="off"/>
+                                        </div>
+                                        <div class="col-lg-4 col-md-12 col-sm-12 col-xm-12 ageing-result" style="display:none;">
+                                            <label for="defect_qty">DEFECT QUANTITY</label>
+                                            <input type="text" name="defect_qty" id="defect_qty" class="form-control" autocomplete="off"/>
+                                        </div>
+                                        <!-- <div class="row ageing-result" style="display:none;">
+                                        </div>
+                                        <div class="row ageing-result" style="display:none;">
+                                        </div>  -->
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
@@ -85,19 +96,18 @@
                                             <label for="lotnumber">PART LOT NO</label>
                                             <input type="text" name="lotnumber" id="lotnumber" class="form-control" autocomplete="off" readonly="true"/>
                                         </div>
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xm-12">
+                                            <label for="part_ft_result">CRITICAL PART LOT RESULT</label>
+                                            <select name="part_ft_result" id="part_ft_result" class="form-control">
+                                                <option value="">Select PART Lot Result</option>
+                                                <option value="GOOD">GOOD</option>
+                                                <option value="NG">NG</option>
+                                                <option value="HOLD">HOLD</option>
+                                            </select>
+                                            <!-- <input type="text" name="ageing_result" id="ageing_result" class="form-control" autocomplete="off" required/> -->
+                                        </div>
                                     </div>      
-                                    <div class="row ageing-result" style="display:none;">
-                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xm-12">
-                                            <label for="failure_remark">FAILURE REMARK</label>
-                                            <input type="text" name="failure_remark" id="failure_remark" class="form-control" autocomplete="off"/>
-                                        </div>
-                                    </div>
-                                    <div class="row ageing-result" style="display:none;">
-                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xm-12">
-                                            <label for="defect_qty">DEFECT QUANTITY</label>
-                                            <input type="text" name="defect_qty" id="defect_qty" class="form-control" autocomplete="off"/>
-                                        </div>
-                                    </div>                      
+                                                         
                                 </div>                                
                             </div>
                             <div class="row">
@@ -231,7 +241,7 @@
 
         $('#manpower_name').keydown(function(e){
             if(e.keyCode == 13) {
-                document.getElementById("ageing_result").focus();
+                document.getElementById("ft_time").focus();
             }
         });
 

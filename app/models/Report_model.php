@@ -17,7 +17,7 @@ class Report_model{
     }
 
     public function rcriticalpart($strdate, $enddate){
-      $this->db->query("SELECT * FROM v_critichal_part1 where smt_date BETWEEN '$strdate' AND '$enddate' ORDER BY kepi_lot, part_lot ASC");
+      $this->db->query("SELECT *, fGetPartLocation(barcode_serial) as 'location' FROM v_critichal_part1 where smt_date BETWEEN '$strdate' AND '$enddate' ORDER BY kepi_lot, part_lot ASC");
       return $this->db->resultSet();
     }
 }

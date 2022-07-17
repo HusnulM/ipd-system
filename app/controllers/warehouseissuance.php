@@ -37,14 +37,21 @@ class Warehouseissuance extends Controller {
 
     public function saveWhIssuance(){
       // echo json_encode($_POST);
-      if( $this->model('Warehouseissuance_model')->saveWHIssuance($_POST) > 0 ) {
-        Flasher::setMessage('Warehouse Issuance Created','','success');
-        header('location: '. BASEURL . '/warehouseissuance');
-        exit;			
-      }else{
-        Flasher::setMessage('Create Warehouse Issuance Failed','','danger');
+      $checBarcode = $this->model('Warehouseissuance_model')->getWareHouseIssuanceByBarcode($_POST['barcode']);
+      if($checBarcode){
+        Flasher::setMessage('POKANON QR CODE '. $_POST['barcode'] .' Already Use','','danger');
         header('location: '. BASEURL . '/warehouseissuance');
         exit;	
+      }else{
+        if( $this->model('Warehouseissuance_model')->saveWHIssuance($_POST) > 0 ) {
+          Flasher::setMessage('Warehouse Issuance Created','','success');
+          header('location: '. BASEURL . '/warehouseissuance');
+          exit;			
+        }else{
+          Flasher::setMessage('Create Warehouse Issuance Failed','','danger');
+          header('location: '. BASEURL . '/warehouseissuance');
+          exit;	
+        }
       }
     }
 }

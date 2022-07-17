@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 30, 2022 at 05:52 PM
+-- Generation Time: Jul 17, 2022 at 04:21 PM
 -- Server version: 8.0.29
 -- PHP Version: 7.4.27
 
@@ -25,7 +25,7 @@ DELIMITER $$
 --
 -- Procedures
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_ProductionView` ()  BEGIN
+CREATE  PROCEDURE `sp_ProductionView` ()  BEGIN
 	
     DECLARE date1 date;
     DECLARE date2 date;
@@ -47,7 +47,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_ProductionView` ()  BEGIN
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_ProductionViewDate` ()  BEGIN
+CREATE  PROCEDURE `sp_ProductionViewDate` ()  BEGIN
 	
     DECLARE date1 date;
     DECLARE date2 date;
@@ -60,10 +60,30 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_ProductionViewDate` ()  BEGIN
     select date1, date2, date3;
 END$$
 
+CREATE  PROCEDURE `sp_UpdateAgeingProcessStatus` (IN `pKepi` VARCHAR(50), IN `pBarcode` VARCHAR(50), IN `pPartLot` VARCHAR(50), IN `pAssycode` VARCHAR(70))  BEGIN
+	UPDATE t_handwork_process set ageing_process = 'Y' WHERE kepi_lot = pKepi AND barcode_serial = pBarcode AND part_lot = pPartLot and assy_code = pAssycode;
+
+UPDATE t_smt_line_process set ageing_process = 'Y' WHERE kepi_lot = pKepi AND barcode_serial = pBarcode AND part_lot = pPartLot and assy_code = pAssycode;
+END$$
+
+CREATE  PROCEDURE `sp_UpdateFTProcessStatus` (IN `pKepi` VARCHAR(50), IN `pBarcode` VARCHAR(50), IN `pPartLot` VARCHAR(50), IN `pAssycode` VARCHAR(70))  BEGIN
+	UPDATE t_handwork_process set ft_process = 'Y' WHERE kepi_lot = pKepi AND barcode_serial = pBarcode AND part_lot = pPartLot and assy_code = pAssycode;
+
+UPDATE t_smt_line_process set ft_process = 'Y' WHERE kepi_lot = pKepi AND barcode_serial = pBarcode AND part_lot = pPartLot and assy_code = pAssycode;
+END$$
+
 --
 -- Functions
 --
-CREATE DEFINER=`root`@`localhost` FUNCTION `fGetProdPlanQty` (`pPlandate` DATE, `pLine` INT, `pShift` INT, `pModel` VARCHAR(70), `pLotnum` VARCHAR(50)) RETURNS BIGINT BEGIN
+CREATE  FUNCTION `fGetPartLocation` (`pBarcode` VARCHAR(50)) RETURNS VARCHAR(50) CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci BEGIN
+	DECLARE hasil varchar(50);
+    
+    SET hasil = (SELECT a.assy_location FROM t_part_location as a INNER JOIN t_warehouse_issuance as b on a.part_number = b.part_number WHERE b.barcode_serial = pBarcode);
+    
+    RETURN (hasil);
+END$$
+
+CREATE  FUNCTION `fGetProdPlanQty` (`pPlandate` DATE, `pLine` INT, `pShift` INT, `pModel` VARCHAR(70), `pLotnum` VARCHAR(50)) RETURNS BIGINT BEGIN
     DECLARE hasil bigint;
 	
     SET hasil = (SELECT sum(plan_qty) from t_planning where plandate = pPlandate and productionline = pLine and shift = pShift and model = pModel and lot_number = pLotnum);    
@@ -75,7 +95,7 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `fGetProdPlanQty` (`pPlandate` DATE, 
 	RETURN (hasil);
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `fGetProdTotalQtyOutput` (`pPlandate` DATE, `pLine` INT, `pShift` INT, `pModel` VARCHAR(70), `pLotnum` VARCHAR(50)) RETURNS BIGINT BEGIN
+CREATE  FUNCTION `fGetProdTotalQtyOutput` (`pPlandate` DATE, `pLine` INT, `pShift` INT, `pModel` VARCHAR(70), `pLotnum` VARCHAR(50)) RETURNS BIGINT BEGIN
     DECLARE hasil bigint;
 	
     SET hasil = (SELECT sum(output_qty) from t_planning_output where plandate = pPlandate and productionline = pLine and shift = pShift and model = pModel and lot_number = pLotnum);    
@@ -84,6 +104,25 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `fGetProdTotalQtyOutput` (`pPlandate`
     if hasil is null THEN
    		set hasil = 0;
     end if;
+	RETURN (hasil);
+END$$
+
+CREATE  FUNCTION `fGetSMTAgeingProcess` (`pInd` VARCHAR(1), `pKepi` VARCHAR(50), `pQrcode` VARCHAR(50), `pLot` VARCHAR(50)) RETURNS VARCHAR(1) CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci BEGIN
+	DECLARE hasil varchar(1);
+    DECLARE icount bigint;
+    
+ 	if pInd = '1' THEN
+    	SET icount = (SELECT count(*) FROM t_smt_line_process WHERE kepi_lot = pKepi and barcode_serial = pQrcode and part_lot = pLot);
+    ELSEIF pInd = '2' THEN
+    	SET icount = (SELECT COUNT(*) FROM t_handwork_process WHERE kepi_lot = pKepi and barcode_serial = pQrcode and part_lot = pLot);
+    end if;
+    
+    if icount > 0 THEN
+    	set hasil = 'Y';
+    ELSE
+    	set hasil = 'N';
+    end if;
+    
 	RETURN (hasil);
 END$$
 
@@ -137,12 +176,18 @@ INSERT INTO `t_actionlist` (`id`, `actionname`, `createdon`, `createdby`) VALUES
 --
 
 CREATE TABLE `t_ageing` (
+  `id` int NOT NULL,
   `kepi_lot` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `quantity` decimal(15,3) NOT NULL,
   `manpower_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ageing_time` decimal(10,2) DEFAULT NULL,
   `ageing_result` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `failure_remark` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `defect_quantity` decimal(15,3) DEFAULT NULL,
+  `assy_code` varchar(70) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `barcode_serial` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `part_lot` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `part_lot_result` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `createdby` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `createdon` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -151,8 +196,19 @@ CREATE TABLE `t_ageing` (
 -- Dumping data for table `t_ageing`
 --
 
-INSERT INTO `t_ageing` (`kepi_lot`, `quantity`, `manpower_name`, `ageing_result`, `failure_remark`, `defect_quantity`, `createdby`, `createdon`) VALUES
-('KEPI-0001', '90.000', 'Test', 'Ok', 'Test', '10.000', 'sys-admin', '2022-06-19 13:06:24');
+INSERT INTO `t_ageing` (`id`, `kepi_lot`, `quantity`, `manpower_name`, `ageing_time`, `ageing_result`, `failure_remark`, `defect_quantity`, `assy_code`, `barcode_serial`, `part_lot`, `part_lot_result`, `createdby`, `createdon`) VALUES
+(1, 'KEPI1', '10.000', 'TEs', '2.00', 'GOOD', '', '0.000', '1122334-01', 'QR01', 'LOT01', NULL, 'sys-admin', '2022-07-12 14:07:48'),
+(3, 'KEPI1', '20.000', 'Tes', '3.00', 'GOOD', '', '0.000', '1122334-01', 'QR02', 'LOT02', NULL, 'sys-admin', '2022-07-13 07:07:33'),
+(4, 'KEPI1', '10.000', 'Test', '5.00', 'NG', 'Test', '3.000', '1122334-01', 'QR03', 'LOT03', 'NG', 'sys-admin', '2022-07-17 07:07:36'),
+(5, 'KEPI2', '10.000', 'Bejo', '2.00', 'GOOD', '', '0.000', '1122334-01', 'QR04', 'LOT101', 'GOOD', 'sys-admin', '2022-07-17 21:07:29');
+
+--
+-- Triggers `t_ageing`
+--
+DELIMITER $$
+CREATE TRIGGER `tg_UpdateAgeingProcessStatus` AFTER INSERT ON `t_ageing` FOR EACH ROW CALL sp_UpdateAgeingProcessStatus(NEW.kepi_lot, NEW.barcode_serial, NEW.part_lot, NEW.assy_code)
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -369,12 +425,19 @@ INSERT INTO `t_defect_repair` (`transactionid`, `counter`, `defect_process_id`, 
 --
 
 CREATE TABLE `t_ft_process` (
+  `id` int NOT NULL,
   `kepi_lot` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `manpower_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `ft_jig_no` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `ft_result` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `ft_quantity` decimal(15,3) NOT NULL,
-  `failure_remark` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `manpower_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ft_time` decimal(15,2) DEFAULT NULL,
+  `ft_jig_no` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ft_result` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ft_quantity` decimal(15,3) DEFAULT NULL,
+  `failure_remark` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `defect_qty` decimal(15,3) DEFAULT NULL,
+  `assy_code` varchar(70) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `barcode_serial` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `part_lot` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `part_lot_result` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `createdby` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `createdon` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -383,8 +446,18 @@ CREATE TABLE `t_ft_process` (
 -- Dumping data for table `t_ft_process`
 --
 
-INSERT INTO `t_ft_process` (`kepi_lot`, `manpower_name`, `ft_jig_no`, `ft_result`, `ft_quantity`, `failure_remark`, `createdby`, `createdon`) VALUES
-('KEPI-0001', 'test', 'no1', 'test', '90.000', 'ok', 'sys-admin', '2022-06-20 10:06:08');
+INSERT INTO `t_ft_process` (`id`, `kepi_lot`, `manpower_name`, `ft_time`, `ft_jig_no`, `ft_result`, `ft_quantity`, `failure_remark`, `defect_qty`, `assy_code`, `barcode_serial`, `part_lot`, `part_lot_result`, `createdby`, `createdon`) VALUES
+(1, 'KEPI1', 'Tes', '4.00', NULL, 'GOOD', '10.000', NULL, '0.000', '1122334-01', 'QR02', 'LOT02', NULL, 'sys-admin', '2022-07-13 06:07:46'),
+(2, 'KEPI1', 'Tes', '4.00', NULL, 'GOOD', '10.000', NULL, '0.000', '1122334-01', 'QR01', 'LOT01', NULL, 'sys-admin', '2022-07-13 06:07:16'),
+(3, 'KEPI2', 'Tes', '4.00', NULL, 'GOOD', '30.000', NULL, '0.000', '1122334-01', 'QR04', 'LOT101', 'GOOD', 'sys-admin', '2022-07-17 21:07:21');
+
+--
+-- Triggers `t_ft_process`
+--
+DELIMITER $$
+CREATE TRIGGER `tg_UpdateFTProcessStatus` AFTER INSERT ON `t_ft_process` FOR EACH ROW CALL sp_UpdateFTProcessStatus(NEW.kepi_lot, NEW.barcode_serial, NEW.part_lot, NEW.assy_code)
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -396,9 +469,12 @@ CREATE TABLE `t_handwork_process` (
   `id` int NOT NULL,
   `assy_code` varchar(70) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `kepi_lot` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `barcode_serial` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `part_lot` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `hw_line` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `hw_shift` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ageing_process` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'N',
+  `ft_process` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'N',
   `createdby` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `createdon` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -407,9 +483,9 @@ CREATE TABLE `t_handwork_process` (
 -- Dumping data for table `t_handwork_process`
 --
 
-INSERT INTO `t_handwork_process` (`id`, `assy_code`, `kepi_lot`, `part_lot`, `hw_line`, `hw_shift`, `createdby`, `createdon`) VALUES
-(1, '1122334-01', 'KEPI-0001', 'LOT-0001', 'HW Line 1', 'Shift 1', 'sys-admin', '2022-06-19 11:06:14'),
-(3, '1122334-01', 'KEPI-0002', 'LOT-0002', '1', '2', 'sys-admin', '2022-06-19 13:06:16');
+INSERT INTO `t_handwork_process` (`id`, `assy_code`, `kepi_lot`, `barcode_serial`, `part_lot`, `hw_line`, `hw_shift`, `ageing_process`, `ft_process`, `createdby`, `createdon`) VALUES
+(1, '1122334-01', 'KEPI1', 'QR02', 'LOT02', '1', '1', 'Y', 'Y', 'sys-admin', '2022-07-12 14:07:05'),
+(2, '1122334-01', 'KEPI1', 'QR01', 'LOT01', '1', '1', 'N', 'Y', 'sys-admin', '2022-07-12 14:07:39');
 
 -- --------------------------------------------------------
 
@@ -768,7 +844,8 @@ INSERT INTO `t_menus` (`id`, `menu`, `route`, `type`, `icon`, `menugroup`, `grou
 (35, 'AGEING Process', 'ageingprocess', 'parent', '', 6, NULL, '2022-06-18 00:00:00', 'sys-admin'),
 (36, 'FT Process', 'ftprocess', 'parent', '', 6, NULL, '2022-06-18 00:00:00', 'sys-admin'),
 (37, 'QA Inspection', 'qainspection', 'parent', '', 6, NULL, '2022-06-18 00:00:00', 'sys-admin'),
-(38, 'Barcode Serial', 'barcodeserial', 'parent', '', 1, NULL, '2022-06-29 00:00:00', 'sys-admin');
+(38, 'Barcode Serial', 'barcodeserial', 'parent', '', 1, NULL, '2022-06-29 00:00:00', 'sys-admin'),
+(39, 'Critical Part Report', 'reports/criticalpart', 'parent', '', 3, NULL, '2022-07-15 00:00:00', 'sys-admin');
 
 -- --------------------------------------------------------
 
@@ -802,7 +879,7 @@ CREATE TABLE `t_part_location` (
 --
 
 INSERT INTO `t_part_location` (`part_number`, `assy_location`, `uniq_id`, `createdby`, `createdon`) VALUES
-('209080001', 'DC1', '1656601237', 'sys-admin', '2022-06-30'),
+('209080001', 'DB1', '1656601237', 'sys-admin', '2022-06-30'),
 ('209080002', 'G90', '1656603881', 'sys-admin', '2022-06-30'),
 ('2177530-00', 'IC1', '1655007157', 'sys-admin', '2022-06-12'),
 ('2180281-00', 'T1', '1655007272', 'sys-admin', '2022-06-12'),
@@ -941,15 +1018,25 @@ INSERT INTO `t_production_lines` (`id`, `description`, `createdon`, `createdby`)
 --
 
 CREATE TABLE `t_qa_inspection` (
+  `id` int NOT NULL,
   `kepi_lot` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `lot_qty_inspected` decimal(15,3) NOT NULL,
+  `qty_inspected` decimal(15,3) NOT NULL,
   `critcal_part_list` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `qa_operator` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `qa_date` date NOT NULL,
   `qa_result` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `failure_remark` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `defect_qty` decimal(15,3) NOT NULL DEFAULT '0.000',
   `createdby` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `createdon` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `t_qa_inspection`
+--
+
+INSERT INTO `t_qa_inspection` (`id`, `kepi_lot`, `qty_inspected`, `critcal_part_list`, `qa_operator`, `qa_date`, `qa_result`, `failure_remark`, `defect_qty`, `createdby`, `createdon`) VALUES
+(1, 'KEPI1', '100.000', NULL, 'Tes', '2022-07-13', 'GOOD', '', '0.000', 'sys-admin', '2022-07-13 07:07:12');
 
 -- --------------------------------------------------------
 
@@ -1018,6 +1105,7 @@ INSERT INTO `t_rolemenu` (`roleid`, `menuid`, `createdon`, `createdby`) VALUES
 (1, 36, '2022-06-19 00:00:00', 'sys-admin'),
 (1, 37, '2022-06-19 00:00:00', 'sys-admin'),
 (1, 38, '2022-06-29 00:00:00', 'sys-admin'),
+(1, 39, '2022-07-15 00:00:00', 'sys-admin'),
 (2, 4, '2021-08-20 00:00:00', 'sys-admin'),
 (2, 5, '2021-08-20 00:00:00', 'sys-admin'),
 (3, 12, '2021-08-20 00:00:00', 'sys-admin');
@@ -1146,6 +1234,10 @@ INSERT INTO `t_role_avtivity` (`roleid`, `menuid`, `activity`, `status`, `create
 (1, 38, 'Delete', 1, '2022-06-29'),
 (1, 38, 'Read', 1, '2022-06-29'),
 (1, 38, 'Update', 1, '2022-06-29'),
+(1, 39, 'Create', 0, '2022-07-15'),
+(1, 39, 'Delete', 0, '2022-07-15'),
+(1, 39, 'Read', 1, '2022-07-15'),
+(1, 39, 'Update', 0, '2022-07-15'),
 (2, 4, 'Create', 1, '2021-08-20'),
 (2, 4, 'Delete', 1, '2021-08-20'),
 (2, 4, 'Read', 1, '2021-08-20'),
@@ -1173,6 +1265,8 @@ CREATE TABLE `t_smt_line_process` (
   `part_lot` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `smt_line` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `smt_shift` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ageing_process` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'N',
+  `ft_process` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'N',
   `createdby` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `createdon` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1181,9 +1275,11 @@ CREATE TABLE `t_smt_line_process` (
 -- Dumping data for table `t_smt_line_process`
 --
 
-INSERT INTO `t_smt_line_process` (`id`, `assy_code`, `kepi_lot`, `barcode_serial`, `part_lot`, `smt_line`, `smt_shift`, `createdby`, `createdon`) VALUES
-(5, '1122334-01', 'KEPI01', 'E1-226-0869', '90000001', 'SMTLINE1', 'Shit1', 'sys-admin', '2022-06-30 22:06:35'),
-(6, '1122334-01', 'KEPI1', 'E1-226-0879', '90000002', 'Test', 'Test', 'sys-admin', '2022-06-30 22:06:07');
+INSERT INTO `t_smt_line_process` (`id`, `assy_code`, `kepi_lot`, `barcode_serial`, `part_lot`, `smt_line`, `smt_shift`, `ageing_process`, `ft_process`, `createdby`, `createdon`) VALUES
+(1, '1122334-01', 'KEPI1', 'QR01', 'LOT01', '1', '2', 'Y', 'Y', 'sys-admin', '2022-07-12 14:07:48'),
+(2, '1122334-01', 'KEPI1', 'QR02', 'LOT02', '1', '1', 'Y', 'Y', 'sys-admin', '2022-07-12 14:07:01'),
+(3, '2424241-01', 'KEPI1', 'QR03', 'LOT03', '1', '2', 'N', 'N', 'sys-admin', '2022-07-17 07:07:48'),
+(4, '1122334-01', 'KEPI2', 'QR04', 'LOT101', '1', '1', 'Y', 'Y', 'sys-admin', '2022-07-17 21:07:00');
 
 -- --------------------------------------------------------
 
@@ -1282,11 +1378,14 @@ INSERT INTO `t_user_role` (`username`, `roleid`, `createdon`, `createdby`) VALUE
 
 CREATE TABLE `t_warehouse_issuance` (
   `issuance_number` int NOT NULL,
+  `barcode_serial` varchar(70) COLLATE utf8mb4_unicode_ci NOT NULL,
   `part_number` varchar(70) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `part_lot` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `quantity` decimal(15,3) DEFAULT NULL,
   `location` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `status` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ageing_status` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ft_status` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `issueance_date` date DEFAULT NULL,
   `createdby` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `createdon` date NOT NULL
@@ -1296,10 +1395,40 @@ CREATE TABLE `t_warehouse_issuance` (
 -- Dumping data for table `t_warehouse_issuance`
 --
 
-INSERT INTO `t_warehouse_issuance` (`issuance_number`, `part_number`, `part_lot`, `quantity`, `location`, `status`, `issueance_date`, `createdby`, `createdon`) VALUES
-(1, '1122334-01', 'LOT-0001', '100.000', 'IC1', 'PASS', '2022-06-16', 'sys-admin', '2022-06-16'),
-(2, '1122334-01', 'LOT-0002', '900.000', 'DB1', 'PASS', '2022-06-16', 'sys-admin', '2022-06-16'),
-(3, '2177530-00', 'LOT-0003', '900.000', 'IC1', 'PASS', '2022-06-16', 'sys-admin', '2022-06-16');
+INSERT INTO `t_warehouse_issuance` (`issuance_number`, `barcode_serial`, `part_number`, `part_lot`, `quantity`, `location`, `status`, `ageing_status`, `ft_status`, `issueance_date`, `createdby`, `createdon`) VALUES
+(1, 'QR01', '209080001', 'LOT01', '0.000', NULL, NULL, 'PENDING', 'PENDING', '2022-07-12', 'sys-admin', '2022-07-12'),
+(2, 'QR02', '209080001', 'LOT02', '0.000', NULL, NULL, 'PENDING', 'PENDING', '2022-07-12', 'sys-admin', '2022-07-12'),
+(3, 'QR03', '2180281-00', 'LOT03', '0.000', NULL, NULL, 'PENDING', 'PENDING', '2022-07-17', 'sys-admin', '2022-07-17'),
+(4, 'QR04', '209080001', 'LOT101', '0.000', NULL, NULL, 'PENDING', 'PENDING', '2022-07-17', 'sys-admin', '2022-07-17');
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_critichal_part1`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_critichal_part1` (
+`smt_date` date
+,`smt_line` varchar(50)
+,`smt_shift` varchar(50)
+,`hw_line` varchar(50)
+,`hw_shift` varchar(50)
+,`kepi_lot` varchar(50)
+,`assy_code` varchar(70)
+,`model` varchar(100)
+,`barcode_serial` varchar(50)
+,`part_lot` varchar(50)
+,`manpower_name` varchar(50)
+,`ageing_qty` decimal(15,3)
+,`ageing_time` decimal(10,2)
+,`ageing_result` varchar(50)
+,`failure_remark` text
+,`defect_quantity` decimal(15,3)
+,`ft_result` varchar(100)
+,`ft_failure_remark` text
+,`part_lot_ageing_result` varchar(50)
+,`part_lot_ft_result` varchar(50)
+);
 
 -- --------------------------------------------------------
 
@@ -1308,20 +1437,20 @@ INSERT INTO `t_warehouse_issuance` (`issuance_number`, `part_number`, `part_lot`
 -- (See below for the actual view)
 --
 CREATE TABLE `v_defect_process` (
-`counter` int
-,`id` int
-,`process_action` varchar(100)
-,`process_cause` varchar(100)
+`id` int
+,`transactionid` varchar(50)
+,`counter` int
+,`repair_counter` int
 ,`process_defect` varchar(100)
 ,`process_location` varchar(100)
+,`process_cause` varchar(100)
+,`process_action` varchar(100)
 ,`process_remark` varchar(100)
-,`repair_action` varchar(100)
-,`repair_cause` varchar(100)
-,`repair_counter` int
 ,`repair_defect` varchar(100)
 ,`repair_location` varchar(100)
+,`repair_cause` varchar(100)
+,`repair_action` varchar(100)
 ,`repair_remark` varchar(100)
-,`transactionid` varchar(50)
 );
 
 -- --------------------------------------------------------
@@ -1331,14 +1460,14 @@ CREATE TABLE `v_defect_process` (
 -- (See below for the actual view)
 --
 CREATE TABLE `v_productionview` (
-`linename` varchar(60)
-,`lot_number` varchar(50)
-,`model` varchar(70)
-,`outputqty` bigint
-,`plan_qty` int
-,`plandate` date
+`plandate` date
 ,`productionline` int
+,`model` varchar(70)
+,`lot_number` varchar(50)
 ,`shift` int
+,`plan_qty` int
+,`linename` varchar(60)
+,`outputqty` bigint
 );
 
 -- --------------------------------------------------------
@@ -1348,13 +1477,13 @@ CREATE TABLE `v_productionview` (
 -- (See below for the actual view)
 --
 CREATE TABLE `v_productionview_shift1` (
-`linename` varchar(60)
-,`model` varchar(70)
-,`outputqty` bigint
-,`plan_qty` int
-,`plandate` date
+`plandate` date
 ,`productionline` int
+,`model` varchar(70)
 ,`shift` int
+,`plan_qty` int
+,`linename` varchar(60)
+,`outputqty` bigint
 );
 
 -- --------------------------------------------------------
@@ -1364,13 +1493,13 @@ CREATE TABLE `v_productionview_shift1` (
 -- (See below for the actual view)
 --
 CREATE TABLE `v_productionview_shift2` (
-`linename` varchar(60)
-,`model` varchar(70)
-,`outputqty` bigint
-,`plan_qty` int
-,`plandate` date
+`plandate` date
 ,`productionline` int
+,`model` varchar(70)
 ,`shift` int
+,`plan_qty` int
+,`linename` varchar(60)
+,`outputqty` bigint
 );
 
 -- --------------------------------------------------------
@@ -1380,17 +1509,14 @@ CREATE TABLE `v_productionview_shift2` (
 -- (See below for the actual view)
 --
 CREATE TABLE `v_report_transaction` (
-`action` varchar(50)
-,`cause` varchar(50)
-,`createdon` date
-,`defect_name` varchar(50)
-,`error_process` varchar(50)
-,`lastprocess` int
-,`lastrepair` int
-,`location` varchar(50)
-,`lotcode` varchar(30)
-,`partmodel` varchar(100)
+`transactionid` varchar(20)
+,`process_counter` int
+,`prod_date` datetime
 ,`partnumber` varchar(70)
+,`partmodel` varchar(100)
+,`lotcode` varchar(30)
+,`serial_no` varchar(30)
+,`createdon` date
 ,`process1` varchar(30)
 ,`process2` varchar(30)
 ,`process3` varchar(30)
@@ -1400,9 +1526,13 @@ CREATE TABLE `v_report_transaction` (
 ,`process7` varchar(30)
 ,`process8` varchar(30)
 ,`process9` varchar(30)
-,`process_counter` int
-,`prod_date` datetime
-,`remark` varchar(50)
+,`lastprocess` int
+,`error_process` varchar(50)
+,`defect_name` varchar(50)
+,`location` varchar(50)
+,`cause` varchar(50)
+,`action` varchar(50)
+,`repair_counter` int
 ,`repair1` varchar(30)
 ,`repair2` varchar(30)
 ,`repair3` varchar(30)
@@ -1410,12 +1540,24 @@ CREATE TABLE `v_report_transaction` (
 ,`repair5` varchar(30)
 ,`repair6` varchar(30)
 ,`repair7` varchar(30)
-,`repair_action` varchar(50)
-,`repair_counter` int
+,`remark` varchar(50)
 ,`repair_defect` varchar(50)
 ,`repair_location` varchar(50)
-,`serial_no` varchar(30)
-,`transactionid` varchar(20)
+,`repair_action` varchar(50)
+,`lastrepair` int
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_smt_handwork_data`
+-- (See below for the actual view)
+--
+CREATE TABLE `v_smt_handwork_data` (
+`assy_code` varchar(70)
+,`kepi_lot` varchar(50)
+,`barcode_serial` varchar(50)
+,`part_lot` varchar(50)
 );
 
 -- --------------------------------------------------------
@@ -1425,19 +1567,19 @@ CREATE TABLE `v_report_transaction` (
 -- (See below for the actual view)
 --
 CREATE TABLE `v_user_menu` (
-`createdby` varchar(50)
-,`createdon` datetime
-,`grouping` varchar(30)
-,`icon` varchar(50)
-,`id` int
-,`menu` varchar(50)
-,`menugroup` int
-,`menuid` int
+`username` varchar(100)
 ,`roleid` int
 ,`rolename` varchar(50)
+,`menuid` int
+,`id` int
+,`menu` varchar(50)
 ,`route` varchar(50)
 ,`type` varchar(20)
-,`username` varchar(100)
+,`menugroup` int
+,`grouping` varchar(30)
+,`icon` varchar(50)
+,`createdon` datetime
+,`createdby` varchar(50)
 );
 
 -- --------------------------------------------------------
@@ -1447,13 +1589,13 @@ CREATE TABLE `v_user_menu` (
 -- (See below for the actual view)
 --
 CREATE TABLE `v_user_menugroup` (
-`_index` int
-,`createdby` varchar(50)
-,`createdon` timestamp
+`menugroup` int
 ,`description` varchar(50)
 ,`icon` varchar(200)
-,`menugroup` int
+,`createdon` timestamp
+,`createdby` varchar(50)
 ,`username` varchar(100)
+,`_index` int
 );
 
 -- --------------------------------------------------------
@@ -1463,16 +1605,25 @@ CREATE TABLE `v_user_menugroup` (
 -- (See below for the actual view)
 --
 CREATE TABLE `v_user_role_avtivity` (
-`activity` varchar(10)
-,`createdon` date
-,`menu` varchar(50)
+`roleid` int
 ,`menuid` int
-,`roleid` int
-,`rolename` varchar(50)
-,`route` varchar(50)
+,`activity` varchar(10)
 ,`status` tinyint(1)
+,`createdon` date
+,`route` varchar(50)
+,`menu` varchar(50)
 ,`username` varchar(100)
+,`rolename` varchar(50)
 );
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_critichal_part1`
+--
+DROP TABLE IF EXISTS `v_critichal_part1`;
+
+CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `v_critichal_part1`  AS SELECT DISTINCT cast(`t4`.`createdon` as date) AS `smt_date`, `t4`.`smt_line` AS `smt_line`, `t4`.`smt_shift` AS `smt_shift`, `t5`.`hw_line` AS `hw_line`, `t5`.`hw_shift` AS `hw_shift`, `t1`.`kepi_lot` AS `kepi_lot`, `t1`.`assy_code` AS `assy_code`, `t6`.`matdesc` AS `model`, `t1`.`barcode_serial` AS `barcode_serial`, `t1`.`part_lot` AS `part_lot`, `t2`.`manpower_name` AS `manpower_name`, `t2`.`quantity` AS `ageing_qty`, `t2`.`ageing_time` AS `ageing_time`, `t2`.`ageing_result` AS `ageing_result`, `t2`.`failure_remark` AS `failure_remark`, `t2`.`defect_quantity` AS `defect_quantity`, `t3`.`ft_result` AS `ft_result`, `t3`.`failure_remark` AS `ft_failure_remark`, `t2`.`part_lot_result` AS `part_lot_ageing_result`, `t3`.`part_lot_result` AS `part_lot_ft_result` FROM ((((((select `t_smt_line_process`.`kepi_lot` AS `kepi_lot`,`t_smt_line_process`.`assy_code` AS `assy_code`,`t_smt_line_process`.`barcode_serial` AS `barcode_serial`,`t_smt_line_process`.`part_lot` AS `part_lot` from `t_smt_line_process` union select `t_handwork_process`.`kepi_lot` AS `kepi_lot`,`t_handwork_process`.`assy_code` AS `assy_code`,`t_handwork_process`.`barcode_serial` AS `barcode_serial`,`t_handwork_process`.`part_lot` AS `part_lot` from `t_handwork_process`) `t1` join `t_ageing` `t2` on(((`t1`.`kepi_lot` = `t2`.`kepi_lot`) and (`t1`.`barcode_serial` = `t2`.`barcode_serial`)))) left join `t_ft_process` `t3` on(((`t1`.`kepi_lot` = `t3`.`kepi_lot`) and (`t1`.`barcode_serial` = `t3`.`barcode_serial`)))) left join `t_smt_line_process` `t4` on(((`t1`.`kepi_lot` = `t4`.`kepi_lot`) and (`t1`.`barcode_serial` = `t4`.`barcode_serial`)))) left join `t_handwork_process` `t5` on(((`t1`.`kepi_lot` = `t5`.`kepi_lot`) and (`t1`.`barcode_serial` = `t5`.`barcode_serial`)))) left join `t_material` `t6` on((`t1`.`assy_code` = `t6`.`material`))) ;
 
 -- --------------------------------------------------------
 
@@ -1481,7 +1632,7 @@ CREATE TABLE `v_user_role_avtivity` (
 --
 DROP TABLE IF EXISTS `v_defect_process`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_defect_process`  AS SELECT `a`.`id` AS `id`, `a`.`transactionid` AS `transactionid`, `a`.`counter` AS `counter`, `b`.`repair_counter` AS `repair_counter`, `a`.`defect` AS `process_defect`, `a`.`location` AS `process_location`, `a`.`cause` AS `process_cause`, `a`.`action` AS `process_action`, `a`.`repairremark` AS `process_remark`, `b`.`defect` AS `repair_defect`, `b`.`location` AS `repair_location`, `b`.`cause` AS `repair_cause`, `b`.`action` AS `repair_action`, `b`.`remark` AS `repair_remark` FROM (`t_defect_process` `a` left join `t_defect_repair` `b` on(((`a`.`transactionid` = `b`.`transactionid`) and (`a`.`counter` = `b`.`process_counter`) and (`a`.`id` = `b`.`defect_process_id`)))) ORDER BY `a`.`transactionid` ASC, `b`.`repair_counter` ASC, `a`.`id` ASC ;
+CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `v_defect_process`  AS SELECT `a`.`id` AS `id`, `a`.`transactionid` AS `transactionid`, `a`.`counter` AS `counter`, `b`.`repair_counter` AS `repair_counter`, `a`.`defect` AS `process_defect`, `a`.`location` AS `process_location`, `a`.`cause` AS `process_cause`, `a`.`action` AS `process_action`, `a`.`repairremark` AS `process_remark`, `b`.`defect` AS `repair_defect`, `b`.`location` AS `repair_location`, `b`.`cause` AS `repair_cause`, `b`.`action` AS `repair_action`, `b`.`remark` AS `repair_remark` FROM (`t_defect_process` `a` left join `t_defect_repair` `b` on(((`a`.`transactionid` = `b`.`transactionid`) and (`a`.`counter` = `b`.`process_counter`) and (`a`.`id` = `b`.`defect_process_id`)))) ORDER BY `a`.`transactionid` ASC, `b`.`repair_counter` ASC, `a`.`id` ASC ;
 
 -- --------------------------------------------------------
 
@@ -1490,7 +1641,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `v_productionview`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_productionview`  AS SELECT `a`.`plandate` AS `plandate`, `a`.`productionline` AS `productionline`, `a`.`model` AS `model`, `a`.`lot_number` AS `lot_number`, `a`.`shift` AS `shift`, `a`.`plan_qty` AS `plan_qty`, `b`.`description` AS `linename`, `fGetProdTotalQtyOutput`(`a`.`plandate`,`a`.`productionline`,`a`.`shift`,`a`.`model`,`a`.`lot_number`) AS `outputqty` FROM (`t_planning` `a` join `t_production_lines` `b` on((`a`.`productionline` = `b`.`id`))) ;
+CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `v_productionview`  AS SELECT `a`.`plandate` AS `plandate`, `a`.`productionline` AS `productionline`, `a`.`model` AS `model`, `a`.`lot_number` AS `lot_number`, `a`.`shift` AS `shift`, `a`.`plan_qty` AS `plan_qty`, `b`.`description` AS `linename`, `fGetProdTotalQtyOutput`(`a`.`plandate`,`a`.`productionline`,`a`.`shift`,`a`.`model`,`a`.`lot_number`) AS `outputqty` FROM (`t_planning` `a` join `t_production_lines` `b` on((`a`.`productionline` = `b`.`id`))) ;
 
 -- --------------------------------------------------------
 
@@ -1499,7 +1650,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `v_productionview_shift1`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_productionview_shift1`  AS SELECT `a`.`plandate` AS `plandate`, `a`.`productionline` AS `productionline`, `a`.`model` AS `model`, `a`.`shift` AS `shift`, `a`.`plan_qty` AS `plan_qty`, `b`.`description` AS `linename`, `fGetProdTotalQtyOutput`(`a`.`plandate`,`a`.`productionline`,`a`.`shift`,`a`.`model`,`a`.`lot_number`) AS `outputqty` FROM (`t_planning` `a` join `t_production_lines` `b` on((`a`.`productionline` = `b`.`id`))) WHERE (`a`.`shift` = 1) ;
+CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `v_productionview_shift1`  AS SELECT `a`.`plandate` AS `plandate`, `a`.`productionline` AS `productionline`, `a`.`model` AS `model`, `a`.`shift` AS `shift`, `a`.`plan_qty` AS `plan_qty`, `b`.`description` AS `linename`, `fGetProdTotalQtyOutput`(`a`.`plandate`,`a`.`productionline`,`a`.`shift`,`a`.`model`,`a`.`lot_number`) AS `outputqty` FROM (`t_planning` `a` join `t_production_lines` `b` on((`a`.`productionline` = `b`.`id`))) WHERE (`a`.`shift` = 1) ;
 
 -- --------------------------------------------------------
 
@@ -1508,7 +1659,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `v_productionview_shift2`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_productionview_shift2`  AS SELECT `a`.`plandate` AS `plandate`, `a`.`productionline` AS `productionline`, `a`.`model` AS `model`, `a`.`shift` AS `shift`, `a`.`plan_qty` AS `plan_qty`, `b`.`description` AS `linename`, `fGetProdTotalQtyOutput`(`a`.`plandate`,`a`.`productionline`,`a`.`shift`,`a`.`model`,`a`.`lot_number`) AS `outputqty` FROM (`t_planning` `a` join `t_production_lines` `b` on((`a`.`productionline` = `b`.`id`))) WHERE (`a`.`shift` = 2) ;
+CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `v_productionview_shift2`  AS SELECT `a`.`plandate` AS `plandate`, `a`.`productionline` AS `productionline`, `a`.`model` AS `model`, `a`.`shift` AS `shift`, `a`.`plan_qty` AS `plan_qty`, `b`.`description` AS `linename`, `fGetProdTotalQtyOutput`(`a`.`plandate`,`a`.`productionline`,`a`.`shift`,`a`.`model`,`a`.`lot_number`) AS `outputqty` FROM (`t_planning` `a` join `t_production_lines` `b` on((`a`.`productionline` = `b`.`id`))) WHERE (`a`.`shift` = 2) ;
 
 -- --------------------------------------------------------
 
@@ -1517,7 +1668,16 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `v_report_transaction`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_report_transaction`  AS SELECT `a`.`transactionid` AS `transactionid`, `b`.`counter` AS `process_counter`, `a`.`prod_date` AS `prod_date`, `a`.`partnumber` AS `partnumber`, `a`.`partmodel` AS `partmodel`, `a`.`lotcode` AS `lotcode`, `a`.`serial_no` AS `serial_no`, `a`.`createdon` AS `createdon`, `b`.`process1` AS `process1`, `b`.`process2` AS `process2`, `b`.`process3` AS `process3`, `b`.`process4` AS `process4`, `b`.`process5` AS `process5`, `b`.`process6` AS `process6`, `b`.`process7` AS `process7`, `b`.`process8` AS `process8`, `b`.`process9` AS `process9`, `b`.`lastprocess` AS `lastprocess`, `b`.`error_process` AS `error_process`, `b`.`defect_name` AS `defect_name`, `b`.`location` AS `location`, `b`.`cause` AS `cause`, `b`.`action` AS `action`, `c`.`counter` AS `repair_counter`, `c`.`process1` AS `repair1`, `c`.`process2` AS `repair2`, `c`.`process3` AS `repair3`, `c`.`process4` AS `repair4`, `c`.`process5` AS `repair5`, `c`.`process6` AS `repair6`, `c`.`process7` AS `repair7`, `c`.`remark` AS `remark`, `c`.`defect_name` AS `repair_defect`, `c`.`location` AS `repair_location`, `c`.`action` AS `repair_action`, `c`.`lastrepair` AS `lastrepair` FROM ((`t_ipd_forms` `a` left join `t_ipd_process` `b` on((`a`.`transactionid` = `b`.`transactionid`))) left join `t_ipd_repair` `c` on(((`a`.`transactionid` = `c`.`transactionid`) and (`b`.`counter` = `c`.`process_counter`)))) ORDER BY `a`.`transactionid` ASC, `a`.`serial_no` ASC, `a`.`partnumber` ASC ;
+CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `v_report_transaction`  AS SELECT `a`.`transactionid` AS `transactionid`, `b`.`counter` AS `process_counter`, `a`.`prod_date` AS `prod_date`, `a`.`partnumber` AS `partnumber`, `a`.`partmodel` AS `partmodel`, `a`.`lotcode` AS `lotcode`, `a`.`serial_no` AS `serial_no`, `a`.`createdon` AS `createdon`, `b`.`process1` AS `process1`, `b`.`process2` AS `process2`, `b`.`process3` AS `process3`, `b`.`process4` AS `process4`, `b`.`process5` AS `process5`, `b`.`process6` AS `process6`, `b`.`process7` AS `process7`, `b`.`process8` AS `process8`, `b`.`process9` AS `process9`, `b`.`lastprocess` AS `lastprocess`, `b`.`error_process` AS `error_process`, `b`.`defect_name` AS `defect_name`, `b`.`location` AS `location`, `b`.`cause` AS `cause`, `b`.`action` AS `action`, `c`.`counter` AS `repair_counter`, `c`.`process1` AS `repair1`, `c`.`process2` AS `repair2`, `c`.`process3` AS `repair3`, `c`.`process4` AS `repair4`, `c`.`process5` AS `repair5`, `c`.`process6` AS `repair6`, `c`.`process7` AS `repair7`, `c`.`remark` AS `remark`, `c`.`defect_name` AS `repair_defect`, `c`.`location` AS `repair_location`, `c`.`action` AS `repair_action`, `c`.`lastrepair` AS `lastrepair` FROM ((`t_ipd_forms` `a` left join `t_ipd_process` `b` on((`a`.`transactionid` = `b`.`transactionid`))) left join `t_ipd_repair` `c` on(((`a`.`transactionid` = `c`.`transactionid`) and (`b`.`counter` = `c`.`process_counter`)))) ORDER BY `a`.`transactionid` ASC, `a`.`serial_no` ASC, `a`.`partnumber` ASC ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `v_smt_handwork_data`
+--
+DROP TABLE IF EXISTS `v_smt_handwork_data`;
+
+CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `v_smt_handwork_data`  AS SELECT `t_handwork_process`.`assy_code` AS `assy_code`, `t_handwork_process`.`kepi_lot` AS `kepi_lot`, `t_handwork_process`.`barcode_serial` AS `barcode_serial`, `t_handwork_process`.`part_lot` AS `part_lot` FROM `t_handwork_process` ;
 
 -- --------------------------------------------------------
 
@@ -1526,7 +1686,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `v_user_menu`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_user_menu`  AS SELECT `a`.`username` AS `username`, `b`.`roleid` AS `roleid`, `f`.`rolename` AS `rolename`, `c`.`menuid` AS `menuid`, `d`.`id` AS `id`, `d`.`menu` AS `menu`, `d`.`route` AS `route`, `d`.`type` AS `type`, `d`.`menugroup` AS `menugroup`, `d`.`grouping` AS `grouping`, `d`.`icon` AS `icon`, `d`.`createdon` AS `createdon`, `d`.`createdby` AS `createdby` FROM ((((`t_user` `a` join `t_user_role` `b` on((`a`.`username` = `b`.`username`))) join `t_rolemenu` `c` on((`c`.`roleid` = `b`.`roleid`))) join `t_menus` `d` on((`d`.`id` = `c`.`menuid`))) join `t_role` `f` on((`f`.`roleid` = `b`.`roleid`))) ;
+CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `v_user_menu`  AS SELECT `a`.`username` AS `username`, `b`.`roleid` AS `roleid`, `f`.`rolename` AS `rolename`, `c`.`menuid` AS `menuid`, `d`.`id` AS `id`, `d`.`menu` AS `menu`, `d`.`route` AS `route`, `d`.`type` AS `type`, `d`.`menugroup` AS `menugroup`, `d`.`grouping` AS `grouping`, `d`.`icon` AS `icon`, `d`.`createdon` AS `createdon`, `d`.`createdby` AS `createdby` FROM ((((`t_user` `a` join `t_user_role` `b` on((`a`.`username` = `b`.`username`))) join `t_rolemenu` `c` on((`c`.`roleid` = `b`.`roleid`))) join `t_menus` `d` on((`d`.`id` = `c`.`menuid`))) join `t_role` `f` on((`f`.`roleid` = `b`.`roleid`))) ;
 
 -- --------------------------------------------------------
 
@@ -1535,7 +1695,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `v_user_menugroup`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_user_menugroup`  AS SELECT `a`.`menugroup` AS `menugroup`, `a`.`description` AS `description`, `a`.`icon` AS `icon`, `a`.`createdon` AS `createdon`, `a`.`createdby` AS `createdby`, `b`.`username` AS `username`, `a`.`_index` AS `_index` FROM (`t_menugroups` `a` join `v_user_menu` `b` on((`a`.`menugroup` = `b`.`menugroup`))) ORDER BY `a`.`_index` ASC, `a`.`menugroup` ASC ;
+CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `v_user_menugroup`  AS SELECT `a`.`menugroup` AS `menugroup`, `a`.`description` AS `description`, `a`.`icon` AS `icon`, `a`.`createdon` AS `createdon`, `a`.`createdby` AS `createdby`, `b`.`username` AS `username`, `a`.`_index` AS `_index` FROM (`t_menugroups` `a` join `v_user_menu` `b` on((`a`.`menugroup` = `b`.`menugroup`))) ORDER BY `a`.`_index` ASC, `a`.`menugroup` ASC ;
 
 -- --------------------------------------------------------
 
@@ -1544,7 +1704,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `v_user_role_avtivity`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_user_role_avtivity`  AS SELECT `a`.`roleid` AS `roleid`, `a`.`menuid` AS `menuid`, `a`.`activity` AS `activity`, `a`.`status` AS `status`, `a`.`createdon` AS `createdon`, `b`.`route` AS `route`, `b`.`menu` AS `menu`, `c`.`username` AS `username`, `d`.`rolename` AS `rolename` FROM (((`t_role_avtivity` `a` join `t_menus` `b` on((`a`.`menuid` = `b`.`id`))) join `t_user_role` `c` on((`a`.`roleid` = `c`.`roleid`))) join `t_role` `d` on((`a`.`roleid` = `d`.`roleid`))) ORDER BY `c`.`username` ASC, `d`.`rolename` ASC ;
+CREATE ALGORITHM=UNDEFINED  SQL SECURITY DEFINER VIEW `v_user_role_avtivity`  AS SELECT `a`.`roleid` AS `roleid`, `a`.`menuid` AS `menuid`, `a`.`activity` AS `activity`, `a`.`status` AS `status`, `a`.`createdon` AS `createdon`, `b`.`route` AS `route`, `b`.`menu` AS `menu`, `c`.`username` AS `username`, `d`.`rolename` AS `rolename` FROM (((`t_role_avtivity` `a` join `t_menus` `b` on((`a`.`menuid` = `b`.`id`))) join `t_user_role` `c` on((`a`.`roleid` = `c`.`roleid`))) join `t_role` `d` on((`a`.`roleid` = `d`.`roleid`))) ORDER BY `c`.`username` ASC, `d`.`rolename` ASC ;
 
 --
 -- Indexes for dumped tables
@@ -1566,7 +1726,7 @@ ALTER TABLE `t_actionlist`
 -- Indexes for table `t_ageing`
 --
 ALTER TABLE `t_ageing`
-  ADD PRIMARY KEY (`kepi_lot`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `t_approval`
@@ -1614,7 +1774,7 @@ ALTER TABLE `t_defect_repair`
 -- Indexes for table `t_ft_process`
 --
 ALTER TABLE `t_ft_process`
-  ADD PRIMARY KEY (`kepi_lot`,`manpower_name`,`ft_jig_no`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `t_handwork_process`
@@ -1716,7 +1876,7 @@ ALTER TABLE `t_production_lines`
 -- Indexes for table `t_qa_inspection`
 --
 ALTER TABLE `t_qa_inspection`
-  ADD PRIMARY KEY (`kepi_lot`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `t_role`
@@ -1783,6 +1943,12 @@ ALTER TABLE `t_actionlist`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT for table `t_ageing`
+--
+ALTER TABLE `t_ageing`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT for table `t_causelist`
 --
 ALTER TABLE `t_causelist`
@@ -1801,10 +1967,16 @@ ALTER TABLE `t_defect_process`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
+-- AUTO_INCREMENT for table `t_ft_process`
+--
+ALTER TABLE `t_ft_process`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `t_handwork_process`
 --
 ALTER TABLE `t_handwork_process`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `t_locationlist`
@@ -1822,7 +1994,7 @@ ALTER TABLE `t_menugroups`
 -- AUTO_INCREMENT for table `t_menus`
 --
 ALTER TABLE `t_menus`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `t_planning_output`
@@ -1843,6 +2015,12 @@ ALTER TABLE `t_production_lines`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT for table `t_qa_inspection`
+--
+ALTER TABLE `t_qa_inspection`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `t_role`
 --
 ALTER TABLE `t_role`
@@ -1852,13 +2030,13 @@ ALTER TABLE `t_role`
 -- AUTO_INCREMENT for table `t_smt_line_process`
 --
 ALTER TABLE `t_smt_line_process`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `t_warehouse_issuance`
 --
 ALTER TABLE `t_warehouse_issuance`
-  MODIFY `issuance_number` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `issuance_number` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables

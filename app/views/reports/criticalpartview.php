@@ -19,7 +19,7 @@
                         </div>
                         <div class="body">                                
                             <div class="table-responsive">
-                                    <table id="report-data" class="table table-bordered table-striped table-hover" style="width:150%;font-size:13px;">
+                                    <table id="report-data" class="table table-bordered table-striped table-hover" style="width:500%;font-size:12px;">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
@@ -32,13 +32,38 @@
                                                 <th>MODEL</th>
                                                 <th>ASSY CODE</th>
                                                 <th>KEPI LOT</th>
-                                                <th>PART LOT</th>
-                                                <th>BARCODE SERIAL</th>
+                                                <!-- <th>PART LOT</th>
+                                                <th>BARCODE SERIAL</th> -->
                                                 <th>QUANTITY</th>
                                                 <th>DEFECT QTY</th>
                                                 <th>AGEING RESULT</th>
                                                 <th>AGEING REMARK</th>
                                                 <th>FT RESULT</th>
+                                                <!-- <th>DB1 PART LOT</th>
+                                                <th>AGEING STATUS</th>
+                                                <th>FT STATUS</th> -->
+
+                                                <th>DB1 PART LOT</th>
+                                                <th>AGEING STATUS</th>
+                                                <th>FT STATUS</th>
+                                                <th>IC1 PART LOT</th>
+                                                <th>AGEING STATUS</th>
+                                                <th>FT STATUS</th>
+                                                <th>PC1 PART LOT</th>
+                                                <th>AGEING STATUS</th>
+                                                <th>FT STATUS</th>
+                                                <th>D1 PART LOT</th>
+                                                <th>AGEING STATUS</th>
+                                                <th>FT STATUS</th>
+                                                <th>D2 PART LOT</th>
+                                                <th>AGEING STATUS</th>
+                                                <th>FT STATUS</th>
+                                                <th>T1 PART LOT</th>
+                                                <th>AGEING STATUS</th>
+                                                <th>FT STATUS</th>
+                                                <th>QF1 PART LOT</th>
+                                                <th>AGEING STATUS</th>
+                                                <th>FT STATUS</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -56,13 +81,189 @@
                                                     <td><?= $row['model'] ?></td>
                                                     <td><?= $row['assy_code'] ?></td>
                                                     <td><?= $row['kepi_lot'] ?></td>
-                                                    <td><?= $row['part_lot'] ?></td>
-                                                    <td><?= $row['barcode_serial'] ?></td>
+                                                    
                                                     <td><?= $row['ageing_qty'] ?></td>
                                                     <td><?= $row['defect_quantity'] ?></td>
                                                     <td><?= $row['ageing_result'] ?></td>
                                                     <td><?= $row['failure_remark'] ?></td>
                                                     <td><?= $row['ft_result'] ?></td>
+                                                    <?php if($row['location'] === 'DB1'):?>
+                                                        <td><?= $row['part_lot'] ?></td>
+                                                        <td><?= $row['part_lot_ageing_result'] ?></td>
+                                                        <td><?= $row['part_lot_ft_result'] ?></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    <?php elseif($row['location'] === 'IC1'):?>    
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td><?= $row['part_lot'] ?></td>
+                                                        <td><?= $row['part_lot_ageing_result'] ?></td>
+                                                        <td><?= $row['part_lot_ft_result'] ?></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    <?php elseif($row['location'] === 'PC1'):?>    
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td><?= $row['part_lot'] ?></td>
+                                                        <td><?= $row['part_lot_ageing_result'] ?></td>
+                                                        <td><?= $row['part_lot_ft_result'] ?></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    <?php elseif($row['location'] === 'D1'):?>    
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td><?= $row['part_lot'] ?></td>
+                                                        <td><?= $row['part_lot_ageing_result'] ?></td>
+                                                        <td><?= $row['part_lot_ft_result'] ?></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    <?php elseif($row['location'] === 'D2'):?>    
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td><?= $row['part_lot'] ?></td>
+                                                        <td><?= $row['part_lot_ageing_result'] ?></td>
+                                                        <td><?= $row['part_lot_ft_result'] ?></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    <?php elseif($row['location'] === 'T1'):?>    
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td><?= $row['part_lot'] ?></td>
+                                                        <td><?= $row['part_lot_ageing_result'] ?></td>
+                                                        <td><?= $row['part_lot_ft_result'] ?></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    <?php elseif($row['location'] === 'QF1'):?>    
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td><?= $row['part_lot'] ?></td>
+                                                        <td><?= $row['part_lot_ageing_result'] ?></td>
+                                                        <td><?= $row['part_lot_ft_result'] ?></td>
+                                                    <?php else: ?>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    <?php endif; ?>                                                        
                                                 </tr>
                                             <?php endforeach; ?>
                                         </tbody>
@@ -79,7 +280,7 @@
     <script>
         $(document).ready(function() {
             $('#report-data').DataTable( {
-                // "scrollY": 200,
+                // "scrollY": 300,
                 // "scrollX": true,
                 // "pageResize": true
             } );

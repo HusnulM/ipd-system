@@ -25,7 +25,7 @@ class Ageingprocess_model{
     }
 
     public function save($data){
-        $query = "INSERT INTO t_ageing (kepi_lot, quantity, manpower_name, ageing_time, ageing_result, failure_remark, defect_quantity, assy_code, barcode_serial, part_lot, createdby, createdon) VALUES (:kepi_lot, :quantity, :manpower_name, :ageing_time, :ageing_result, :failure_remark, :defect_quantity, :assy_code, :barcode_serial, :part_lot, :createdby, :createdon)";
+        $query = "INSERT INTO t_ageing (kepi_lot, quantity, manpower_name, ageing_time, ageing_result, failure_remark, defect_quantity, assy_code, barcode_serial, part_lot, part_lot_result, createdby, createdon) VALUES (:kepi_lot, :quantity, :manpower_name, :ageing_time, :ageing_result, :failure_remark, :defect_quantity, :assy_code, :barcode_serial, :part_lot, :part_lot_result, :createdby, :createdon)";
         $this->db->query($query);
 
         $defectQty = 0;
@@ -43,6 +43,7 @@ class Ageingprocess_model{
         $this->db->bind('assy_code',       $data['assycode']);
         $this->db->bind('barcode_serial',  $data['qrcode']);
         $this->db->bind('part_lot',        $data['lotnumber']);
+        $this->db->bind('part_lot_result', $data['part_ageing_result']);
         $this->db->bind('createdby',       $_SESSION['usr']['user']);
         $this->db->bind('createdon',       date('Y-m-d H:m:s'));
         $this->db->execute();
