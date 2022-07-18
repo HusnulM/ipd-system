@@ -41,23 +41,57 @@ class Handworkprocess extends Controller {
         }  
     }
 
-    public function saveshandwork(){
-        if( $this->model('Handworkprocess_model')->save($_POST) > 0 ) {
-            $result = array(
-                "msgtype" => "1",
-                "message" => "Success"
-            );
-            echo json_encode($result);
-            // echo json_encode($nextNumb['nextnumb']);
-            exit;			
+    public function checkkepi($kepi, $assycode){
+        $data = $this->model('Handworkprocess_model')->checkKepi($kepi, $assycode);
+        if($data){
+            echo json_encode('1');
         }else{
-            // $result = ["msg"=>"error"];
+            echo json_encode('0');
+        }
+    }
+
+    public function getkepi($kepi){
+        $data = $this->model('Handworkprocess_model')->getKepi($kepi);
+        echo json_encode($data);
+    }
+
+    public function saveshandwork(){
+        $data = $this->model('Handworkprocess_model')->checkKepi($_POST['kepilot'], $_POST['assycode']);
+        if($data){
             $result = array(
                 "msgtype" => "2",
-                "message" => "Error"
+                "message" => "KEPI LOT " . $_POST['kepilot'] . " already use in another Assy Code"
             );
             echo json_encode($result);
             exit;	
+        }else{
+            $checkqr = $this->model('Handworkprocess_model')->checkKepiqrcode($_POST['kepilot'], $_POST['barcode']);
+            if($checkqr){
+                $result = array(
+                    "msgtype" => "2",
+                    "message" => "KEPI LOT " . $_POST['kepilot'] . " With Barcode ". $_POST['barcode'] ." already processed"
+                );
+                echo json_encode($result);
+                exit;
+            }else{
+                if( $this->model('Handworkprocess_model')->save($_POST) > 0 ) {
+                    $result = array(
+                        "msgtype" => "1",
+                        "message" => "Success"
+                    );
+                    echo json_encode($result);
+                    // echo json_encode($nextNumb['nextnumb']);
+                    exit;			
+                }else{
+                    // $result = ["msg"=>"error"];
+                    $result = array(
+                        "msgtype" => "2",
+                        "message" => "Error"
+                    );
+                    echo json_encode($result);
+                    exit;	
+                }
+            }
         }
     }
 }

@@ -42,7 +42,7 @@ class Partlocation_model{
     }
 
     public function update($data){
-        $query = "UPDATE t_assy_location SET assy_location=:assy_location WHERE uniq_id=:uniq_id";
+        $query = "UPDATE t_part_location SET assy_location=:assy_location WHERE uniq_id=:uniq_id";
         $this->db->query($query);
       
         // $this->db->bind('assy_code',        $data['assy_code']);

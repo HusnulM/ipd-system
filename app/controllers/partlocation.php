@@ -81,11 +81,11 @@ class Partlocation extends Controller {
 
     public function update(){
       if( $this->model('Partlocation_model')->update($_POST) > 0 ) {
-          Flasher::setMessage('ASSY CODE LOCATION UPDATED','','success');
+          Flasher::setMessage('PART CODE LOCATION UPDATED','','success');
           header('location: '. BASEURL . '/partlocation');
           exit;			
         }else{
-          Flasher::setMessage('FAILED UPDATE ASSY CODE LOCATION,','','danger');
+          Flasher::setMessage('FAILED UPDATE PART CODE LOCATION,','','danger');
           header('location: '. BASEURL . '/partlocation');
           exit;	
         }

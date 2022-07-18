@@ -67,7 +67,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php $no = 0; ?>
+                                            <?php $no = 0; $itemcount = 0; ?>
                                             <?php foreach ($data['rdata'] as $row) : ?>
                                                 <?php $no++; ?>
                                                 <tr>
@@ -80,191 +80,35 @@
                                                     <td><?= $row['hw_line'] ?></td>
                                                     <td><?= $row['model'] ?></td>
                                                     <td><?= $row['assy_code'] ?></td>
-                                                    <td><?= $row['kepi_lot'] ?></td>
-                                                    
-                                                    <td><?= $row['ageing_qty'] ?></td>
+                                                    <td><?= $row['kepi_lot'] ?></td>                                                    
+                                                    <td><?= $row['quantity'] ?></td>
                                                     <td><?= $row['defect_quantity'] ?></td>
                                                     <td><?= $row['ageing_result'] ?></td>
                                                     <td><?= $row['failure_remark'] ?></td>
                                                     <td><?= $row['ft_result'] ?></td>
-                                                    <?php if($row['location'] === 'DB1'):?>
-                                                        <td><?= $row['part_lot'] ?></td>
-                                                        <td><?= $row['part_lot_ageing_result'] ?></td>
-                                                        <td><?= $row['part_lot_ft_result'] ?></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                    <?php elseif($row['location'] === 'IC1'):?>    
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td><?= $row['part_lot'] ?></td>
-                                                        <td><?= $row['part_lot_ageing_result'] ?></td>
-                                                        <td><?= $row['part_lot_ft_result'] ?></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                    <?php elseif($row['location'] === 'PC1'):?>    
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td><?= $row['part_lot'] ?></td>
-                                                        <td><?= $row['part_lot_ageing_result'] ?></td>
-                                                        <td><?= $row['part_lot_ft_result'] ?></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                    <?php elseif($row['location'] === 'D1'):?>    
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td><?= $row['part_lot'] ?></td>
-                                                        <td><?= $row['part_lot_ageing_result'] ?></td>
-                                                        <td><?= $row['part_lot_ft_result'] ?></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                    <?php elseif($row['location'] === 'D2'):?>    
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td><?= $row['part_lot'] ?></td>
-                                                        <td><?= $row['part_lot_ageing_result'] ?></td>
-                                                        <td><?= $row['part_lot_ft_result'] ?></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                    <?php elseif($row['location'] === 'T1'):?>    
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td><?= $row['part_lot'] ?></td>
-                                                        <td><?= $row['part_lot_ageing_result'] ?></td>
-                                                        <td><?= $row['part_lot_ft_result'] ?></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                    <?php elseif($row['location'] === 'QF1'):?>    
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td><?= $row['part_lot'] ?></td>
-                                                        <td><?= $row['part_lot_ageing_result'] ?></td>
-                                                        <td><?= $row['part_lot_ft_result'] ?></td>
-                                                    <?php else: ?>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                    <?php endif; ?>                                                        
-                                                </tr>
+                                                    <td><?= $row['DB1'] ?></td>
+                                                    <td><?= $row['db1ag'] ?></td>
+                                                    <td><?= $row['db1ft'] ?></td>
+                                                    <td><?= $row['IC1'] ?></td>
+                                                    <td><?= $row['ic1ag'] ?></td>
+                                                    <td><?= $row['ic1ft'] ?></td>
+                                                    <td><?= $row['PC1'] ?></td>
+                                                    <td><?= $row['pc1ag'] ?></td>
+                                                    <td><?= $row['pc1ft'] ?></td>
+                                                    <td><?= $row['D1'] ?></td>
+                                                    <td><?= $row['d1ag'] ?></td>
+                                                    <td><?= $row['d1ft'] ?></td>
+                                                    <td><?= $row['D2'] ?></td>
+                                                    <td><?= $row['d2ag'] ?></td>
+                                                    <td><?= $row['d2ft'] ?></td>
+                                                    <td><?= $row['T1'] ?></td>
+                                                    <td><?= $row['t1ag'] ?></td>
+                                                    <td><?= $row['t1ft'] ?></td>
+                                                    <td><?= $row['QF1'] ?></td>
+                                                    <td><?= $row['qf1ag'] ?></td>
+                                                    <td><?= $row['qf1ft'] ?></td>
+                                                </tr>                                                 
+                                                    
                                             <?php endforeach; ?>
                                         </tbody>
                                     </table>
@@ -284,7 +128,5 @@
                 // "scrollX": true,
                 // "pageResize": true
             } );
-
-            
         } );
     </script>

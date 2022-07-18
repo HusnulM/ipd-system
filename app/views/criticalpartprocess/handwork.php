@@ -74,6 +74,14 @@
                                         Handwork Process Success!
                                     </div>
                                 </div>
+                                <div id="msg-error-div" class="col-lg-6 msg-alert" style="display:none;">
+                                    <div>
+                                        <img src="<?= BASEURL; ?>/images/error_icon.png" alt="Error" class="center-block img-rounded img-responsive" style="width:250px; height:240px; margin-top:20px;">
+                                    </div>
+                                    <div style="text-align:center; font-size: 15px; font-weight: bold; margin:5px;">
+                                        <span id="span-msg-error"></span>
+                                    </div>
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
@@ -236,6 +244,27 @@
 
         $('#kepilot').keydown(function(e){
             if(e.keyCode == 13) {
+                var inputKepi = this.value;
+                $.ajax({
+                    url: base_url+'/handworkprocess/getkepi/'+inputKepi,
+                    type: 'GET',
+                    dataType: 'json',
+                    cache:false,
+                    success: function(result){
+
+                    },
+                    error: function(err){
+                        console.log(err)
+                    }
+                }).done(function(data){
+                    console.log(data)
+                    if(data){
+                        $('#hwline').val(data.hw_line);
+                        $('#hwshift').val(data.hw_shift);
+                    }
+
+                    // setLineItems();
+                });
                 document.getElementById("barcode").focus();
             }
         });
@@ -288,8 +317,8 @@
                     $("#partnumber").val('');
                     $("#lotnumber").val('');
                     $("#partlocation").val('');
-                    $("#hwline").val('');
-                    $("#hwshift").val('');
+                    // $("#hwline").val('');
+                    // $("#hwshift").val('');
                     document.getElementById("barcode").focus();
                     $('#msg-success-div').show();
 
@@ -297,7 +326,17 @@
                         $('.msg-alert').hide();
                     }, 5000);
                 }else{
-                    
+                    $("#barcode").val('');
+                    $("#lotnumber").val('');
+                    $("#partlocation").val('');
+                    $("#partnumber").val('');
+                    $('#span-msg-error').html('');
+                    $('#span-msg-error').html(result.message);
+                    $('#msg-error-div').show();
+                    document.getElementById("barcode").focus();
+                    setTimeout(function(){ 
+                        $('.msg-alert').hide();
+                    }, 5000);
                 }
             });
         });

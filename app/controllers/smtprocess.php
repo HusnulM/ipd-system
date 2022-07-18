@@ -36,6 +36,20 @@ class Smtprocess extends Controller {
         }
     }
 
+    public function checkkepi($kepi, $assycode){
+        $data = $this->model('Smtprocess_model')->checkKepi($kepi, $assycode);
+        if($data){
+            echo json_encode('1');
+        }else{
+            echo json_encode('0');
+        }
+    }
+
+    public function getkepi($kepi){
+        $data = $this->model('Smtprocess_model')->getKepi($kepi);
+        echo json_encode($data);
+    }
+
     public function getbarcodedetail($params){
         $url = parse_url($_SERVER['REQUEST_URI']);
         $data = parse_str($url['query'], $params);
@@ -51,22 +65,42 @@ class Smtprocess extends Controller {
     }
 
     public function savesmtline(){
-        if( $this->model('Smtprocess_model')->save($_POST) > 0 ) {
-            $result = array(
-                "msgtype" => "1",
-                "message" => "Success"
-            );
-            echo json_encode($result);
-            // echo json_encode($nextNumb['nextnumb']);
-            exit;			
-        }else{
-            // $result = ["msg"=>"error"];
+        $data = $this->model('Smtprocess_model')->checkKepi($_POST['kepilot'], $_POST['assycode']);
+        if($data){
             $result = array(
                 "msgtype" => "2",
-                "message" => "Error"
+                "message" => "KEPI LOT " . $_POST['kepilot'] . " already use in another Assy Code"
             );
             echo json_encode($result);
             exit;	
+        }else{
+            $checkqr = $this->model('Smtprocess_model')->checkKepiqrcode($_POST['kepilot'], $_POST['barcode']);
+            if($checkqr){
+                $result = array(
+                    "msgtype" => "2",
+                    "message" => "KEPI LOT " . $_POST['kepilot'] . " With Barcode ". $_POST['barcode'] ." already processed"
+                );
+                echo json_encode($result);
+                exit;
+            }else{
+                if( $this->model('Smtprocess_model')->save($_POST) > 0 ) {
+                    $result = array(
+                        "msgtype" => "1",
+                        "message" => "Success"
+                    );
+                    echo json_encode($result);
+                    // echo json_encode($nextNumb['nextnumb']);
+                    exit;			
+                }else{
+                    // $result = ["msg"=>"error"];
+                    $result = array(
+                        "msgtype" => "2",
+                        "message" => "Error"
+                    );
+                    echo json_encode($result);
+                    exit;	
+                }
+            }
         }
     }
 }

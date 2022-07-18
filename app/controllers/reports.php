@@ -67,9 +67,11 @@ class Reports extends Controller{
 			$data['menu']     = 'Report Critical Parts';
 
 			$data['rdata']   = $this->model('Report_model')->rcriticalpart($strdate, $enddate);
+			// $data['rdatadtl']= $this->model('Report_model')->rcriticalpartdetails($strdate, $enddate);
 			$data['strdate'] = $strdate;
 			$data['enddate'] = $enddate;
 
+			// echo json_encode($data);
 			$this->view('templates/header_a', $data);
 			$this->view('reports/criticalpartview', $data);
 			$this->view('templates/footer_a');

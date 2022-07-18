@@ -17,7 +17,13 @@ class Report_model{
     }
 
     public function rcriticalpart($strdate, $enddate){
-      $this->db->query("SELECT *, fGetPartLocation(barcode_serial) as 'location' FROM v_critichal_part1 where smt_date BETWEEN '$strdate' AND '$enddate' ORDER BY kepi_lot, part_lot ASC");
+      $this->db->query("SELECT * FROM v_critical_parts_report where smt_date BETWEEN '$strdate' AND '$enddate' ORDER BY kepi_lot ASC");
+      return $this->db->resultSet();
+    }
+
+    public function rcriticalpartdetails($strdate, $enddate){
+      // v_ageing_ft_data
+      $this->db->query("SELECT * FROM v_ageing_ft_data where kepi_lot in(SELECT kepi_lot FROM v_critical_parts where smt_date BETWEEN '$strdate' AND '$enddate')");
       return $this->db->resultSet();
     }
 }
