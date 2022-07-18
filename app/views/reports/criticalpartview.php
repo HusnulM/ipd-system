@@ -8,9 +8,9 @@
                                 <?= $data['menu']; ?>
                             </h2>
                             <ul class="header-dropdown m-r--5">                                
-                                <!-- <a href="<?= BASEURL; ?>/exportdata/exportransaction/<?= $data['strdate']; ?>/<?= $data['enddate']; ?>" target="_blank" class="btn bg-teal">
+                                <a href="<?= BASEURL; ?>/exportdata/exportcriticalpart/<?= $data['strdate']; ?>/<?= $data['enddate']; ?>" target="_blank" class="btn bg-teal">
                                    <i class="material-icons">cloud_download</i> EXPORT DATA
-                                </a> -->
+                                </a>
 
                                 <a href="<?= BASEURL; ?>/reports/criticalpart" type="button" class="btn bg-teal">
                                     <i class="material-icons">backspace</i> <span>BACK</span>
