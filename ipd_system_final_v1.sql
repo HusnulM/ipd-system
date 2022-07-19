@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 18, 2022 at 08:15 PM
+-- Generation Time: Jul 19, 2022 at 06:44 AM
 -- Server version: 8.0.29
 -- PHP Version: 7.4.27
 
@@ -25,7 +25,7 @@ DELIMITER $$
 --
 -- Procedures
 --
-CREATE  PROCEDURE `sp_ProductionView` ()  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_ProductionView` ()  BEGIN
 	
     DECLARE date1 date;
     DECLARE date2 date;
@@ -47,7 +47,7 @@ CREATE  PROCEDURE `sp_ProductionView` ()  BEGIN
     
 END$$
 
-CREATE  PROCEDURE `sp_ProductionViewDate` ()  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_ProductionViewDate` ()  BEGIN
 	
     DECLARE date1 date;
     DECLARE date2 date;
@@ -60,13 +60,13 @@ CREATE  PROCEDURE `sp_ProductionViewDate` ()  BEGIN
     select date1, date2, date3;
 END$$
 
-CREATE  PROCEDURE `sp_UpdateAgeingProcessStatus` (IN `pKepi` VARCHAR(50), IN `pBarcode` VARCHAR(50), IN `pPartLot` VARCHAR(50), IN `pAssycode` VARCHAR(70))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_UpdateAgeingProcessStatus` (IN `pKepi` VARCHAR(50), IN `pBarcode` VARCHAR(50), IN `pPartLot` VARCHAR(50), IN `pAssycode` VARCHAR(70))  BEGIN
 	UPDATE t_handwork_process_items set ageing_process = 'Y' WHERE kepi_lot = pKepi AND barcode_serial = pBarcode AND part_lot = pPartLot and assy_code = pAssycode;
 
 UPDATE t_smt_line_process_items set ageing_process = 'Y' WHERE kepi_lot = pKepi AND barcode_serial = pBarcode AND part_lot = pPartLot and assy_code = pAssycode;
 END$$
 
-CREATE  PROCEDURE `sp_UpdateFTProcessStatus` (IN `pKepi` VARCHAR(50), IN `pBarcode` VARCHAR(50), IN `pPartLot` VARCHAR(50), IN `pAssycode` VARCHAR(70))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_UpdateFTProcessStatus` (IN `pKepi` VARCHAR(50), IN `pBarcode` VARCHAR(50), IN `pPartLot` VARCHAR(50), IN `pAssycode` VARCHAR(70))  BEGIN
 	UPDATE t_handwork_process_items set ft_process = 'Y' WHERE kepi_lot = pKepi AND barcode_serial = pBarcode AND part_lot = pPartLot and assy_code = pAssycode;
 
 UPDATE t_smt_line_process_items set ft_process = 'Y' WHERE kepi_lot = pKepi AND barcode_serial = pBarcode AND part_lot = pPartLot and assy_code = pAssycode;
@@ -75,7 +75,7 @@ END$$
 --
 -- Functions
 --
-CREATE  FUNCTION `fGetPartLocation` (`pBarcode` VARCHAR(50)) RETURNS VARCHAR(50) CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci BEGIN
+CREATE DEFINER=`root`@`localhost` FUNCTION `fGetPartLocation` (`pBarcode` VARCHAR(50)) RETURNS VARCHAR(50) CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci BEGIN
 	DECLARE hasil varchar(50);
     
     SET hasil = (SELECT a.assy_location FROM t_part_location as a INNER JOIN t_warehouse_issuance as b on a.part_number = b.part_number WHERE b.barcode_serial = pBarcode);
@@ -83,7 +83,7 @@ CREATE  FUNCTION `fGetPartLocation` (`pBarcode` VARCHAR(50)) RETURNS VARCHAR(50)
     RETURN (hasil);
 END$$
 
-CREATE  FUNCTION `fGetProdPlanQty` (`pPlandate` DATE, `pLine` INT, `pShift` INT, `pModel` VARCHAR(70), `pLotnum` VARCHAR(50)) RETURNS BIGINT BEGIN
+CREATE DEFINER=`root`@`localhost` FUNCTION `fGetProdPlanQty` (`pPlandate` DATE, `pLine` INT, `pShift` INT, `pModel` VARCHAR(70), `pLotnum` VARCHAR(50)) RETURNS BIGINT BEGIN
     DECLARE hasil bigint;
 	
     SET hasil = (SELECT sum(plan_qty) from t_planning where plandate = pPlandate and productionline = pLine and shift = pShift and model = pModel and lot_number = pLotnum);    
@@ -95,7 +95,7 @@ CREATE  FUNCTION `fGetProdPlanQty` (`pPlandate` DATE, `pLine` INT, `pShift` INT,
 	RETURN (hasil);
 END$$
 
-CREATE  FUNCTION `fGetProdTotalQtyOutput` (`pPlandate` DATE, `pLine` INT, `pShift` INT, `pModel` VARCHAR(70), `pLotnum` VARCHAR(50)) RETURNS BIGINT BEGIN
+CREATE DEFINER=`root`@`localhost` FUNCTION `fGetProdTotalQtyOutput` (`pPlandate` DATE, `pLine` INT, `pShift` INT, `pModel` VARCHAR(70), `pLotnum` VARCHAR(50)) RETURNS BIGINT BEGIN
     DECLARE hasil bigint;
 	
     SET hasil = (SELECT sum(output_qty) from t_planning_output where plandate = pPlandate and productionline = pLine and shift = pShift and model = pModel and lot_number = pLotnum);    
@@ -107,7 +107,7 @@ CREATE  FUNCTION `fGetProdTotalQtyOutput` (`pPlandate` DATE, `pLine` INT, `pShif
 	RETURN (hasil);
 END$$
 
-CREATE  FUNCTION `fGetSMTAgeingProcess` (`pInd` VARCHAR(1), `pKepi` VARCHAR(50), `pQrcode` VARCHAR(50), `pLot` VARCHAR(50)) RETURNS VARCHAR(1) CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci BEGIN
+CREATE DEFINER=`root`@`localhost` FUNCTION `fGetSMTAgeingProcess` (`pInd` VARCHAR(1), `pKepi` VARCHAR(50), `pQrcode` VARCHAR(50), `pLot` VARCHAR(50)) RETURNS VARCHAR(1) CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci BEGIN
 	DECLARE hasil varchar(1);
     DECLARE icount bigint;
     
@@ -1542,15 +1542,6 @@ CREATE TABLE `v_critical_parts_report` (
 -- --------------------------------------------------------
 
 --
--- Stand-in structure for view `v_critichal_part1`
--- (See below for the actual view)
---
-CREATE TABLE `v_critichal_part1` (
-);
-
--- --------------------------------------------------------
-
---
 -- Stand-in structure for view `v_defect_process`
 -- (See below for the actual view)
 --
@@ -1921,7 +1912,7 @@ CREATE TABLE `v_user_role_avtivity` (
 --
 DROP TABLE IF EXISTS `v_ageing_ft_data`;
 
-CREATE  VIEW `v_ageing_ft_data`  AS SELECT `a`.`kepi_lot` AS `kepi_lot`, `a`.`assy_code` AS `assy_code`, `a`.`barcode_serial` AS `barcode_serial`, `a`.`part_lot` AS `part_lot`, `fGetPartLocation`(`a`.`barcode_serial`) AS `location`, `a`.`part_lot_result` AS `part_lot_ageing_result`, `b`.`part_lot_result` AS `part_lot_ft_result` FROM (`t_ageing` `a` left join `t_ft_process` `b` on(((`a`.`kepi_lot` = `b`.`kepi_lot`) and (`a`.`barcode_serial` = `b`.`barcode_serial`)))) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_ageing_ft_data`  AS SELECT `a`.`kepi_lot` AS `kepi_lot`, `a`.`assy_code` AS `assy_code`, `a`.`barcode_serial` AS `barcode_serial`, `a`.`part_lot` AS `part_lot`, `fGetPartLocation`(`a`.`barcode_serial`) AS `location`, `a`.`part_lot_result` AS `part_lot_ageing_result`, `b`.`part_lot_result` AS `part_lot_ft_result` FROM (`t_ageing` `a` left join `t_ft_process` `b` on(((`a`.`kepi_lot` = `b`.`kepi_lot`) and (`a`.`barcode_serial` = `b`.`barcode_serial`)))) ;
 
 -- --------------------------------------------------------
 
@@ -1930,7 +1921,7 @@ CREATE  VIEW `v_ageing_ft_data`  AS SELECT `a`.`kepi_lot` AS `kepi_lot`, `a`.`as
 --
 DROP TABLE IF EXISTS `v_critical_parts`;
 
-CREATE  VIEW `v_critical_parts`  AS SELECT DISTINCT `t1`.`smt_date` AS `smt_date`, `t1`.`assy_code` AS `assy_code`, `t2`.`matdesc` AS `model`, `t1`.`kepi_lot` AS `kepi_lot`, `t1`.`smt_line` AS `smt_line`, `t1`.`smt_shift` AS `smt_shift`, `t1`.`hw_line` AS `hw_line`, `t1`.`hw_shift` AS `hw_shift`, `t3`.`quantity` AS `quantity`, `t3`.`ageing_time` AS `ageing_time`, `t3`.`ageing_result` AS `ageing_result`, `t3`.`failure_remark` AS `failure_remark`, `t3`.`defect_quantity` AS `defect_quantity`, `t4`.`ft_result` AS `ft_result` FROM ((((select distinct cast(`a`.`createdon` as date) AS `smt_date`,`a`.`assy_code` AS `assy_code`,`a`.`kepi_lot` AS `kepi_lot`,`a`.`smt_line` AS `smt_line`,`a`.`smt_shift` AS `smt_shift`,`b`.`hw_line` AS `hw_line`,`b`.`hw_shift` AS `hw_shift` from (`t_smt_line_process` `a` left join `t_handwork_process` `b` on(((`a`.`assy_code` = `b`.`assy_code`) and (`a`.`kepi_lot` = `b`.`kepi_lot`)))) union select distinct (case when (`a`.`createdon` is null) then cast(`b`.`createdon` as date) else cast(`a`.`createdon` as date) end) AS `smt_date`,`b`.`assy_code` AS `assy_code`,`b`.`kepi_lot` AS `kepi_lot`,`a`.`smt_line` AS `smt_line`,`a`.`smt_shift` AS `smt_shift`,`b`.`hw_line` AS `hw_line`,`b`.`hw_shift` AS `hw_shift` from (`t_handwork_process` `b` left join `t_smt_line_process` `a` on(((`a`.`assy_code` = `b`.`assy_code`) and (`a`.`kepi_lot` = `b`.`kepi_lot`))))) `t1` join `t_material` `t2` on((`t1`.`assy_code` = `t2`.`material`))) left join `v_header_ageing` `t3` on(((`t1`.`assy_code` = `t3`.`assy_code`) and (`t1`.`kepi_lot` = `t3`.`kepi_lot`)))) left join `v_header_ft` `t4` on(((`t1`.`assy_code` = `t4`.`assy_code`) and (`t1`.`kepi_lot` = `t4`.`kepi_lot`)))) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_critical_parts`  AS SELECT DISTINCT `t1`.`smt_date` AS `smt_date`, `t1`.`assy_code` AS `assy_code`, `t2`.`matdesc` AS `model`, `t1`.`kepi_lot` AS `kepi_lot`, `t1`.`smt_line` AS `smt_line`, `t1`.`smt_shift` AS `smt_shift`, `t1`.`hw_line` AS `hw_line`, `t1`.`hw_shift` AS `hw_shift`, `t3`.`quantity` AS `quantity`, `t3`.`ageing_time` AS `ageing_time`, `t3`.`ageing_result` AS `ageing_result`, `t3`.`failure_remark` AS `failure_remark`, `t3`.`defect_quantity` AS `defect_quantity`, `t4`.`ft_result` AS `ft_result` FROM ((((select distinct cast(`a`.`createdon` as date) AS `smt_date`,`a`.`assy_code` AS `assy_code`,`a`.`kepi_lot` AS `kepi_lot`,`a`.`smt_line` AS `smt_line`,`a`.`smt_shift` AS `smt_shift`,`b`.`hw_line` AS `hw_line`,`b`.`hw_shift` AS `hw_shift` from (`t_smt_line_process` `a` left join `t_handwork_process` `b` on(((`a`.`assy_code` = `b`.`assy_code`) and (`a`.`kepi_lot` = `b`.`kepi_lot`)))) union select distinct (case when (`a`.`createdon` is null) then cast(`b`.`createdon` as date) else cast(`a`.`createdon` as date) end) AS `smt_date`,`b`.`assy_code` AS `assy_code`,`b`.`kepi_lot` AS `kepi_lot`,`a`.`smt_line` AS `smt_line`,`a`.`smt_shift` AS `smt_shift`,`b`.`hw_line` AS `hw_line`,`b`.`hw_shift` AS `hw_shift` from (`t_handwork_process` `b` left join `t_smt_line_process` `a` on(((`a`.`assy_code` = `b`.`assy_code`) and (`a`.`kepi_lot` = `b`.`kepi_lot`))))) `t1` join `t_material` `t2` on((`t1`.`assy_code` = `t2`.`material`))) left join `v_header_ageing` `t3` on(((`t1`.`assy_code` = `t3`.`assy_code`) and (`t1`.`kepi_lot` = `t3`.`kepi_lot`)))) left join `v_header_ft` `t4` on(((`t1`.`assy_code` = `t4`.`assy_code`) and (`t1`.`kepi_lot` = `t4`.`kepi_lot`)))) ;
 
 -- --------------------------------------------------------
 
@@ -1939,16 +1930,7 @@ CREATE  VIEW `v_critical_parts`  AS SELECT DISTINCT `t1`.`smt_date` AS `smt_date
 --
 DROP TABLE IF EXISTS `v_critical_parts_report`;
 
-CREATE  VIEW `v_critical_parts_report`  AS SELECT `mt`.`smt_date` AS `smt_date`, `mt`.`assy_code` AS `assy_code`, `mt`.`model` AS `model`, `mt`.`kepi_lot` AS `kepi_lot`, `mt`.`smt_line` AS `smt_line`, `mt`.`smt_shift` AS `smt_shift`, `mt`.`hw_line` AS `hw_line`, `mt`.`hw_shift` AS `hw_shift`, `mt`.`quantity` AS `quantity`, `mt`.`ageing_time` AS `ageing_time`, `mt`.`ageing_result` AS `ageing_result`, `mt`.`failure_remark` AS `failure_remark`, `mt`.`defect_quantity` AS `defect_quantity`, `mt`.`ft_result` AS `ft_result`, `db1`.`DB1` AS `DB1`, `db1`.`part_lot_ageing_result` AS `db1ag`, `db1`.`part_lot_ft_result` AS `db1ft`, `ic1`.`IC1` AS `IC1`, `ic1`.`part_lot_ageing_result` AS `ic1ag`, `ic1`.`part_lot_ft_result` AS `ic1ft`, `pc1`.`PC1` AS `PC1`, `pc1`.`part_lot_ageing_result` AS `pc1ag`, `pc1`.`part_lot_ft_result` AS `pc1ft`, `d1`.`D1` AS `D1`, `d1`.`part_lot_ageing_result` AS `d1ag`, `d1`.`part_lot_ft_result` AS `d1ft`, `d2`.`D2` AS `D2`, `d2`.`part_lot_ageing_result` AS `d2ag`, `d2`.`part_lot_ft_result` AS `d2ft`, `t1`.`T1` AS `T1`, `t1`.`part_lot_ageing_result` AS `t1ag`, `t1`.`part_lot_ft_result` AS `t1ft`, `qf1`.`QF1` AS `QF1`, `qf1`.`part_lot_ageing_result` AS `qf1ag`, `qf1`.`part_lot_ft_result` AS `qf1ft` FROM (((((((`v_critical_parts` `mt` left join `v_part_db1` `db1` on((`mt`.`kepi_lot` = `db1`.`kepi_lot`))) left join `v_part_ic1` `ic1` on((`mt`.`kepi_lot` = `ic1`.`kepi_lot`))) left join `v_part_pc1` `pc1` on((`mt`.`kepi_lot` = `pc1`.`kepi_lot`))) left join `v_part_d1` `d1` on((`mt`.`kepi_lot` = `d1`.`kepi_lot`))) left join `v_part_d2` `d2` on((`mt`.`kepi_lot` = `d2`.`kepi_lot`))) left join `v_part_t1` `t1` on((`mt`.`kepi_lot` = `t1`.`kepi_lot`))) left join `v_part_qf1` `qf1` on((`mt`.`kepi_lot` = `qf1`.`kepi_lot`))) ;
-
--- --------------------------------------------------------
-
---
--- Structure for view `v_critichal_part1`
---
-DROP TABLE IF EXISTS `v_critichal_part1`;
-
-CREATE  VIEW `v_critichal_part1`  AS SELECT DISTINCT cast(`t4`.`createdon` as date) AS `smt_date`, `t4`.`smt_line` AS `smt_line`, `t4`.`smt_shift` AS `smt_shift`, `t5`.`hw_line` AS `hw_line`, `t5`.`hw_shift` AS `hw_shift`, `t1`.`kepi_lot` AS `kepi_lot`, `t1`.`assy_code` AS `assy_code`, `t6`.`matdesc` AS `model`, `t1`.`barcode_serial` AS `barcode_serial`, `t1`.`part_lot` AS `part_lot`, `t2`.`manpower_name` AS `manpower_name`, `t2`.`quantity` AS `ageing_qty`, `t2`.`ageing_time` AS `ageing_time`, `t2`.`ageing_result` AS `ageing_result`, `t2`.`failure_remark` AS `failure_remark`, `t2`.`defect_quantity` AS `defect_quantity`, `t3`.`ft_result` AS `ft_result`, `t3`.`failure_remark` AS `ft_failure_remark`, `t2`.`part_lot_result` AS `part_lot_ageing_result`, `t3`.`part_lot_result` AS `part_lot_ft_result` FROM ((((((select `t_smt_line_process`.`kepi_lot` AS `kepi_lot`,`t_smt_line_process`.`assy_code` AS `assy_code`,`t_smt_line_process`.`barcode_serial` AS `barcode_serial`,`t_smt_line_process`.`part_lot` AS `part_lot` from `t_smt_line_process` union select `t_handwork_process`.`kepi_lot` AS `kepi_lot`,`t_handwork_process`.`assy_code` AS `assy_code`,`t_handwork_process`.`barcode_serial` AS `barcode_serial`,`t_handwork_process`.`part_lot` AS `part_lot` from `t_handwork_process`) `t1` join `t_ageing` `t2` on(((`t1`.`kepi_lot` = `t2`.`kepi_lot`) and (`t1`.`barcode_serial` = `t2`.`barcode_serial`)))) left join `t_ft_process` `t3` on(((`t1`.`kepi_lot` = `t3`.`kepi_lot`) and (`t1`.`barcode_serial` = `t3`.`barcode_serial`)))) left join `t_smt_line_process` `t4` on(((`t1`.`kepi_lot` = `t4`.`kepi_lot`) and (`t1`.`barcode_serial` = `t4`.`barcode_serial`)))) left join `t_handwork_process` `t5` on(((`t1`.`kepi_lot` = `t5`.`kepi_lot`) and (`t1`.`barcode_serial` = `t5`.`barcode_serial`)))) left join `t_material` `t6` on((`t1`.`assy_code` = `t6`.`material`))) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_critical_parts_report`  AS SELECT `mt`.`smt_date` AS `smt_date`, `mt`.`assy_code` AS `assy_code`, `mt`.`model` AS `model`, `mt`.`kepi_lot` AS `kepi_lot`, `mt`.`smt_line` AS `smt_line`, `mt`.`smt_shift` AS `smt_shift`, `mt`.`hw_line` AS `hw_line`, `mt`.`hw_shift` AS `hw_shift`, `mt`.`quantity` AS `quantity`, `mt`.`ageing_time` AS `ageing_time`, `mt`.`ageing_result` AS `ageing_result`, `mt`.`failure_remark` AS `failure_remark`, `mt`.`defect_quantity` AS `defect_quantity`, `mt`.`ft_result` AS `ft_result`, `db1`.`DB1` AS `DB1`, `db1`.`part_lot_ageing_result` AS `db1ag`, `db1`.`part_lot_ft_result` AS `db1ft`, `ic1`.`IC1` AS `IC1`, `ic1`.`part_lot_ageing_result` AS `ic1ag`, `ic1`.`part_lot_ft_result` AS `ic1ft`, `pc1`.`PC1` AS `PC1`, `pc1`.`part_lot_ageing_result` AS `pc1ag`, `pc1`.`part_lot_ft_result` AS `pc1ft`, `d1`.`D1` AS `D1`, `d1`.`part_lot_ageing_result` AS `d1ag`, `d1`.`part_lot_ft_result` AS `d1ft`, `d2`.`D2` AS `D2`, `d2`.`part_lot_ageing_result` AS `d2ag`, `d2`.`part_lot_ft_result` AS `d2ft`, `t1`.`T1` AS `T1`, `t1`.`part_lot_ageing_result` AS `t1ag`, `t1`.`part_lot_ft_result` AS `t1ft`, `qf1`.`QF1` AS `QF1`, `qf1`.`part_lot_ageing_result` AS `qf1ag`, `qf1`.`part_lot_ft_result` AS `qf1ft` FROM (((((((`v_critical_parts` `mt` left join `v_part_db1` `db1` on((`mt`.`kepi_lot` = `db1`.`kepi_lot`))) left join `v_part_ic1` `ic1` on((`mt`.`kepi_lot` = `ic1`.`kepi_lot`))) left join `v_part_pc1` `pc1` on((`mt`.`kepi_lot` = `pc1`.`kepi_lot`))) left join `v_part_d1` `d1` on((`mt`.`kepi_lot` = `d1`.`kepi_lot`))) left join `v_part_d2` `d2` on((`mt`.`kepi_lot` = `d2`.`kepi_lot`))) left join `v_part_t1` `t1` on((`mt`.`kepi_lot` = `t1`.`kepi_lot`))) left join `v_part_qf1` `qf1` on((`mt`.`kepi_lot` = `qf1`.`kepi_lot`))) ;
 
 -- --------------------------------------------------------
 
@@ -1957,7 +1939,7 @@ CREATE  VIEW `v_critichal_part1`  AS SELECT DISTINCT cast(`t4`.`createdon` as da
 --
 DROP TABLE IF EXISTS `v_defect_process`;
 
-CREATE  VIEW `v_defect_process`  AS SELECT `a`.`id` AS `id`, `a`.`transactionid` AS `transactionid`, `a`.`counter` AS `counter`, `b`.`repair_counter` AS `repair_counter`, `a`.`defect` AS `process_defect`, `a`.`location` AS `process_location`, `a`.`cause` AS `process_cause`, `a`.`action` AS `process_action`, `a`.`repairremark` AS `process_remark`, `b`.`defect` AS `repair_defect`, `b`.`location` AS `repair_location`, `b`.`cause` AS `repair_cause`, `b`.`action` AS `repair_action`, `b`.`remark` AS `repair_remark` FROM (`t_defect_process` `a` left join `t_defect_repair` `b` on(((`a`.`transactionid` = `b`.`transactionid`) and (`a`.`counter` = `b`.`process_counter`) and (`a`.`id` = `b`.`defect_process_id`)))) ORDER BY `a`.`transactionid` ASC, `b`.`repair_counter` ASC, `a`.`id` ASC ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_defect_process`  AS SELECT `a`.`id` AS `id`, `a`.`transactionid` AS `transactionid`, `a`.`counter` AS `counter`, `b`.`repair_counter` AS `repair_counter`, `a`.`defect` AS `process_defect`, `a`.`location` AS `process_location`, `a`.`cause` AS `process_cause`, `a`.`action` AS `process_action`, `a`.`repairremark` AS `process_remark`, `b`.`defect` AS `repair_defect`, `b`.`location` AS `repair_location`, `b`.`cause` AS `repair_cause`, `b`.`action` AS `repair_action`, `b`.`remark` AS `repair_remark` FROM (`t_defect_process` `a` left join `t_defect_repair` `b` on(((`a`.`transactionid` = `b`.`transactionid`) and (`a`.`counter` = `b`.`process_counter`) and (`a`.`id` = `b`.`defect_process_id`)))) ORDER BY `a`.`transactionid` ASC, `b`.`repair_counter` ASC, `a`.`id` ASC ;
 
 -- --------------------------------------------------------
 
@@ -1966,7 +1948,7 @@ CREATE  VIEW `v_defect_process`  AS SELECT `a`.`id` AS `id`, `a`.`transactionid`
 --
 DROP TABLE IF EXISTS `v_handwork_process`;
 
-CREATE  VIEW `v_handwork_process`  AS SELECT `a`.`assy_code` AS `assy_code`, `a`.`kepi_lot` AS `kepi_lot`, `a`.`hw_line` AS `hw_line`, `a`.`hw_shift` AS `hw_shift`, `b`.`barcode_serial` AS `barcode_serial`, `b`.`part_lot` AS `part_lot`, `b`.`ageing_process` AS `ageing_process`, `b`.`ft_process` AS `ft_process` FROM (`t_handwork_process` `a` join `t_handwork_process_items` `b` on(((`a`.`kepi_lot` = `b`.`kepi_lot`) and (`a`.`assy_code` = `b`.`assy_code`)))) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_handwork_process`  AS SELECT `a`.`assy_code` AS `assy_code`, `a`.`kepi_lot` AS `kepi_lot`, `a`.`hw_line` AS `hw_line`, `a`.`hw_shift` AS `hw_shift`, `b`.`barcode_serial` AS `barcode_serial`, `b`.`part_lot` AS `part_lot`, `b`.`ageing_process` AS `ageing_process`, `b`.`ft_process` AS `ft_process` FROM (`t_handwork_process` `a` join `t_handwork_process_items` `b` on(((`a`.`kepi_lot` = `b`.`kepi_lot`) and (`a`.`assy_code` = `b`.`assy_code`)))) ;
 
 -- --------------------------------------------------------
 
@@ -1975,7 +1957,7 @@ CREATE  VIEW `v_handwork_process`  AS SELECT `a`.`assy_code` AS `assy_code`, `a`
 --
 DROP TABLE IF EXISTS `v_header_ageing`;
 
-CREATE  VIEW `v_header_ageing`  AS SELECT DISTINCT `a`.`kepi_lot` AS `kepi_lot`, `a`.`assy_code` AS `assy_code`, `a`.`quantity` AS `quantity`, `a`.`ageing_time` AS `ageing_time`, `a`.`ageing_result` AS `ageing_result`, `a`.`failure_remark` AS `failure_remark`, `a`.`defect_quantity` AS `defect_quantity` FROM `t_ageing` AS `a` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_header_ageing`  AS SELECT DISTINCT `a`.`kepi_lot` AS `kepi_lot`, `a`.`assy_code` AS `assy_code`, `a`.`quantity` AS `quantity`, `a`.`ageing_time` AS `ageing_time`, `a`.`ageing_result` AS `ageing_result`, `a`.`failure_remark` AS `failure_remark`, `a`.`defect_quantity` AS `defect_quantity` FROM `t_ageing` AS `a` ;
 
 -- --------------------------------------------------------
 
@@ -1984,7 +1966,7 @@ CREATE  VIEW `v_header_ageing`  AS SELECT DISTINCT `a`.`kepi_lot` AS `kepi_lot`,
 --
 DROP TABLE IF EXISTS `v_header_ft`;
 
-CREATE  VIEW `v_header_ft`  AS SELECT DISTINCT `a`.`kepi_lot` AS `kepi_lot`, `a`.`assy_code` AS `assy_code`, `a`.`ft_quantity` AS `ft_quantity`, `a`.`ft_result` AS `ft_result`, `a`.`failure_remark` AS `failure_remark`, `a`.`defect_qty` AS `defect_qty` FROM `t_ft_process` AS `a` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_header_ft`  AS SELECT DISTINCT `a`.`kepi_lot` AS `kepi_lot`, `a`.`assy_code` AS `assy_code`, `a`.`ft_quantity` AS `ft_quantity`, `a`.`ft_result` AS `ft_result`, `a`.`failure_remark` AS `failure_remark`, `a`.`defect_qty` AS `defect_qty` FROM `t_ft_process` AS `a` ;
 
 -- --------------------------------------------------------
 
@@ -1993,7 +1975,7 @@ CREATE  VIEW `v_header_ft`  AS SELECT DISTINCT `a`.`kepi_lot` AS `kepi_lot`, `a`
 --
 DROP TABLE IF EXISTS `v_part_d1`;
 
-CREATE  VIEW `v_part_d1`  AS SELECT DISTINCT `a`.`kepi_lot` AS `kepi_lot`, `a`.`part_lot` AS `D1`, `a`.`part_lot_ageing_result` AS `part_lot_ageing_result`, `a`.`part_lot_ft_result` AS `part_lot_ft_result` FROM `v_ageing_ft_data` AS `a` WHERE (`a`.`location` = 'D1') ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_part_d1`  AS SELECT DISTINCT `a`.`kepi_lot` AS `kepi_lot`, `a`.`part_lot` AS `D1`, `a`.`part_lot_ageing_result` AS `part_lot_ageing_result`, `a`.`part_lot_ft_result` AS `part_lot_ft_result` FROM `v_ageing_ft_data` AS `a` WHERE (`a`.`location` = 'D1') ;
 
 -- --------------------------------------------------------
 
@@ -2002,7 +1984,7 @@ CREATE  VIEW `v_part_d1`  AS SELECT DISTINCT `a`.`kepi_lot` AS `kepi_lot`, `a`.`
 --
 DROP TABLE IF EXISTS `v_part_d2`;
 
-CREATE  VIEW `v_part_d2`  AS SELECT DISTINCT `a`.`kepi_lot` AS `kepi_lot`, `a`.`part_lot` AS `D2`, `a`.`part_lot_ageing_result` AS `part_lot_ageing_result`, `a`.`part_lot_ft_result` AS `part_lot_ft_result` FROM `v_ageing_ft_data` AS `a` WHERE (`a`.`location` = 'D2') ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_part_d2`  AS SELECT DISTINCT `a`.`kepi_lot` AS `kepi_lot`, `a`.`part_lot` AS `D2`, `a`.`part_lot_ageing_result` AS `part_lot_ageing_result`, `a`.`part_lot_ft_result` AS `part_lot_ft_result` FROM `v_ageing_ft_data` AS `a` WHERE (`a`.`location` = 'D2') ;
 
 -- --------------------------------------------------------
 
@@ -2011,7 +1993,7 @@ CREATE  VIEW `v_part_d2`  AS SELECT DISTINCT `a`.`kepi_lot` AS `kepi_lot`, `a`.`
 --
 DROP TABLE IF EXISTS `v_part_db1`;
 
-CREATE  VIEW `v_part_db1`  AS SELECT DISTINCT `a`.`kepi_lot` AS `kepi_lot`, `a`.`part_lot` AS `DB1`, `a`.`part_lot_ageing_result` AS `part_lot_ageing_result`, `a`.`part_lot_ft_result` AS `part_lot_ft_result` FROM `v_ageing_ft_data` AS `a` WHERE (`a`.`location` = 'DB1') ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_part_db1`  AS SELECT DISTINCT `a`.`kepi_lot` AS `kepi_lot`, `a`.`part_lot` AS `DB1`, `a`.`part_lot_ageing_result` AS `part_lot_ageing_result`, `a`.`part_lot_ft_result` AS `part_lot_ft_result` FROM `v_ageing_ft_data` AS `a` WHERE (`a`.`location` = 'DB1') ;
 
 -- --------------------------------------------------------
 
@@ -2020,7 +2002,7 @@ CREATE  VIEW `v_part_db1`  AS SELECT DISTINCT `a`.`kepi_lot` AS `kepi_lot`, `a`.
 --
 DROP TABLE IF EXISTS `v_part_ic1`;
 
-CREATE  VIEW `v_part_ic1`  AS SELECT DISTINCT `a`.`kepi_lot` AS `kepi_lot`, `a`.`part_lot` AS `IC1`, `a`.`part_lot_ageing_result` AS `part_lot_ageing_result`, `a`.`part_lot_ft_result` AS `part_lot_ft_result` FROM `v_ageing_ft_data` AS `a` WHERE (`a`.`location` = 'IC1') ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_part_ic1`  AS SELECT DISTINCT `a`.`kepi_lot` AS `kepi_lot`, `a`.`part_lot` AS `IC1`, `a`.`part_lot_ageing_result` AS `part_lot_ageing_result`, `a`.`part_lot_ft_result` AS `part_lot_ft_result` FROM `v_ageing_ft_data` AS `a` WHERE (`a`.`location` = 'IC1') ;
 
 -- --------------------------------------------------------
 
@@ -2029,7 +2011,7 @@ CREATE  VIEW `v_part_ic1`  AS SELECT DISTINCT `a`.`kepi_lot` AS `kepi_lot`, `a`.
 --
 DROP TABLE IF EXISTS `v_part_pc1`;
 
-CREATE  VIEW `v_part_pc1`  AS SELECT DISTINCT `a`.`kepi_lot` AS `kepi_lot`, `a`.`part_lot` AS `PC1`, `a`.`part_lot_ageing_result` AS `part_lot_ageing_result`, `a`.`part_lot_ft_result` AS `part_lot_ft_result` FROM `v_ageing_ft_data` AS `a` WHERE (`a`.`location` = 'PC1') ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_part_pc1`  AS SELECT DISTINCT `a`.`kepi_lot` AS `kepi_lot`, `a`.`part_lot` AS `PC1`, `a`.`part_lot_ageing_result` AS `part_lot_ageing_result`, `a`.`part_lot_ft_result` AS `part_lot_ft_result` FROM `v_ageing_ft_data` AS `a` WHERE (`a`.`location` = 'PC1') ;
 
 -- --------------------------------------------------------
 
@@ -2038,7 +2020,7 @@ CREATE  VIEW `v_part_pc1`  AS SELECT DISTINCT `a`.`kepi_lot` AS `kepi_lot`, `a`.
 --
 DROP TABLE IF EXISTS `v_part_qf1`;
 
-CREATE  VIEW `v_part_qf1`  AS SELECT DISTINCT `a`.`kepi_lot` AS `kepi_lot`, `a`.`part_lot` AS `QF1`, `a`.`part_lot_ageing_result` AS `part_lot_ageing_result`, `a`.`part_lot_ft_result` AS `part_lot_ft_result` FROM `v_ageing_ft_data` AS `a` WHERE (`a`.`location` = 'QF1') ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_part_qf1`  AS SELECT DISTINCT `a`.`kepi_lot` AS `kepi_lot`, `a`.`part_lot` AS `QF1`, `a`.`part_lot_ageing_result` AS `part_lot_ageing_result`, `a`.`part_lot_ft_result` AS `part_lot_ft_result` FROM `v_ageing_ft_data` AS `a` WHERE (`a`.`location` = 'QF1') ;
 
 -- --------------------------------------------------------
 
@@ -2047,7 +2029,7 @@ CREATE  VIEW `v_part_qf1`  AS SELECT DISTINCT `a`.`kepi_lot` AS `kepi_lot`, `a`.
 --
 DROP TABLE IF EXISTS `v_part_t1`;
 
-CREATE  VIEW `v_part_t1`  AS SELECT DISTINCT `a`.`kepi_lot` AS `kepi_lot`, `a`.`part_lot` AS `T1`, `a`.`part_lot_ageing_result` AS `part_lot_ageing_result`, `a`.`part_lot_ft_result` AS `part_lot_ft_result` FROM `v_ageing_ft_data` AS `a` WHERE (`a`.`location` = 'T2') ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_part_t1`  AS SELECT DISTINCT `a`.`kepi_lot` AS `kepi_lot`, `a`.`part_lot` AS `T1`, `a`.`part_lot_ageing_result` AS `part_lot_ageing_result`, `a`.`part_lot_ft_result` AS `part_lot_ft_result` FROM `v_ageing_ft_data` AS `a` WHERE (`a`.`location` = 'T1') ;
 
 -- --------------------------------------------------------
 
@@ -2056,7 +2038,7 @@ CREATE  VIEW `v_part_t1`  AS SELECT DISTINCT `a`.`kepi_lot` AS `kepi_lot`, `a`.`
 --
 DROP TABLE IF EXISTS `v_productionview`;
 
-CREATE  VIEW `v_productionview`  AS SELECT `a`.`plandate` AS `plandate`, `a`.`productionline` AS `productionline`, `a`.`model` AS `model`, `a`.`lot_number` AS `lot_number`, `a`.`shift` AS `shift`, `a`.`plan_qty` AS `plan_qty`, `b`.`description` AS `linename`, `fGetProdTotalQtyOutput`(`a`.`plandate`,`a`.`productionline`,`a`.`shift`,`a`.`model`,`a`.`lot_number`) AS `outputqty` FROM (`t_planning` `a` join `t_production_lines` `b` on((`a`.`productionline` = `b`.`id`))) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_productionview`  AS SELECT `a`.`plandate` AS `plandate`, `a`.`productionline` AS `productionline`, `a`.`model` AS `model`, `a`.`lot_number` AS `lot_number`, `a`.`shift` AS `shift`, `a`.`plan_qty` AS `plan_qty`, `b`.`description` AS `linename`, `fGetProdTotalQtyOutput`(`a`.`plandate`,`a`.`productionline`,`a`.`shift`,`a`.`model`,`a`.`lot_number`) AS `outputqty` FROM (`t_planning` `a` join `t_production_lines` `b` on((`a`.`productionline` = `b`.`id`))) ;
 
 -- --------------------------------------------------------
 
@@ -2065,7 +2047,7 @@ CREATE  VIEW `v_productionview`  AS SELECT `a`.`plandate` AS `plandate`, `a`.`pr
 --
 DROP TABLE IF EXISTS `v_productionview_shift1`;
 
-CREATE  VIEW `v_productionview_shift1`  AS SELECT `a`.`plandate` AS `plandate`, `a`.`productionline` AS `productionline`, `a`.`model` AS `model`, `a`.`shift` AS `shift`, `a`.`plan_qty` AS `plan_qty`, `b`.`description` AS `linename`, `fGetProdTotalQtyOutput`(`a`.`plandate`,`a`.`productionline`,`a`.`shift`,`a`.`model`,`a`.`lot_number`) AS `outputqty` FROM (`t_planning` `a` join `t_production_lines` `b` on((`a`.`productionline` = `b`.`id`))) WHERE (`a`.`shift` = 1) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_productionview_shift1`  AS SELECT `a`.`plandate` AS `plandate`, `a`.`productionline` AS `productionline`, `a`.`model` AS `model`, `a`.`shift` AS `shift`, `a`.`plan_qty` AS `plan_qty`, `b`.`description` AS `linename`, `fGetProdTotalQtyOutput`(`a`.`plandate`,`a`.`productionline`,`a`.`shift`,`a`.`model`,`a`.`lot_number`) AS `outputqty` FROM (`t_planning` `a` join `t_production_lines` `b` on((`a`.`productionline` = `b`.`id`))) WHERE (`a`.`shift` = 1) ;
 
 -- --------------------------------------------------------
 
@@ -2074,7 +2056,7 @@ CREATE  VIEW `v_productionview_shift1`  AS SELECT `a`.`plandate` AS `plandate`, 
 --
 DROP TABLE IF EXISTS `v_productionview_shift2`;
 
-CREATE  VIEW `v_productionview_shift2`  AS SELECT `a`.`plandate` AS `plandate`, `a`.`productionline` AS `productionline`, `a`.`model` AS `model`, `a`.`shift` AS `shift`, `a`.`plan_qty` AS `plan_qty`, `b`.`description` AS `linename`, `fGetProdTotalQtyOutput`(`a`.`plandate`,`a`.`productionline`,`a`.`shift`,`a`.`model`,`a`.`lot_number`) AS `outputqty` FROM (`t_planning` `a` join `t_production_lines` `b` on((`a`.`productionline` = `b`.`id`))) WHERE (`a`.`shift` = 2) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_productionview_shift2`  AS SELECT `a`.`plandate` AS `plandate`, `a`.`productionline` AS `productionline`, `a`.`model` AS `model`, `a`.`shift` AS `shift`, `a`.`plan_qty` AS `plan_qty`, `b`.`description` AS `linename`, `fGetProdTotalQtyOutput`(`a`.`plandate`,`a`.`productionline`,`a`.`shift`,`a`.`model`,`a`.`lot_number`) AS `outputqty` FROM (`t_planning` `a` join `t_production_lines` `b` on((`a`.`productionline` = `b`.`id`))) WHERE (`a`.`shift` = 2) ;
 
 -- --------------------------------------------------------
 
@@ -2083,7 +2065,7 @@ CREATE  VIEW `v_productionview_shift2`  AS SELECT `a`.`plandate` AS `plandate`, 
 --
 DROP TABLE IF EXISTS `v_report_transaction`;
 
-CREATE  VIEW `v_report_transaction`  AS SELECT `a`.`transactionid` AS `transactionid`, `b`.`counter` AS `process_counter`, `a`.`prod_date` AS `prod_date`, `a`.`partnumber` AS `partnumber`, `a`.`partmodel` AS `partmodel`, `a`.`lotcode` AS `lotcode`, `a`.`serial_no` AS `serial_no`, `a`.`createdon` AS `createdon`, `b`.`process1` AS `process1`, `b`.`process2` AS `process2`, `b`.`process3` AS `process3`, `b`.`process4` AS `process4`, `b`.`process5` AS `process5`, `b`.`process6` AS `process6`, `b`.`process7` AS `process7`, `b`.`process8` AS `process8`, `b`.`process9` AS `process9`, `b`.`lastprocess` AS `lastprocess`, `b`.`error_process` AS `error_process`, `b`.`defect_name` AS `defect_name`, `b`.`location` AS `location`, `b`.`cause` AS `cause`, `b`.`action` AS `action`, `c`.`counter` AS `repair_counter`, `c`.`process1` AS `repair1`, `c`.`process2` AS `repair2`, `c`.`process3` AS `repair3`, `c`.`process4` AS `repair4`, `c`.`process5` AS `repair5`, `c`.`process6` AS `repair6`, `c`.`process7` AS `repair7`, `c`.`remark` AS `remark`, `c`.`defect_name` AS `repair_defect`, `c`.`location` AS `repair_location`, `c`.`action` AS `repair_action`, `c`.`lastrepair` AS `lastrepair` FROM ((`t_ipd_forms` `a` left join `t_ipd_process` `b` on((`a`.`transactionid` = `b`.`transactionid`))) left join `t_ipd_repair` `c` on(((`a`.`transactionid` = `c`.`transactionid`) and (`b`.`counter` = `c`.`process_counter`)))) ORDER BY `a`.`transactionid` ASC, `a`.`serial_no` ASC, `a`.`partnumber` ASC ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_report_transaction`  AS SELECT `a`.`transactionid` AS `transactionid`, `b`.`counter` AS `process_counter`, `a`.`prod_date` AS `prod_date`, `a`.`partnumber` AS `partnumber`, `a`.`partmodel` AS `partmodel`, `a`.`lotcode` AS `lotcode`, `a`.`serial_no` AS `serial_no`, `a`.`createdon` AS `createdon`, `b`.`process1` AS `process1`, `b`.`process2` AS `process2`, `b`.`process3` AS `process3`, `b`.`process4` AS `process4`, `b`.`process5` AS `process5`, `b`.`process6` AS `process6`, `b`.`process7` AS `process7`, `b`.`process8` AS `process8`, `b`.`process9` AS `process9`, `b`.`lastprocess` AS `lastprocess`, `b`.`error_process` AS `error_process`, `b`.`defect_name` AS `defect_name`, `b`.`location` AS `location`, `b`.`cause` AS `cause`, `b`.`action` AS `action`, `c`.`counter` AS `repair_counter`, `c`.`process1` AS `repair1`, `c`.`process2` AS `repair2`, `c`.`process3` AS `repair3`, `c`.`process4` AS `repair4`, `c`.`process5` AS `repair5`, `c`.`process6` AS `repair6`, `c`.`process7` AS `repair7`, `c`.`remark` AS `remark`, `c`.`defect_name` AS `repair_defect`, `c`.`location` AS `repair_location`, `c`.`action` AS `repair_action`, `c`.`lastrepair` AS `lastrepair` FROM ((`t_ipd_forms` `a` left join `t_ipd_process` `b` on((`a`.`transactionid` = `b`.`transactionid`))) left join `t_ipd_repair` `c` on(((`a`.`transactionid` = `c`.`transactionid`) and (`b`.`counter` = `c`.`process_counter`)))) ORDER BY `a`.`transactionid` ASC, `a`.`serial_no` ASC, `a`.`partnumber` ASC ;
 
 -- --------------------------------------------------------
 
@@ -2092,7 +2074,7 @@ CREATE  VIEW `v_report_transaction`  AS SELECT `a`.`transactionid` AS `transacti
 --
 DROP TABLE IF EXISTS `v_smt_handwork_data`;
 
-CREATE  VIEW `v_smt_handwork_data`  AS SELECT `a`.`assy_code` AS `assy_code`, `b`.`matdesc` AS `model`, `a`.`kepi_lot` AS `kepi_lot`, `a`.`barcode_serial` AS `barcode_serial`, `a`.`part_lot` AS `part_lot` FROM (`v_smt_process` `a` join `t_material` `b` on((`a`.`assy_code` = `b`.`material`))) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_smt_handwork_data`  AS SELECT `a`.`assy_code` AS `assy_code`, `b`.`matdesc` AS `model`, `a`.`kepi_lot` AS `kepi_lot`, `a`.`barcode_serial` AS `barcode_serial`, `a`.`part_lot` AS `part_lot` FROM (`v_smt_process` `a` join `t_material` `b` on((`a`.`assy_code` = `b`.`material`))) ;
 
 -- --------------------------------------------------------
 
@@ -2101,7 +2083,7 @@ CREATE  VIEW `v_smt_handwork_data`  AS SELECT `a`.`assy_code` AS `assy_code`, `b
 --
 DROP TABLE IF EXISTS `v_smt_process`;
 
-CREATE  VIEW `v_smt_process`  AS SELECT `a`.`assy_code` AS `assy_code`, `a`.`kepi_lot` AS `kepi_lot`, `a`.`smt_line` AS `smt_line`, `a`.`smt_shift` AS `smt_shift`, `b`.`barcode_serial` AS `barcode_serial`, `b`.`part_lot` AS `part_lot`, `b`.`ageing_process` AS `ageing_process`, `b`.`ft_process` AS `ft_process` FROM (`t_smt_line_process` `a` join `t_smt_line_process_items` `b` on(((`a`.`kepi_lot` = `b`.`kepi_lot`) and (`a`.`assy_code` = `b`.`assy_code`)))) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_smt_process`  AS SELECT `a`.`assy_code` AS `assy_code`, `a`.`kepi_lot` AS `kepi_lot`, `a`.`smt_line` AS `smt_line`, `a`.`smt_shift` AS `smt_shift`, `b`.`barcode_serial` AS `barcode_serial`, `b`.`part_lot` AS `part_lot`, `b`.`ageing_process` AS `ageing_process`, `b`.`ft_process` AS `ft_process` FROM (`t_smt_line_process` `a` join `t_smt_line_process_items` `b` on(((`a`.`kepi_lot` = `b`.`kepi_lot`) and (`a`.`assy_code` = `b`.`assy_code`)))) ;
 
 -- --------------------------------------------------------
 
@@ -2110,7 +2092,7 @@ CREATE  VIEW `v_smt_process`  AS SELECT `a`.`assy_code` AS `assy_code`, `a`.`kep
 --
 DROP TABLE IF EXISTS `v_tes1`;
 
-CREATE  VIEW `v_tes1`  AS SELECT DISTINCT `a`.`kepi_lot` AS `kepi_lot`, `a`.`location` AS `location` FROM `v_ageing_ft_data` AS `a` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_tes1`  AS SELECT DISTINCT `a`.`kepi_lot` AS `kepi_lot`, `a`.`location` AS `location` FROM `v_ageing_ft_data` AS `a` ;
 
 -- --------------------------------------------------------
 
@@ -2119,7 +2101,7 @@ CREATE  VIEW `v_tes1`  AS SELECT DISTINCT `a`.`kepi_lot` AS `kepi_lot`, `a`.`loc
 --
 DROP TABLE IF EXISTS `v_tes2`;
 
-CREATE  VIEW `v_tes2`  AS SELECT DISTINCT `a`.`kepi_lot` AS `kepi_lot`, `a`.`part_lot` AS `part_lot`, `a`.`location` AS `location` FROM `v_ageing_ft_data` AS `a` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_tes2`  AS SELECT DISTINCT `a`.`kepi_lot` AS `kepi_lot`, `a`.`part_lot` AS `part_lot`, `a`.`location` AS `location` FROM `v_ageing_ft_data` AS `a` ;
 
 -- --------------------------------------------------------
 
@@ -2128,7 +2110,7 @@ CREATE  VIEW `v_tes2`  AS SELECT DISTINCT `a`.`kepi_lot` AS `kepi_lot`, `a`.`par
 --
 DROP TABLE IF EXISTS `v_user_menu`;
 
-CREATE  VIEW `v_user_menu`  AS SELECT `a`.`username` AS `username`, `b`.`roleid` AS `roleid`, `f`.`rolename` AS `rolename`, `c`.`menuid` AS `menuid`, `d`.`id` AS `id`, `d`.`menu` AS `menu`, `d`.`route` AS `route`, `d`.`type` AS `type`, `d`.`menugroup` AS `menugroup`, `d`.`grouping` AS `grouping`, `d`.`icon` AS `icon`, `d`.`createdon` AS `createdon`, `d`.`createdby` AS `createdby` FROM ((((`t_user` `a` join `t_user_role` `b` on((`a`.`username` = `b`.`username`))) join `t_rolemenu` `c` on((`c`.`roleid` = `b`.`roleid`))) join `t_menus` `d` on((`d`.`id` = `c`.`menuid`))) join `t_role` `f` on((`f`.`roleid` = `b`.`roleid`))) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_user_menu`  AS SELECT `a`.`username` AS `username`, `b`.`roleid` AS `roleid`, `f`.`rolename` AS `rolename`, `c`.`menuid` AS `menuid`, `d`.`id` AS `id`, `d`.`menu` AS `menu`, `d`.`route` AS `route`, `d`.`type` AS `type`, `d`.`menugroup` AS `menugroup`, `d`.`grouping` AS `grouping`, `d`.`icon` AS `icon`, `d`.`createdon` AS `createdon`, `d`.`createdby` AS `createdby` FROM ((((`t_user` `a` join `t_user_role` `b` on((`a`.`username` = `b`.`username`))) join `t_rolemenu` `c` on((`c`.`roleid` = `b`.`roleid`))) join `t_menus` `d` on((`d`.`id` = `c`.`menuid`))) join `t_role` `f` on((`f`.`roleid` = `b`.`roleid`))) ;
 
 -- --------------------------------------------------------
 
@@ -2137,7 +2119,7 @@ CREATE  VIEW `v_user_menu`  AS SELECT `a`.`username` AS `username`, `b`.`roleid`
 --
 DROP TABLE IF EXISTS `v_user_menugroup`;
 
-CREATE  VIEW `v_user_menugroup`  AS SELECT `a`.`menugroup` AS `menugroup`, `a`.`description` AS `description`, `a`.`icon` AS `icon`, `a`.`createdon` AS `createdon`, `a`.`createdby` AS `createdby`, `b`.`username` AS `username`, `a`.`_index` AS `_index` FROM (`t_menugroups` `a` join `v_user_menu` `b` on((`a`.`menugroup` = `b`.`menugroup`))) ORDER BY `a`.`_index` ASC, `a`.`menugroup` ASC ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_user_menugroup`  AS SELECT `a`.`menugroup` AS `menugroup`, `a`.`description` AS `description`, `a`.`icon` AS `icon`, `a`.`createdon` AS `createdon`, `a`.`createdby` AS `createdby`, `b`.`username` AS `username`, `a`.`_index` AS `_index` FROM (`t_menugroups` `a` join `v_user_menu` `b` on((`a`.`menugroup` = `b`.`menugroup`))) ORDER BY `a`.`_index` ASC, `a`.`menugroup` ASC ;
 
 -- --------------------------------------------------------
 
@@ -2146,7 +2128,7 @@ CREATE  VIEW `v_user_menugroup`  AS SELECT `a`.`menugroup` AS `menugroup`, `a`.`
 --
 DROP TABLE IF EXISTS `v_user_role_avtivity`;
 
-CREATE  VIEW `v_user_role_avtivity`  AS SELECT `a`.`roleid` AS `roleid`, `a`.`menuid` AS `menuid`, `a`.`activity` AS `activity`, `a`.`status` AS `status`, `a`.`createdon` AS `createdon`, `b`.`route` AS `route`, `b`.`menu` AS `menu`, `c`.`username` AS `username`, `d`.`rolename` AS `rolename` FROM (((`t_role_avtivity` `a` join `t_menus` `b` on((`a`.`menuid` = `b`.`id`))) join `t_user_role` `c` on((`a`.`roleid` = `c`.`roleid`))) join `t_role` `d` on((`a`.`roleid` = `d`.`roleid`))) ORDER BY `c`.`username` ASC, `d`.`rolename` ASC ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_user_role_avtivity`  AS SELECT `a`.`roleid` AS `roleid`, `a`.`menuid` AS `menuid`, `a`.`activity` AS `activity`, `a`.`status` AS `status`, `a`.`createdon` AS `createdon`, `b`.`route` AS `route`, `b`.`menu` AS `menu`, `c`.`username` AS `username`, `d`.`rolename` AS `rolename` FROM (((`t_role_avtivity` `a` join `t_menus` `b` on((`a`.`menuid` = `b`.`id`))) join `t_user_role` `c` on((`a`.`roleid` = `c`.`roleid`))) join `t_role` `d` on((`a`.`roleid` = `d`.`roleid`))) ORDER BY `c`.`username` ASC, `d`.`rolename` ASC ;
 
 --
 -- Indexes for dumped tables
