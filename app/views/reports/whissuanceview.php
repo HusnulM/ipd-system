@@ -23,12 +23,13 @@
                                     <thead>
                                         <tr>
                                             <th>Issuance Number</th>
+                                            <th>POKANON QR CODE</th>
                                             <th>Part Number</th>
                                             <th>Lot Number</th>
-                                            <th>Quantity</th>
+                                            <!-- <th>Quantity</th> -->
                                             <th>Issuance Date</th>
-                                            <th>Location</th>
-                                            <th>Status</th>
+                                            <th>Ageing Status</th>
+                                            <th>FT Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -37,18 +38,19 @@
                                             <?php $no++; ?>
                                             <tr>
                                                 <td><?= $prdata['issuance_number']; ?></td>
+                                                <td><?= $prdata['barcode_serial']; ?></td>
                                                 <td><?= $prdata['part_number']; ?></td>
                                                 <td><?= $prdata['part_lot']; ?></td>
-                                                <td style="text-align:right;">
+                                                <!-- <td style="text-align:right;">
                                                     <?php if (strpos($prdata['quantity'], '.000') !== false) {
                                                         echo number_format($prdata['quantity'], 0, ',', '.');;
                                                     }else{
                                                         echo number_format($prdata['quantity'], 3, ',', '.');;
                                                     } ?>   
-                                                </td>
+                                                </td> -->
                                                 <td><?= $prdata['issueance_date']; ?></td>
-                                                <td><?= $prdata['location']; ?></td>
-                                                <td><?= $prdata['status']; ?></td>
+                                                <td><?= $prdata['ageing_status']; ?></td>
+                                                <td><?= $prdata['ft_status']; ?></td>
                                             </tr>
                                         <?php endforeach; ?>
                                     </tbody>
