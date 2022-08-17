@@ -47,18 +47,27 @@
                                     </div>
                                 </div> -->
                                 <div class="row">
-                                    <div class="col-sm-6">
+                                    <div class="col-lg-4 col-sm-12">
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <label for="">Model</label>
+                                                <select name="assycode" id="find-model"></select>
+                                                <input type="hidden" name="selectedmodel" id="selectedmodel">
+                                                <input type="text" name="model" id="model" class="form-control" placeholder="Model" autocomplete="off" required="true" value="<?= $data['location']['model']; ?>" readonly>                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-sm-12">
                                         <div class="form-group">
                                             <div class="form-line">
                                                 <label for="">Part Number</label>
-                                                <input type="text" name="part_number" id="part_number" class="form-control" placeholder="Part Number" autocomplete="off" required="true" value="<?= $data['location']['part_number']; ?>">
+                                                <input type="text" name="part_number" id="part_number" class="form-control" placeholder="Part Number" autocomplete="off" required="true" value="<?= $data['location']['part_number']; ?>" readonly>
                                                 <input type="hidden" name="uniq_id" value="<?= $data['location']['uniq_id']; ?>">
                                             </div>
                                         </div>
                                     </div>
                                     
-                                    
-                                    <div class="col-sm-6">
+                                    <div class="col-lg-4 col-sm-12">
                                         <div class="form-group">
                                             <div class="form-line">
                                                 <label for="">Location</label>
@@ -131,7 +140,7 @@
             $('#find-model').on('select2:select', async function (e) {
                 const _data = e.params.data
                 // alert(_data.material);    
-                $('#assy_code').val(_data.material);
+                $('#selectedmodel').val(_data.matdesc);
                 document.getElementById("part_number").focus();
             });
         });    

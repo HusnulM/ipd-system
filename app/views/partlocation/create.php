@@ -47,7 +47,21 @@
                                     </div>
                                 </div> -->
                                 <div class="row">
-                                    <div class="col-sm-6">
+                                    <div class="col-lg-4 col-sm-12">
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <label for="">Model</label>
+                                                <!-- <select name="model" class="form-control cbModel">
+                                                    <?php foreach($data['model'] as $row) : ?>
+                                                        <option value="<?= $row['material']; ?>"> <?= $row['matdesc']; ?> </option>
+                                                    <?php endforeach; ?>
+                                                </select> -->
+                                                <select name="assycode" id="find-model"></select>
+                                                <input type="hidden" name="selectedmodel" id="selectedmodel">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-sm-12">
                                         <div class="form-group">
                                             <div class="form-line">
                                                 <label for="">Part Number</label>
@@ -55,9 +69,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
-                                    
-                                    <div class="col-sm-6">
+                                    <div class="col-lg-4 col-sm-12">
                                         <div class="form-group">
                                             <div class="form-line">
                                                 <label for="">Location</label>
@@ -88,6 +100,14 @@
                 }
             });
 
+            // $('#model').select2();
+
+            // $('.cbModel').on('change', function(){
+            //     var t = document.getElementById("model");
+            //     var selectedText = t.options[t.selectedIndex].text;
+            //     alert(selectedText);
+            // })
+
             $(document).on('select2:open', (event) => {
     
                 const searchField = document.querySelector(
@@ -112,9 +132,10 @@
                         }
                     },
                     processResults: function (data) {
-                        // console.log(data);
+                        
                         return {
                             results: $.map(data.data, function (item) {
+                                // console.log(item);
                                 return {
                                     text: item.matdesc,
                                     slug: item.matdesc,
@@ -129,8 +150,9 @@
 
             $('#find-model').on('select2:select', async function (e) {
                 const _data = e.params.data
+                console.log(_data)
                 // alert(_data.material);    
-                $('#assy_code').val(_data.material);
+                $('#selectedmodel').val(_data.matdesc);
                 document.getElementById("part_number").focus();
             });
         });    

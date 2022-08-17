@@ -285,7 +285,7 @@
             event.preventDefault();
                 
             var formData = new FormData(this);
-            console.log($(this).serialize())
+            // console.log($(this).serialize())
             $.ajax({
                 url:base_url+'/smtprocess/savesmtline',
                 method:'post',
@@ -302,7 +302,7 @@
                     console.log(data);
                 },
                 error:function(err){
-                    // showErrorMessage(JSON.stringify(err))
+                    showErrorMessage(JSON.stringify(err))
                 }
             }).done(function(result){
                 console.log(result);

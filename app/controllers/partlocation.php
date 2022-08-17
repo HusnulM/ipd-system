@@ -30,7 +30,7 @@ class Partlocation extends Controller {
           $data['title'] = 'ADD PART CODE LOCATION';
           $data['menu']  = 'ADD PART CODE LOCATION';  
 
-          // $data['location'] = $this->model('Partlocation_model')->getLocation();
+          $data['model'] = $this->model('Material_model')->getListBarang();
 
           $this->view('templates/header_a', $data);
           $this->view('partlocation/create', $data);

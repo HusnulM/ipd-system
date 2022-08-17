@@ -25,11 +25,12 @@ class Partlocation_model{
     }
 
     public function save($data){
-        $query = "INSERT INTO t_part_location (part_number,assy_location,uniq_id,createdon,createdby) 
-                      VALUES(:part_number,:assy_location,:uniq_id,:createdon,:createdby)";
+        $query = "INSERT INTO t_part_location (assy_code, model, part_number,assy_location,uniq_id,createdon,createdby) 
+                      VALUES(:assy_code, :model, :part_number,:assy_location,:uniq_id,:createdon,:createdby)";
         $this->db->query($query);
       
-        // $this->db->bind('assy_code',        $data['assy_code']);
+        $this->db->bind('assy_code',        $data['assycode']);
+        $this->db->bind('model',            $data['selectedmodel']);
         $this->db->bind('part_number',      $data['part_number']);
         $this->db->bind('assy_location',    $data['assy_location']);
         // $this->db->bind('part_number',      $data['part_number']);
@@ -42,10 +43,11 @@ class Partlocation_model{
     }
 
     public function update($data){
-        $query = "UPDATE t_part_location SET assy_location=:assy_location WHERE uniq_id=:uniq_id";
+        $query = "UPDATE t_part_location SET assy_code=:assy_code, model=:model, assy_location=:assy_location WHERE uniq_id=:uniq_id";
         $this->db->query($query);
       
-        // $this->db->bind('assy_code',        $data['assy_code']);
+        $this->db->bind('assy_code',        $data['assycode']);
+        $this->db->bind('model',            $data['selectedmodel']);
         $this->db->bind('assy_location',    $data['assy_location']);
         // $this->db->bind('part_number',      $data['part_number']);
         $this->db->bind('uniq_id',          $data['uniq_id']);

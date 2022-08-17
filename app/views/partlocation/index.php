@@ -24,6 +24,7 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
+                                        <th>Model</th>
                                         <th>Part Number</th>
                                         <!-- <th>Description / Model</th> -->
                                         <th>Location</th>
@@ -38,7 +39,7 @@
                                         <tr>
                                             <td><?= $no; ?></td>
                                             <!-- <td><?= $barang['assy_code']; ?></td> -->
-                                            <!-- <td><?= $barang['model']; ?></td> -->
+                                            <td><?= $barang['model']; ?></td>
                                             <td><?= $barang['part_number']; ?></td>
                                             <td><?= $barang['assy_location']; ?></td>
                                             <td>

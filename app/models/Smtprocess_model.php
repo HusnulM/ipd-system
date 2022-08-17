@@ -29,6 +29,11 @@ class Smtprocess_model{
         return $this->db->single();
     }
 
+    public function checkpartmodel($partnumber, $model){
+        $this->db->query("SELECT * FROM t_part_location WHERE part_number='$partnumber' AND model='$model'");
+        return $this->db->single();
+    }
+
     public function save($data){
 
         $kepiCheck = $this->checkKepiExists($data['kepilot'],$data['assycode']);

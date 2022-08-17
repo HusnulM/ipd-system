@@ -83,19 +83,29 @@ class Smtprocess extends Controller {
                 echo json_encode($result);
                 exit;
             }else{
-                if( $this->model('Smtprocess_model')->save($_POST) > 0 ) {
-                    $result = array(
-                        "msgtype" => "1",
-                        "message" => "Success"
-                    );
-                    echo json_encode($result);
-                    // echo json_encode($nextNumb['nextnumb']);
-                    exit;			
+                $checkpartmodel = $this->model('Smtprocess_model')->checkpartmodel($_POST['kepilot'], $_POST['barcode']);
+                if($checkpartmodel){
+                    if( $this->model('Smtprocess_model')->save($_POST) > 0 ) {
+                        $result = array(
+                            "msgtype" => "1",
+                            "message" => "Success"
+                        );
+                        echo json_encode($result);
+                        // echo json_encode($nextNumb['nextnumb']);
+                        exit;			
+                    }else{
+                        // $result = ["msg"=>"error"];
+                        $result = array(
+                            "msgtype" => "2",
+                            "message" => "Error"
+                        );
+                        echo json_encode($result);
+                        exit;	
+                    }
                 }else{
-                    // $result = ["msg"=>"error"];
                     $result = array(
                         "msgtype" => "2",
-                        "message" => "Error"
+                        "message" => "Partnumber does not match with part Model"
                     );
                     echo json_encode($result);
                     exit;	
