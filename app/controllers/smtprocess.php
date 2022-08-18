@@ -83,7 +83,7 @@ class Smtprocess extends Controller {
                 echo json_encode($result);
                 exit;
             }else{
-                $checkpartmodel = $this->model('Smtprocess_model')->checkpartmodel($_POST['kepilot'], $_POST['barcode']);
+                $checkpartmodel = $this->model('Smtprocess_model')->checkpartmodel($_POST['partnumber'], $_POST['partmodel']);
                 if($checkpartmodel){
                     if( $this->model('Smtprocess_model')->save($_POST) > 0 ) {
                         $result = array(
