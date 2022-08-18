@@ -57,7 +57,7 @@ class Partlocation_model{
     }
 
     public function delete($uniq_id){
-        $query = "DELETE FROM t_assy_location WHERE uniq_id=:uniq_id";
+        $query = "DELETE FROM t_part_location WHERE uniq_id=:uniq_id";
         $this->db->query($query);
 
         $this->db->bind('uniq_id',          $uniq_id);
