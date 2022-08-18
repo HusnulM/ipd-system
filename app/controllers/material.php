@@ -69,15 +69,22 @@ class Material extends Controller {
     }
 
     public function save(){
-        if( $this->model('Material_model')->save($_POST) > 0 ) {
-			Flasher::setMessage('New Material Created','','success');
-			header('location: '. BASEURL . '/material');
-			exit;			
-		}else{
-			Flasher::setMessage('Fail Create New Material,','','danger');
-			header('location: '. BASEURL . '/material');
-			exit;	
-		}
+        $checkExisting = $this->model('Material_model')->getBarangByKode($_POST['kodebrg']);
+        if($checkExisting){
+            Flasher::setMessage('Material '. $_POST['kodebrg'] . ' already exists','','danger');
+            header('location: '. BASEURL . '/material');
+            exit;	
+        }else{
+            if( $this->model('Material_model')->save($_POST) > 0 ) {
+                Flasher::setMessage('New Material Created','','success');
+                header('location: '. BASEURL . '/material');
+                exit;			
+            }else{
+                Flasher::setMessage('Fail Create New Material,','','danger');
+                header('location: '. BASEURL . '/material');
+                exit;	
+            }
+        }
     }
     
     public function update(){
