@@ -52,12 +52,12 @@
                                                 <th>PC1 PART LOT</th>
                                                 <th>AGEING STATUS</th>
                                                 <th>FT STATUS</th>
-                                                <th>D1 PART LOT</th>
+                                                <th>D1/D2 PART LOT</th>
                                                 <th>AGEING STATUS</th>
                                                 <th>FT STATUS</th>
-                                                <th>D2 PART LOT</th>
+                                                <!-- <th>D2 PART LOT</th>
                                                 <th>AGEING STATUS</th>
-                                                <th>FT STATUS</th>
+                                                <th>FT STATUS</th> -->
                                                 <th>T1 PART LOT</th>
                                                 <th>AGEING STATUS</th>
                                                 <th>FT STATUS</th>
@@ -95,12 +95,14 @@
                                                     <td><?= $row['PC1'] ?></td>
                                                     <td><?= $row['pc1ag'] ?></td>
                                                     <td><?= $row['pc1ft'] ?></td>
-                                                    <td><?= $row['D1'] ?></td>
+                                                    <td>
+                                                        <?= $row['D1'] ?? $row['D2'] ?> 
+                                                    </td>
                                                     <td><?= $row['d1ag'] ?></td>
                                                     <td><?= $row['d1ft'] ?></td>
-                                                    <td><?= $row['D2'] ?></td>
+                                                    <!-- <td><?= $row['D2'] ?></td>
                                                     <td><?= $row['d2ag'] ?></td>
-                                                    <td><?= $row['d2ft'] ?></td>
+                                                    <td><?= $row['d2ft'] ?></td> -->
                                                     <td><?= $row['T1'] ?></td>
                                                     <td><?= $row['t1ag'] ?></td>
                                                     <td><?= $row['t1ft'] ?></td>
