@@ -16,7 +16,7 @@ class Ftprocess_model{
     }
 
     public function checkKepiLot($kepi_lot){
-        $this->db->query("SELECT a.*, b.matdesc FROM t_smt_line_process as a left join t_material as b on a.assy_code = b.material WHERE a.kepi_lot = '$kepi_lot'");
+        $this->db->query("SELECT a.*, b.matdesc FROM v_smt_handwork_data as a left join t_material as b on a.assy_code = b.material WHERE a.kepi_lot = '$kepi_lot'");
         return $this->db->single();
     }
 
