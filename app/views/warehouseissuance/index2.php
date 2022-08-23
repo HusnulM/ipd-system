@@ -208,13 +208,13 @@
                 }).done(function(data){
                     console.log(data)
                     if(data['ageing']){
-                        $('#ageing_status').val(data['ageing'].ageing_result);
+                        $('#ageing_status').val(data['ageing'].part_lot_result);
                     }else{
                         $('#ageing_status').val('PENDING');
                     }
 
                     if(data['ft']){
-                        $('#ft_status').val(data['ft'].ft_result);
+                        $('#ft_status').val(data['ft'].part_lot_result);
                     }else{
                         $('#ft_status').val('PENDING');
                     }
